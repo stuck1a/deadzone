@@ -15,11 +15,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 
 public class Deadzone {
-  
-  private int width = 1280;
-  private int height = 720;
-  private String title = "Deadzone";
-  
   private GameState gameState = GameState.STOPPED;
   
   private long window;
@@ -40,8 +35,10 @@ public class Deadzone {
    * Initialization of the game engine/libraries
    */
   private void init() {
-    // Setup error callback
-    GLFWErrorCallback.createPrint(System.err).set();
+    // Set up the error callback
+    GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.err);
+    glfwSetErrorCallback(errorCallback);
+    
     // Initialize GLFW
     if ( !glfwInit() )
       throw new IllegalStateException("Unable to initialize GLFW");
@@ -49,15 +46,13 @@ public class Deadzone {
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hide until init is done
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
-    // Create application window
-    window = glfwCreateWindow(width, height, title, NULL, NULL);
-    if ( window == NULL )
+    // Create application window and load launcher scene
+    window = glfwCreateWindow(800, 600, "Deadzone", NULL, NULL);
+    if ( window == NULL ) {
+      glfwTerminate();
       throw new RuntimeException("Failed to create the GLFW window");
-    // Set up callback for pressed keys
-    glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-      if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-        glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-    });
+    }
+    
     // Get thread stack and push initial frame
     try ( MemoryStack stack = stackPush() ) {
       IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -88,17 +83,9 @@ public class Deadzone {
    */
   public void run() {
     gameState = GameState.RUNNING;
-    
     init();
     loop();
-  
-    // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
-  
-    // Terminate GLFW and free the error callback
-    glfwTerminate();
-    Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    shutdown();
   }
   
   
@@ -110,7 +97,7 @@ public class Deadzone {
     GL.createCapabilities();
     // Set black as base color of the application window
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    // Run the primary loop until user window is closed or ESC was pressed
+    // Run the primary loop until window is closed
     while ( !glfwWindowShouldClose(window) ) {
       // Clear framebuffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -119,9 +106,33 @@ public class Deadzone {
       // Check for events like pressed keys and such
       glfwPollEvents();
       // Execute the game loop subroutines
+      input();
       update();
       render();
     }
+    
+  }
+  
+  /**
+   * Executed when the application will be closed.
+   */
+  public void shutdown() {
+    // Free up all resources and release callbacks
+    // Free the window callbacks and destroy the window
+    glfwFreeCallbacks(window);
+    glfwDestroyWindow(window);
+  
+    // Terminate GLFW and free the error callback
+    glfwTerminate();
+    Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+  }
+  
+  
+  /**
+   * Subroutine of the game loop which will register all user inputs from the current frame
+   */
+  public void input() {
+  
   }
   
   
