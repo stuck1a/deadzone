@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-zstd">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-zstd" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-zstd" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-zstd" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-zstd" recursive="false" type="SOURCES" />
+  </library>
+</component>

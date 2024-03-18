@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-freetype">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-freetype" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-freetype" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-freetype" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-freetype" recursive="false" type="SOURCES" />
+  </library>
+</component>

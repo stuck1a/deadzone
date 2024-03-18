@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-cuda">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-cuda" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-cuda" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-cuda" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-cuda" recursive="false" type="SOURCES" />
+  </library>
+</component>

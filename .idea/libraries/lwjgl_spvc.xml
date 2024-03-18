@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-spvc">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-spvc" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-spvc" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-spvc" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-spvc" recursive="false" type="SOURCES" />
+  </library>
+</component>

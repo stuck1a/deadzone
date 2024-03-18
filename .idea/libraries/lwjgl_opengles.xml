@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-opengles">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-opengles" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-opengles" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-opengles" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-opengles" recursive="false" type="SOURCES" />
+  </library>
+</component>

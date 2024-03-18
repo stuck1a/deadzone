@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-shaderc">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-shaderc" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-shaderc" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-shaderc" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-shaderc" recursive="false" type="SOURCES" />
+  </library>
+</component>

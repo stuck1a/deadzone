@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-harfbuzz">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-harfbuzz" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-harfbuzz" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-harfbuzz" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-harfbuzz" recursive="false" type="SOURCES" />
+  </library>
+</component>

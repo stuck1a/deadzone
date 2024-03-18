@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-jemalloc">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-jemalloc" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-jemalloc" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-jemalloc" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-jemalloc" recursive="false" type="SOURCES" />
+  </library>
+</component>

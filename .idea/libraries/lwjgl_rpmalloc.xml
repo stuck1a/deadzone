@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-rpmalloc">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-rpmalloc" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-rpmalloc" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-rpmalloc" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-rpmalloc" recursive="false" type="SOURCES" />
+  </library>
+</component>

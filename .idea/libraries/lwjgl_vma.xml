@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-vma">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-vma" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-vma" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-vma" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-vma" recursive="false" type="SOURCES" />
+  </library>
+</component>

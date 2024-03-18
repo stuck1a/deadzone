@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-lmdb">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-lmdb" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-lmdb" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-lmdb" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-lmdb" recursive="false" type="SOURCES" />
+  </library>
+</component>

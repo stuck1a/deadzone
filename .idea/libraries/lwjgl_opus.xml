@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-opus">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-opus" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-opus" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-opus" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-opus" recursive="false" type="SOURCES" />
+  </library>
+</component>

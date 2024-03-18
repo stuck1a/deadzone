@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-openxr">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-openxr" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-openxr" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-openxr" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-openxr" recursive="false" type="SOURCES" />
+  </library>
+</component>

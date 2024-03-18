@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-yoga">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-yoga" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-yoga" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-yoga" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-yoga" recursive="false" type="SOURCES" />
+  </library>
+</component>

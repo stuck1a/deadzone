@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-tinyfd">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-tinyfd" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-tinyfd" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-tinyfd" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-tinyfd" recursive="false" type="SOURCES" />
+  </library>
+</component>

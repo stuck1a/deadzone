@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-bgfx">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-bgfx" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-bgfx" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-bgfx" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-bgfx" recursive="false" type="SOURCES" />
+  </library>
+</component>

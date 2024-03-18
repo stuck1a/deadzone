@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-nuklear">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../libraries/lwjgl-3.3.2/lwjgl-nuklear" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../libraries/lwjgl-3.3.2/lwjgl-nuklear" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../libraries/lwjgl-3.3.2/lwjgl-nuklear" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../libraries/lwjgl-3.3.2/lwjgl-nuklear" recursive="false" type="SOURCES" />
+  </library>
+</component>

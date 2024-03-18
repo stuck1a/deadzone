@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-meshoptimizer">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-meshoptimizer" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-meshoptimizer" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-meshoptimizer" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-meshoptimizer" recursive="false" type="SOURCES" />
+  </library>
+</component>

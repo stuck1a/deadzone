@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-tinyexr">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-tinyexr" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-tinyexr" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-tinyexr" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-tinyexr" recursive="false" type="SOURCES" />
+  </library>
+</component>

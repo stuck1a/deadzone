@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lwjgl-openvr">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-openvr" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/lwjgl-openvr" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-openvr" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/lwjgl-openvr" recursive="false" type="SOURCES" />
+  </library>
+</component>
