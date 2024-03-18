@@ -1,4 +1,8 @@
 package deadzone.scenes;
 
-public class AbstractScene {
+/**
+ * Base class for any scene
+ */
+public abstract class AbstractScene {
+
 }

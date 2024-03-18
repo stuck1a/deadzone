@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+
 public class Deadzone {
   
   private int width = 1280;
@@ -20,7 +21,9 @@ public class Deadzone {
   private String title = "Deadzone";
   
   private GameState gameState = GameState.STOPPED;
+  
   private long window;
+  public static Deadzone game;
   
   
   /**
@@ -28,7 +31,8 @@ public class Deadzone {
    * @param args Launcher arguments
    */
   public static void main(String[] args) {
-    new Deadzone().run();
+    game = new Deadzone();
+    game.run();
   }
   
   
