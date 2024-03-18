@@ -7,6 +7,7 @@ import org.lwjgl.system.*;
 import java.nio.*;
 import java.util.Objects;
 
+import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -16,16 +17,16 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Deadzone {
   private GameState gameState = GameState.STOPPED;
-  
   private long window;
+  public GameTimer timer;
   public static Deadzone game;
-  
+
   
   /**
    * Application entrypoint
    * @param args Launcher arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     game = new Deadzone();
     game.run();
   }
@@ -48,7 +49,7 @@ public class Deadzone {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
     // Create application window and load launcher scene
     window = glfwCreateWindow(800, 600, "Deadzone", NULL, NULL);
-    if ( window == NULL ) {
+    if ( this.window == NULL ) {
       glfwTerminate();
       throw new RuntimeException("Failed to create the GLFW window");
     }
@@ -58,7 +59,7 @@ public class Deadzone {
       IntBuffer pWidth = stack.mallocInt(1); // int*
       IntBuffer pHeight = stack.mallocInt(1); // int*
       // Get the window size passed to glfwCreateWindow
-      glfwGetWindowSize(window, pWidth, pHeight);
+      glfwGetWindowSize(this.window, pWidth, pHeight);
       // Get primary monitor resolution
       GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
       // Center window
@@ -70,45 +71,49 @@ public class Deadzone {
       );
     }
     // Use OpenGL context
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(this.window);
     // Enable v-sync
     glfwSwapInterval(1);
     // Display application window
-    glfwShowWindow(window);
+    glfwShowWindow(this.window);
+    // Initialize the game timer object
+    this.timer = new GameTimer();
   }
   
   
   /**
    * Launcher sequence
    */
-  public void run() {
-    gameState = GameState.RUNNING;
-    init();
-    loop();
-    shutdown();
+  public void run() throws InterruptedException {
+    this.gameState = GameState.RUNNING;
+    this.init();
+    this.loop();
+    this.shutdown();
   }
   
   
   /**
    * The primary execution loop
    */
-  public void loop() {
+  public void loop() throws InterruptedException {
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
     // Set black as base color of the application window
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     // Run the primary loop until window is closed
-    while ( !glfwWindowShouldClose(window) ) {
+    while ( !glfwWindowShouldClose(this.window) ) {
       // Clear framebuffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       // Swap color buffers
-      glfwSwapBuffers(window);
+      glfwSwapBuffers(this.window);
       // Check for events like pressed keys and such
       glfwPollEvents();
-      // Execute the game loop subroutines
+      // Execute all content related game loop subroutines
       input();
       update();
       render();
+      // Update the game timer
+      this.timer.updateTimer();
     }
     
   }
@@ -119,8 +124,8 @@ public class Deadzone {
   public void shutdown() {
     // Free up all resources and release callbacks
     // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
+    glfwFreeCallbacks(this.window);
+    glfwDestroyWindow(this.window);
   
     // Terminate GLFW and free the error callback
     glfwTerminate();
@@ -140,7 +145,7 @@ public class Deadzone {
    * Subroutine of the game loop which updates all data for the next frame
    */
   public void update() {
-  
+
   }
   
   
@@ -148,7 +153,10 @@ public class Deadzone {
    * Subroutine of the game loop which renders the updated data for the next frame
    */
   public void render() {
-  
+    System.out.println("Frame:" + this.timer.getCurrentFrame());
+    System.out.println("Seconds:" + this.timer.getCurrentSecond());
   }
+  
+
   
 }
