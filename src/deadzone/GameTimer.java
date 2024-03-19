@@ -22,15 +22,13 @@ public class GameTimer {
   /** (readonly) Amount of milliseconds we have to wait after each game loop to reach the defined target FPS */
   private long sleepTime;
   
-  /** Internal field used to determine, how much time has passend since the last frame */
-  private double lastLoopTime;
-  
   
   public GameTimer() {
-    this.lastLoopTime = this.initialTimestamp = this.createTimestamp();
-    this.currentSecond = 0;
-    this.currentFrame = 1;
-    this.targetFps = 30;  // default value - later use value from stored user config, if any
+    currentTimestamp = initialTimestamp = createTimestamp();
+    currentSecond = 0;
+    currentFrame = 1;
+    targetFps = 30;  // default value - later use value from stored user config, if any
+    sleepTime = 1000L / (long) (targetFps + 1);  // must be recalculated whenever the user changes the target fps
   }
   
   public double getInitialTimestamp() {
@@ -38,23 +36,23 @@ public class GameTimer {
   }
   
   public int getCurrentFrame() {
-    return this.currentFrame;
+    return currentFrame;
   }
   
   public int getCurrentSecond() {
-    return this.currentSecond;
+    return currentSecond;
   }
   
   public int getTargetFps() {
-    return this.targetFps;
+    return targetFps;
   }
   
   public int getFps() {
-    return this.fps;
+    return fps;
   }
   
   public double getCurrentTimestamp() {
-    return this.currentTimestamp;
+    return currentTimestamp;
   }
   
   /**
@@ -70,13 +68,23 @@ public class GameTimer {
   
   
   /**
-   * Called at the end of each game loop to recalculate all times
+   * Called at the end of each game loop to recalculate all timer values
    */
   protected void updateTimer() {
-    this.currentTimestamp = createTimestamp();
-    this.currentFrame++;
+    double newTimestamp = createTimestamp();
+    currentSecond = (int) newTimestamp;
+    fps = (int) Math.round(currentFrame / currentTimestamp);
+    currentFrame++;
+    currentTimestamp = newTimestamp;
   }
   
+  
+  /**
+   * @return Difference between two timestamps
+   */
+  private double getTimeDiff(double timestamp1, double timestamp2) {
+    return Math.abs(timestamp1 - timestamp2);
+  }
   
   /**
    * @return Current timestamp in seconds (from system time)
@@ -86,24 +94,3 @@ public class GameTimer {
   }
   
 }
-
-
-//  public static void updateFPS() {
-//    currentFrame++;
-//  }
-
-//  public static void updateGameTime() {
-//    timeCount = getDelta();
-//    if (timeCount > 1f) {
-//      GameTimer.currentSecond = GameTimer.currentSecond++;
-//      timeCount -= 1f;
-//    }
-//  }
-
-//  public static float getDelta() {
-//    double time = getTime();
-//    float delta = (float) (time - lastLoopTime);
-//    lastLoopTime = time;
-//    timeCount += delta;
-//    return delta;
-//  }

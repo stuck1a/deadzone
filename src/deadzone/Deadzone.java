@@ -49,17 +49,17 @@ public class Deadzone {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
     // Create application window and load launcher scene
     window = glfwCreateWindow(800, 600, "Deadzone", NULL, NULL);
-    if ( this.window == NULL ) {
+    if ( window == NULL ) {
       glfwTerminate();
       throw new RuntimeException("Failed to create the GLFW window");
     }
     
-    // Get thread stack and push initial frame
+    // Get thread stack and generate initial frame
     try ( MemoryStack stack = stackPush() ) {
       IntBuffer pWidth = stack.mallocInt(1); // int*
       IntBuffer pHeight = stack.mallocInt(1); // int*
       // Get the window size passed to glfwCreateWindow
-      glfwGetWindowSize(this.window, pWidth, pHeight);
+      glfwGetWindowSize(window, pWidth, pHeight);
       // Get primary monitor resolution
       GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
       // Center window
@@ -71,13 +71,13 @@ public class Deadzone {
       );
     }
     // Use OpenGL context
-    glfwMakeContextCurrent(this.window);
+    glfwMakeContextCurrent(window);
     // Enable v-sync
     glfwSwapInterval(1);
     // Display application window
-    glfwShowWindow(this.window);
+    glfwShowWindow(window);
     // Initialize the game timer object
-    this.timer = new GameTimer();
+    timer = new GameTimer();
   }
   
   
@@ -101,11 +101,11 @@ public class Deadzone {
     // Set black as base color of the application window
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     // Run the primary loop until window is closed
-    while ( !glfwWindowShouldClose(this.window) ) {
+    while ( !glfwWindowShouldClose(window) ) {
       // Clear framebuffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       // Swap color buffers
-      glfwSwapBuffers(this.window);
+      glfwSwapBuffers(window);
       // Check for events like pressed keys and such
       glfwPollEvents();
       // Execute all content related game loop subroutines
@@ -113,7 +113,9 @@ public class Deadzone {
       update();
       render();
       // Update the game timer
-      this.timer.updateTimer();
+      timer.updateTimer();
+      // Keep the target frame rate
+      sleep(timer.getSleepTime());
     }
     
   }
@@ -124,8 +126,8 @@ public class Deadzone {
   public void shutdown() {
     // Free up all resources and release callbacks
     // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(this.window);
-    glfwDestroyWindow(this.window);
+    glfwFreeCallbacks(window);
+    glfwDestroyWindow(window);
   
     // Terminate GLFW and free the error callback
     glfwTerminate();
@@ -153,8 +155,11 @@ public class Deadzone {
    * Subroutine of the game loop which renders the updated data for the next frame
    */
   public void render() {
-    System.out.println("Frame:" + this.timer.getCurrentFrame());
-    System.out.println("Seconds:" + this.timer.getCurrentSecond());
+    System.out.println("Frame:" + timer.getCurrentFrame());
+    System.out.println("Elapsed Time:" + timer.getCurrentTimestamp());
+    System.out.println("Elapsed Seconds:" + timer.getCurrentSecond());
+    System.out.println("Current FPS:" + timer.getFps());
+    System.out.println("----------------------------");
   }
   
 
