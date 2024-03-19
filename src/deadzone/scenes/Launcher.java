@@ -6,5 +6,12 @@ package deadzone.scenes;
  * and start the initial in-game scene (Compound)
  */
 public class Launcher extends AbstractScene {
-
+  
+  protected static Scene name = Scene.LAUNCHER;
+  
+  
+  public Launcher() {
+    super(name);
+  }
+  
 }

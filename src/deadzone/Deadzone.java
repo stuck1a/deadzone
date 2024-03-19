@@ -1,5 +1,8 @@
 package deadzone;
 
+import deadzone.scenes.AbstractScene;
+import deadzone.scenes.Launcher;
+import deadzone.scenes.Scene;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -62,8 +65,8 @@ public class Deadzone {
     
     // Set up render context
     createRenderContext(800, 600, "Deadzone", NULL, NULL);
-    // Set up initial scene (launcher scene)
-    // TODO ...
+    // Set up initial scene to render (launcher scene)
+    AbstractScene.setActiveScene(Scene.LAUNCHER);
     
     // Get thread stack and generate initial frame
     try ( MemoryStack stack = stackPush() ) {
@@ -87,8 +90,9 @@ public class Deadzone {
     glfwSwapInterval(1);
     // Display application window
     glfwShowWindow(window);
-    // Initialize the game timer object
+    // Initialize the game timer object and the launcher scene
     timer = new GameTimer(30);  // default value  // TODO: use value from stored user config, if any
+    Launcher launcherScene = new Launcher();
   }
   
   
@@ -195,6 +199,7 @@ public class Deadzone {
    * Subroutine of the game loop which renders the updated data for the next frame
    */
   public void render() {
+    // Write some additional debug information to the console if in debug mode
     if (isDebugMode()) {
       System.out.println("Elapsed Time:" + timer.getCurrentTimestamp());
       System.out.println("Elapsed Seconds:" + timer.getCurrentSecond());
@@ -203,11 +208,9 @@ public class Deadzone {
       System.out.println("----------------------------");
     }
 
+    // Render the current scene
+    AbstractScene.getActiveScene().renderScene();
     
-    
-    // DEBUG BLOCK START - RENDER A VERTICE BASED TRIANGLE
-    
-    // DEBUG BLOCK END
   }
   
 

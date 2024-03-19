@@ -6,5 +6,11 @@ package deadzone.scenes;
  * from where other scenes (like Map for starting a mission) can be accessed
  */
 public class Compound extends AbstractScene {
-
+  
+  protected static Scene name = Scene.COMPOUND;
+  
+  public Compound() {
+    super(name);
+  }
+  
 }
