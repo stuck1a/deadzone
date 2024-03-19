@@ -23,12 +23,12 @@ public class GameTimer {
   private long sleepTime;
   
   
-  public GameTimer() {
+  public GameTimer(int targetFps) {
     currentTimestamp = initialTimestamp = createTimestamp();
     currentSecond = 0;
     currentFrame = 1;
-    targetFps = 30;  // default value - later use value from stored user config, if any
-    sleepTime = 1000L / (long) (targetFps + 1);  // must be recalculated whenever the user changes the target fps
+    this.targetFps = targetFps;
+    sleepTime = 1000L / (long) (targetFps + 1);
   }
   
   public double getInitialTimestamp() {
@@ -63,9 +63,9 @@ public class GameTimer {
   }
   
   public void setTargetFps(int targetFps) {
+    sleepTime = 1000L / (long) (targetFps + 1);
     this.targetFps = targetFps;
   }
-  
   
   /**
    * Called at the end of each game loop to recalculate all timer values
@@ -76,14 +76,6 @@ public class GameTimer {
     fps = (int) Math.round(currentFrame / currentTimestamp);
     currentFrame++;
     currentTimestamp = newTimestamp;
-  }
-  
-  
-  /**
-   * @return Difference between two timestamps
-   */
-  private double getTimeDiff(double timestamp1, double timestamp2) {
-    return Math.abs(timestamp1 - timestamp2);
   }
   
   /**

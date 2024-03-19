@@ -77,7 +77,7 @@ public class Deadzone {
     // Display application window
     glfwShowWindow(window);
     // Initialize the game timer object
-    timer = new GameTimer();
+    timer = new GameTimer(30);  // default value TODO: use value from stored user config, if any
   }
   
   
