@@ -68,7 +68,7 @@ public abstract class AbstractScene {
    * renders every registered object
    */
   public void renderScene() {
-    System.out.println("Executed AbstractScene::renderScene()");
+  
   }
   
 }
