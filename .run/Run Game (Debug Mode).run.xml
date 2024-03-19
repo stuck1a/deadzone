@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Game (Debug Mode)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="deadzone.Deadzone" />
+    <module name="Deadzone" />
+    <option name="PROGRAM_PARAMETERS" value="debug" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
