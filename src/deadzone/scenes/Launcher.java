@@ -7,11 +7,12 @@ package deadzone.scenes;
  */
 public class Launcher extends AbstractScene {
   
-  protected static Scene name = Scene.LAUNCHER;
+  private static final Scene name = Scene.LAUNCHER;
   
   
   public Launcher() {
     super(name);
   }
+  
   
 }

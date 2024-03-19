@@ -7,7 +7,7 @@ package deadzone.scenes;
  */
 public class Compound extends AbstractScene {
   
-  protected static Scene name = Scene.COMPOUND;
+  protected static final Scene name = Scene.COMPOUND;
   
   public Compound() {
     super(name);
