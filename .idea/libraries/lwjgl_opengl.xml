@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="file://$PROJECT_DIR$/lib/lwjgl-opengl" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="https://javadoc.lwjgl.org" />
+    </JAVADOC>
     <SOURCES>
       <root url="file://$PROJECT_DIR$/lib/lwjgl-opengl" />
     </SOURCES>

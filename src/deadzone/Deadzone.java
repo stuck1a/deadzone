@@ -165,7 +165,7 @@ public class Deadzone {
   }
   
   /**
-   * Executed when the application will be closed.
+   * Executed when the application will or shall be closed.
    */
   public void shutdown() {
     // Free up all resources and release callbacks
@@ -210,6 +210,11 @@ public class Deadzone {
 
     // Render the current scene
     AbstractScene.getActiveScene().renderScene();
+    
+    // TEST STUFF START
+    System.out.println("Absolute Client Dir: " + Util.getAbsoluteClientDir());
+    System.out.println("Absolute User Dir: " +Util.getAbsoluteUserDir());
+    // TEST STUFF END
     
   }
   
