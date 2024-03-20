@@ -1,13 +1,6 @@
 package deadzone.scenes;
 
-import org.lwjgl.system.MemoryStack;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-
+import deadzone.Util;
 
 
 /**

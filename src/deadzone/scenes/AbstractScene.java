@@ -1,5 +1,6 @@
 package deadzone.scenes;
 
+import deadzone.Util;
 import deadzone.render.Renderable;
 
 import java.util.EnumMap;

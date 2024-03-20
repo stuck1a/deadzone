@@ -44,12 +44,12 @@ public class Deadzone {
     return gameState;
   }
   
-  public void setGameState(GameState gameState) {
-    this.gameState = gameState;
-  }
-  
   public boolean isDebugMode() {
     return debugMode;
+  }
+  
+  public void setGameState(GameState gameState) {
+    this.gameState = gameState;
   }
   
   /**
@@ -118,6 +118,11 @@ public class Deadzone {
     // Terminate GLFW and free the error callback
     glfwTerminate();
     Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+  
+    // TEST STUFF START
+    System.out.println("Absolute Client Dir: " + Util.getAbsoluteClientDir());
+    System.out.println("Absolute User Dir: " +Util.getAbsoluteUserDir());
+    // TEST STUFF END
   }
   
   /**
@@ -149,12 +154,6 @@ public class Deadzone {
 
     // Render the current scene
     AbstractScene.getActiveScene().renderScene();
-    
-    // TEST STUFF START
-    System.out.println("Absolute Client Dir: " + Util.getAbsoluteClientDir());
-    System.out.println("Absolute User Dir: " +Util.getAbsoluteUserDir());
-    // TEST STUFF END
-    
   }
   
   
@@ -167,13 +166,10 @@ public class Deadzone {
     glfwSetErrorCallback(errorCallback);
     
     // Initialize GLFW
-    if ( !glfwInit() )
+    if ( !glfwInit() ) {
       throw new IllegalStateException("Unable to initialize GLFW");
-    
-    // Set up render context
+    }
     createRenderContext(800, 600, "Deadzone", NULL, NULL);
-    // Set up initial scene to render (launcher scene)
-    AbstractScene.setActiveScene(Scene.LAUNCHER);
     
     // Get thread stack and generate initial frame
     try ( MemoryStack stack = stackPush() ) {
@@ -197,7 +193,8 @@ public class Deadzone {
     glfwSwapInterval(1);
     // Display application window
     glfwShowWindow(window);
-    // Initialize the game timer object and the launcher scene
+    // Initialize timer and initial scene
+    AbstractScene.setActiveScene(Scene.LAUNCHER);
     timer = new GameTimer(30);  // default value  // TODO: use value from stored user config, if any
     Launcher launcherScene = new Launcher();
   }
