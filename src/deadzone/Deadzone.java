@@ -23,31 +23,138 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Deadzone {
   private GameState gameState = GameState.STOPPED;
   private long window;
-  public GameTimer timer;
-  public static Deadzone game;
+  private GameTimer timer;
+  private static Deadzone app;
+  private boolean debugMode = false;
   
-  public boolean debugMode = false;
-
+  
+  public long getWindowHandle() {
+    return window;
+  }
+  
+  public GameTimer getTimer() {
+    return timer;
+  }
+  
+  public static Deadzone getApplication() {
+    return app;
+  }
+  
+  public GameState getGameState() {
+    return gameState;
+  }
+  
+  public void setGameState(GameState gameState) {
+    this.gameState = gameState;
+  }
+  
+  public boolean isDebugMode() {
+    return debugMode;
+  }
   
   /**
    * Application entrypoint
    * @param args Launcher arguments
    */
   public static void main(String[] args) throws InterruptedException {
-    game = new Deadzone();
+    app = new Deadzone();
     // Process arguments
     for (String arg: args) {
       String param = arg.toUpperCase();
       if (Objects.equals( param, "D") || Objects.equals( param, "DEBUG")) {
-        game.debugMode = true;
+        app.debugMode = true;
         continue;
       }
     }
-    game.run();
+    app.run();
   }
   
-  public boolean isDebugMode() {
-    return debugMode;
+  /**
+   * Launcher sequence
+   */
+  public void run() throws InterruptedException {
+    this.gameState = GameState.RUNNING;
+    this.init();
+    this.loop();
+    this.shutdown();
+  }
+  
+  /**
+   * The primary execution loop
+   */
+  public void loop() throws InterruptedException {
+    // Detect OpenGL thread and make bindings available for use
+    GL.createCapabilities();
+    // Set black as base color of the application window
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    // Run the primary loop until window is closed
+    while ( !glfwWindowShouldClose(window) ) {
+      // Clear framebuffer
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      // Swap color buffers
+      glfwSwapBuffers(window);
+      // Check for events like pressed keys and such
+      glfwPollEvents();
+      // Execute all content related game loop subroutines
+      input();
+      update();
+      render();
+      // Update the game timer
+      timer.updateTimer();
+      // Keep the target frame rate
+      sleep(timer.getSleepTime());
+    }
+  }
+  
+  /**
+   * Executed when the application will or shall be closed.
+   */
+  public void shutdown() {
+    // Free up all resources and release callbacks
+    // Free the window callbacks and destroy the window
+    glfwFreeCallbacks(window);
+    glfwDestroyWindow(window);
+  
+    // Terminate GLFW and free the error callback
+    glfwTerminate();
+    Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+  }
+  
+  /**
+   * Subroutine of the game loop which will register all user inputs from the current frame
+   */
+  public void input() {
+  
+  }
+  
+  /**
+   * Subroutine of the game loop which updates all data for the next frame
+   */
+  public void update() {
+
+  }
+  
+  /**
+   * Subroutine of the game loop which renders the updated data for the next frame
+   */
+  public void render() {
+    // Write some additional debug information to the console if in debug mode
+    if (isDebugMode()) {
+      System.out.println("Elapsed Time:" + timer.getCurrentTimestamp());
+      System.out.println("Elapsed Seconds:" + timer.getCurrentSecond());
+      System.out.println("Current Frame:" + timer.getCurrentFrame());
+      System.out.println("Current FPS:" + timer.getFps());
+      System.out.println("----------------------------");
+    }
+
+    // Render the current scene
+    AbstractScene.getActiveScene().renderScene();
+    
+    // TEST STUFF START
+    System.out.println("Absolute Client Dir: " + Util.getAbsoluteClientDir());
+    System.out.println("Absolute User Dir: " +Util.getAbsoluteUserDir());
+    // TEST STUFF END
+    
   }
   
   
@@ -95,46 +202,6 @@ public class Deadzone {
     Launcher launcherScene = new Launcher();
   }
   
-  
-  /**
-   * Launcher sequence
-   */
-  public void run() throws InterruptedException {
-    this.gameState = GameState.RUNNING;
-    this.init();
-    this.loop();
-    this.shutdown();
-  }
-  
-  
-  /**
-   * The primary execution loop
-   */
-  public void loop() throws InterruptedException {
-    // Detect OpenGL thread and make bindings available for use
-    GL.createCapabilities();
-    // Set black as base color of the application window
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    // Run the primary loop until window is closed
-    while ( !glfwWindowShouldClose(window) ) {
-      // Clear framebuffer
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      // Swap color buffers
-      glfwSwapBuffers(window);
-      // Check for events like pressed keys and such
-      glfwPollEvents();
-      // Execute all content related game loop subroutines
-      input();
-      update();
-      render();
-      // Update the game timer
-      timer.updateTimer();
-      // Keep the target frame rate
-      sleep(timer.getSleepTime());
-    }
-  }
-  
-  
   /**
    * Set up GLFW to use the OpenGL 3.2 core profile for rendering
    */
@@ -163,61 +230,5 @@ public class Deadzone {
       throw new RuntimeException("Failed to create the GLFW window");
     }
   }
-  
-  /**
-   * Executed when the application will or shall be closed.
-   */
-  public void shutdown() {
-    // Free up all resources and release callbacks
-    // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
-  
-    // Terminate GLFW and free the error callback
-    glfwTerminate();
-    Objects.requireNonNull(glfwSetErrorCallback(null)).free();
-  }
-  
-  
-  /**
-   * Subroutine of the game loop which will register all user inputs from the current frame
-   */
-  public void input() {
-  
-  }
-  
-  
-  /**
-   * Subroutine of the game loop which updates all data for the next frame
-   */
-  public void update() {
-
-  }
-  
-  
-  /**
-   * Subroutine of the game loop which renders the updated data for the next frame
-   */
-  public void render() {
-    // Write some additional debug information to the console if in debug mode
-    if (isDebugMode()) {
-      System.out.println("Elapsed Time:" + timer.getCurrentTimestamp());
-      System.out.println("Elapsed Seconds:" + timer.getCurrentSecond());
-      System.out.println("Current Frame:" + timer.getCurrentFrame());
-      System.out.println("Current FPS:" + timer.getFps());
-      System.out.println("----------------------------");
-    }
-
-    // Render the current scene
-    AbstractScene.getActiveScene().renderScene();
-    
-    // TEST STUFF START
-    System.out.println("Absolute Client Dir: " + Util.getAbsoluteClientDir());
-    System.out.println("Absolute User Dir: " +Util.getAbsoluteUserDir());
-    // TEST STUFF END
-    
-  }
-  
-
   
 }
