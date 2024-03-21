@@ -120,7 +120,11 @@ public class Deadzone {
     Objects.requireNonNull(glfwSetErrorCallback(null)).free();
   
     // TEST STUFF START
-    System.out.println("Absolute Client Dir: " + Util.getAbsoluteClientDir());
+    System.out.println("getAbsoluteRootDir: " + Util.getAbsoluteRootDir());
+    System.out.println("getAbsoluteLibraryDir: " + Util.getAbsoluteLibraryDir());
+    System.out.println("getAbsoluteAssetsDir: " + Util.getAbsoluteAssetsDir());
+    System.out.println("getAbsoluteFontsDir: " + Util.getAbsoluteFontsDir());
+    System.out.println("getAbsoluteTilesDir: " + Util.getAbsoluteTilesDir());
     // TEST STUFF END
   }
   
