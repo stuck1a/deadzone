@@ -1,19 +1,7 @@
 #version 150
 
-attribute vec2 position;
-attribute vec3 color;
-attribute vec2 texcoord;
-
-varying vec3 vertexColor;
-varying vec2 textureCoord;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+layout (location=0) in vec3 position;
 
 void main() {
-    vertexColor = color;
-    textureCoord = texcoord;
-    mat4 mvp = projection * view * model;
-    gl_Position = mvp * vec4(position, 0.0, 1.0);
+    gl_Position = vec4(position, 1.0);
 }

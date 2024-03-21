@@ -1,6 +1,6 @@
 package deadzone.scenes;
 
-import deadzone.render.FontRenderer;
+import deadzone.rendering.FontRenderer;
 
 
 /**

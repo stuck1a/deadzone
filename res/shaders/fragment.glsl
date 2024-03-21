@@ -1,7 +1,8 @@
 #version 150
 
-varying vec3 vertexColor;
+out vec4 fragColor;
 
-void main() {
-    gl_FragColor = vec4(vertexColor, 1.0);
+void main()
+{
+    fragColor = vec4(0.0, 0.5, 0.5, 1.0);
 }
