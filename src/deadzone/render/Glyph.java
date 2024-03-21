@@ -1,4 +1,4 @@
-package deadzone.shader;
+package deadzone.render;
 
 /**
  * This class represents single glyphs of a font
@@ -9,7 +9,6 @@ public class Glyph {
   public final int y;
   public final int height;
   public final int width;
-  public final float advance;
   
   
   
@@ -20,14 +19,12 @@ public class Glyph {
    * @param height Glyph height
    * @param x Font texture x coordinate
    * @param y Y Font texture x coordinate
-   * @param advance Offset width
    */
-  public Glyph(int width, int height, int x, int y, float advance) {
+  public Glyph(int width, int height, int x, int y) {
     this.width = width;
     this.height = height;
     this.x = x;
     this.y = y;
-    this.advance = advance;
   }
   
 }

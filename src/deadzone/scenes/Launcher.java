@@ -1,6 +1,6 @@
 package deadzone.scenes;
 
-import deadzone.Util;
+import deadzone.render.FontRenderer;
 
 
 /**
@@ -19,12 +19,15 @@ public class Launcher extends AbstractScene {
   
   
   public void renderScene() {
-    testRenderTriangle();
+    testRenderTest();
   }
   
   
-  private void testRenderTriangle() {
-
+  private void testRenderTest() {
+    
+    FontRenderer foo = new FontRenderer();
+    foo.writeText(50, 50, "bla");
+    
   }
   
   
