@@ -1,47 +1,67 @@
 package deadzone;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * Support class which provides some smart general utility functions
  */
 public class Util {
   
-  /** Stores the absolute path of the applications root dir once located for better performance */
-  private static String absClientDir;
-  
-  /** Stores the absolute path of the systems user dir once located for better performance */
-  private static final String absUserDir;
+  /** Stores the absolute path of the applications root folder */
+  private static final String absRootDir;
+  /** Stores the absolute path of the assets folder */
+  private static final String absAssetsDir;
+  /** Stores the absolute path to the library folder */
+  private static final String absLibraryDir;
+  /** Stores the absolute path to the fonts folder */
+  private static final String absFontsDir;
+  /** Stores the absolute path to the tiles folder */
+  private static final String absTilesDir;
   
   
   static {
-    // Initialize application dir
-    File currentDirFile = new File(".");
-    String helper = currentDirFile.getAbsolutePath();
-    try {
-      absClientDir = helper.substring(0, helper.length() - currentDirFile.getCanonicalPath().length());
-    } catch (IOException e) {
-      System.err.println("Failed to determine the application path!");
-      throw new RuntimeException("Fatal error occurred, check log for more details");
-    }
-    // Initialize user dir
-    absUserDir = System.getProperty("user.dir");
+    // Initialize paths
+    String separator = System.getProperty("file.separator");
+    absRootDir = System.getProperty("user.dir") + separator;
+    absLibraryDir = absRootDir + "libs" + separator;
+    
+    absAssetsDir = absRootDir + "assets" + separator;
+    absFontsDir = absAssetsDir + "fonts" + separator;
+    absTilesDir = absAssetsDir + "tiles" + separator;
   }
   
   
   /**
-   * @return The root directory of this application
+   * @return Application root path
    */
-  public static String getAbsoluteClientDir()  {
-    return absClientDir;  // FIXME: Executed from IDE currently returns "E:"
+  public static String getAbsoluteRootDir()  {
+    return absRootDir;
   }
   
   /**
-   * @return Path to the systems user directory
+   * @return Libraries folder path
    */
-  public static String getAbsoluteUserDir() {
-    return absUserDir;    // FIXME: Executed from IDE currently returns "E:\Development\Java Workspace\Deadzone"
+  public static String getAbsoluteLibraryDir()  {
+    return absLibraryDir;
+  }
+  
+  /**
+   * @return Assets folder path
+   */
+  public static String getAbsoluteAssetsDir()  {
+    return absAssetsDir;
+  }
+  
+  /**
+   * @return Fonts folder path
+   */
+  public static String getAbsoluteFontsDir()  {
+    return absFontsDir;
+  }
+  
+  /**
+   * @return Tiles folder path
+   */
+  public static String getAbsoluteTilesDir()  {
+    return absTilesDir;
   }
   
 }

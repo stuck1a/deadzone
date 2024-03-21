@@ -121,7 +121,6 @@ public class Deadzone {
   
     // TEST STUFF START
     System.out.println("Absolute Client Dir: " + Util.getAbsoluteClientDir());
-    System.out.println("Absolute User Dir: " +Util.getAbsoluteUserDir());
     // TEST STUFF END
   }
   
