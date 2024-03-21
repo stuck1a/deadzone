@@ -5,6 +5,7 @@ import deadzone.render.Renderable;
 
 import java.util.EnumMap;
 
+
 /**
  * Base class for any existing scene.
  * Provides general functions for scene management and their mapping and the object catalogue every scene must have.
@@ -29,7 +30,8 @@ public abstract class AbstractScene {
    */
   public AbstractScene(Scene name) {
     // Only add this scene to the scene class mapping on first initialization of the actual scene
-    if (!sceneMappings.containsKey(name)) {  // FIXME: this.name hat nicht den child Wert Scene.LAUNCHER sondern den parent Wert Scene.NONE....
+    // TODO: Move into static initializer block
+    if (!sceneMappings.containsKey(name)) {
       sceneMappings.put(name, this);
     }
     
