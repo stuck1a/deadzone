@@ -1,18 +1,14 @@
 package deadzone.rendering;
 
+import deadzone.Util;
+
 import static org.lwjgl.opengl.GL20.*;
+
 
 
 /**
  * Class for loading, compiling and managing GLSL shader programs.
  * Each instance represents a concrete shader.
- *
- * Initialization steps:
- * (1) Create an empty OpenGL program (constructor)
- * (2) Compile all necessary shaders (createXYShader)
- * (3) Load compiled shaders into graphic card (link)
- * (4) Remove compiled shaders from memory (link)
- * (5) Render stuff
  */
 public class ShaderProgram {
   
@@ -21,12 +17,6 @@ public class ShaderProgram {
   private int vertexShaderId;
   
   private int fragmentShaderId;
-  
-  
-  // Compile all basic shaders which are required from the beginning
-  static {
-    compileBaseShaders();
-  }
   
   
   /**
@@ -79,27 +69,33 @@ public class ShaderProgram {
   
   
   /**
-   * Compiles all basic shader programs which are needed from the very beginning
+   * Initializes the vertex and fragment shader
    */
-  public void compileBaseShaders(String shaderCode) throws Exception {
-    vertexShaderId = createShader(shaderCode, GL_VERTEX_SHADER);
-    fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);
+  public void initializeBaseShaders() throws Exception {
+    String shadersDir = Util.getShadersDir();
+    
+    String vertexShaderCode = Util.readFullFile(shadersDir + "vertex.glsl");
+    vertexShaderId = compileShader(vertexShaderCode, GL_VERTEX_SHADER);
+  
+    String fragmentShaderCode = Util.readFullFile(shadersDir + "fragment.glsl");
+    fragmentShaderId = compileShader(fragmentShaderCode, GL_FRAGMENT_SHADER);
+    
+    link();
   }
   
 
-  
   /**
    * Compiles a shader program
    */
-  protected int createShader(String shaderCode, int shaderType) throws Exception {
+  public int compileShader(String shaderCode, int shaderType) throws Exception {
     int shaderId = glCreateShader(shaderType);
     if (shaderId == 0) {
-      throw new Exception("Error creating shader. Type: " + shaderType);
+      throw new RuntimeException("Error creating shader. Type: " + shaderType);
     }
     glShaderSource(shaderId, shaderCode);
     glCompileShader(shaderId);
     if (glGetShaderi(shaderId, GL_COMPILE_STATUS) == 0) {
-      throw new Exception("Error compiling Shader code: " + glGetShaderInfoLog(shaderId, 1024));
+      throw new RuntimeException("Error compiling Shader code: " + glGetShaderInfoLog(shaderId, 1024));
     }
     glAttachShader(programId, shaderId);
     return shaderId;

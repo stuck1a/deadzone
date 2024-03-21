@@ -1,5 +1,11 @@
 package deadzone;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /**
  * Support class which provides some smart general utility functions
  */
@@ -89,6 +95,17 @@ public class Util {
    */
   public static String getTilesDir()  {
     return absTilesDir;
+  }
+  
+  
+  public static String readFullFile(String path) {
+    byte[] encoded;
+    try {
+      encoded = Files.readAllBytes(Paths.get(path));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return new String(encoded, StandardCharsets.UTF_8);
   }
   
 }
