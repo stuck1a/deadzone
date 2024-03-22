@@ -18,8 +18,8 @@ public class Launcher extends AbstractScene {
 
   
   public void renderScene() {
-    
-    
+  
+    renderer.init();
     
     System.out.println("###   Do some rendering here...   ###");
     

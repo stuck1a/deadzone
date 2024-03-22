@@ -39,7 +39,6 @@ public abstract class AbstractScene {
     }
     // Initialize renderer
     renderer = new Renderer();
-    renderer.init();
   }
   
   
