@@ -1,5 +1,6 @@
 package deadzone.rendering;
 
+import deadzone.Deadzone;
 import deadzone.Util;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -61,10 +62,13 @@ public class ShaderProgram {
       glDetachShader(programId, fragmentShaderId);
     }
     // Validate the attached shaders to make sure everything works fine
-    glValidateProgram(programId);
-    if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
-      System.err.println("Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
+    if (Deadzone.getApplication().isDebugMode()) {
+      glValidateProgram(programId);
+      if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
+        System.err.println("Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
+      }
     }
+
   }
   
   
