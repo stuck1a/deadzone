@@ -1,6 +1,7 @@
 package deadzone.scenes;
 
 import deadzone.rendering.Renderable;
+import deadzone.rendering.Renderer;
 import deadzone.rendering.ShaderProgram;
 
 import java.util.EnumMap;
@@ -23,7 +24,7 @@ public abstract class AbstractScene {
    */
   Renderable[] renderObjects;
   
-  protected ShaderProgram shaders;
+  protected Renderer renderer;
   
   
   /**
@@ -36,7 +37,9 @@ public abstract class AbstractScene {
     if (!sceneMappings.containsKey(name)) {
       sceneMappings.put(name, this);
     }
-    
+    // Initialize renderer
+    renderer = new Renderer();
+    renderer.init();
   }
   
   
@@ -49,8 +52,8 @@ public abstract class AbstractScene {
   }
   
   
-  public ShaderProgram getShaders() {
-    return shaders;
+  public Renderer getRenderer() {
+    return renderer;
   }
   
   
