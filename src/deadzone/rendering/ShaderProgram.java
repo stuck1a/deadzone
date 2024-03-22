@@ -54,6 +54,7 @@ public class ShaderProgram {
     if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
       throw new Exception("Error linking Shader code: " + glGetProgramInfoLog(programId, 1024));
     }
+    
     // Remove shaders from RAM, because we have them now in the GPU
     if (vertexShaderId != 0) {
       glDetachShader(programId, vertexShaderId);
@@ -61,12 +62,10 @@ public class ShaderProgram {
     if (fragmentShaderId != 0) {
       glDetachShader(programId, fragmentShaderId);
     }
-    // Validate the attached shaders to make sure everything works fine
-    if (Deadzone.getApplication().isDebugMode()) {
-      glValidateProgram(programId);
-      if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
-        System.err.println("Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
-      }
+    
+    // Validate the attached shaders to make sure everything works fine (Debug mode only)
+    if (!validateShaders()) {
+      System.err.println("Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
     }
 
   }
@@ -104,4 +103,21 @@ public class ShaderProgram {
     glAttachShader(programId, shaderId);
     return shaderId;
   }
+  
+  
+  /**
+   * Make sure all shaders are properly linked to the GPU.
+   * Will be executed only if we are in debug mode.
+   */
+  protected boolean validateShaders() {
+    if (!Deadzone.getApplication().isDebugMode()) {
+      return true;
+    }
+    if (programId == 0) {
+      return false;
+    }
+    glValidateProgram(programId);
+    return glGetProgrami(programId, GL_VALIDATE_STATUS) != 0;
+  }
+  
 }
