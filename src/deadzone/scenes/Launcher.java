@@ -12,7 +12,7 @@ public class Launcher extends AbstractScene {
   
   private static final Scene name = Scene.LAUNCHER;
   
-  protected ShaderProgram shaders;
+//  protected ShaderProgram shaders;
   
   
   public Launcher() {

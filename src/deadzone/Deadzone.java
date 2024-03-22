@@ -211,12 +211,12 @@ public class Deadzone {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
     // Configure OpenGL 3.2 core profile
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);  // deactivate deprecated features
     // Create application window
     window = glfwCreateWindow(width, height, title, monitor, share);
-    // If the GPU doesn't support OpenGL 3.2 try 2.1 as fallback
+    // Exit if the users graphic cards doesn't support OpenGL 3.3
     if ( window == NULL ) {
       final JPanel panel = new JPanel();
       JOptionPane.showMessageDialog(
