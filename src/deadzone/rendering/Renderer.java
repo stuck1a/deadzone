@@ -36,4 +36,11 @@ public class Renderer {
   
   }
   
+  /**
+   * Free up all resources from GPU memory
+   */
+  public void cleanup() {
+  
+  }
+  
 }

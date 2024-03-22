@@ -3,8 +3,7 @@ package deadzone.rendering;
 import deadzone.Deadzone;
 import deadzone.Util;
 
-import static org.lwjgl.opengl.GL20.*;
-
+import static org.lwjgl.opengl.GL20C.*;
 
 
 /**

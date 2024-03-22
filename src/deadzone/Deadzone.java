@@ -90,10 +90,7 @@ public class Deadzone {
    * The primary execution loop
    */
   public void loop() throws InterruptedException {
-    // Detect OpenGL thread and make bindings available for use
-    GL.createCapabilities();
-    // Set the base color of the application window
-    glClearColor(1.0f, 0.0f, 0.0f, 0.5f);
+
     // Run the primary loop until window is closed
     while ( !glfwWindowShouldClose(window) ) {
       // Clear framebuffer
@@ -122,8 +119,9 @@ public class Deadzone {
     glfwFreeCallbacks(window);
     glfwDestroyWindow(window);
   
-
-  
+    // Remove all objects from GPU memory
+    renderer.cleanup();
+    
     // Terminate GLFW and free the error callback
     glfwTerminate();
     Objects.requireNonNull(glfwSetErrorCallback(null)).free();
@@ -157,6 +155,7 @@ public class Deadzone {
     }
 
     // Render the current frame
+
     renderer.renderRegisteredObjects();
   }
   
@@ -201,6 +200,10 @@ public class Deadzone {
     AbstractScene.setActiveScene(Scene.LAUNCHER);
     timer = new GameTimer(30);  // default value  // TODO: use value from stored user config, if any
     Launcher launcherScene = new Launcher();
+    // Detect OpenGL thread and make bindings available for use
+    GL.createCapabilities();
+    // Set the base color of the application window
+    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
     // Set up the renderer
     renderer = new Renderer();
     renderer.init();
