@@ -29,6 +29,7 @@ public class Launcher extends AbstractScene {
         shaders = new ShaderProgram();
         shaders.initializeBaseShaders();
         shaders.initializeBaseShaders();
+        shaders.bind();
       } catch (Exception e) {
         System.err.println("Could not initialize shaders.\n" + e.getMessage());
         return;
