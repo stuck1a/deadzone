@@ -119,6 +119,7 @@ public class Deadzone {
     // Free up resources of the rendering pipeline
     ShaderProgram shaders = AbstractScene.getActiveScene().getShaders();
     if (shaders != null) {
+      shaders.unbind();
       shaders.cleanup();
     }
   
