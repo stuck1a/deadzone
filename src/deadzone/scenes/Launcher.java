@@ -1,7 +1,7 @@
 package deadzone.scenes;
 
-import deadzone.rendering.FontRenderer;
 
+import deadzone.rendering.ShaderProgram;
 
 /**
  * This is the first rendered scene when the game is launched.
@@ -12,6 +12,8 @@ public class Launcher extends AbstractScene {
   
   private static final Scene name = Scene.LAUNCHER;
   
+  private ShaderProgram shaders;
+  
   
   public Launcher() {
     super(name);
@@ -19,16 +21,21 @@ public class Launcher extends AbstractScene {
   
   
   public void renderScene() {
-    testRenderTest();
-  }
-  
-  
-  private void testRenderTest() {
     
-    FontRenderer foo = new FontRenderer();
-    foo.writeText(50, 50, "bla");
+    // Make sure the shaders are upset
+    if (shaders == null) {
+      try {
+        shaders = new ShaderProgram();
+        shaders.initializeBaseShaders();
+        shaders.initializeBaseShaders();
+      } catch (Exception e) {
+        System.err.println("Could not initialize shaders.\n" + e.getMessage());
+        return;
+      }
+    }
+  
+    System.out.println("###   Do some rendering here...   ###");
     
   }
-  
   
 }

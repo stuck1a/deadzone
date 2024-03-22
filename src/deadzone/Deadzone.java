@@ -118,14 +118,6 @@ public class Deadzone {
     // Terminate GLFW and free the error callback
     glfwTerminate();
     Objects.requireNonNull(glfwSetErrorCallback(null)).free();
-  
-    // TEST STUFF START
-    System.out.println("getAbsoluteRootDir: " + Util.getRootDir());
-    System.out.println("getAbsoluteLibraryDir: " + Util.getLibrariesDir());
-    System.out.println("getAbsoluteAssetsDir: " + Util.getAssetsDir());
-    System.out.println("getAbsoluteFontsDir: " + Util.getFontsDir());
-    System.out.println("getAbsoluteTilesDir: " + Util.getTilesDir());
-    // TEST STUFF END
   }
   
   /**
