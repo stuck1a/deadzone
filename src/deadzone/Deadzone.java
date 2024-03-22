@@ -117,7 +117,7 @@ public class Deadzone {
     glfwDestroyWindow(window);
   
     // Free up resources of the rendering pipeline
-    ShaderProgram shaders = AbstractScene.getActiveScene().getShaders();
+    ShaderProgram shaders = AbstractScene.getActiveScene().getRenderer().getShaders();
     if (shaders != null) {
       shaders.unbind();
       shaders.cleanup();
@@ -212,12 +212,12 @@ public class Deadzone {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
     // Configure OpenGL 3.2 core profile
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);  // deactivate deprecated features
     // Create application window
     window = glfwCreateWindow(width, height, title, monitor, share);
-    // Exit if the users graphic cards doesn't support OpenGL 3.3
+    // Exit if the users graphic cards doesn't support OpenGL 3.2
     if ( window == NULL ) {
       final JPanel panel = new JPanel();
       JOptionPane.showMessageDialog(

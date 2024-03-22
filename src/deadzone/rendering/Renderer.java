@@ -7,6 +7,10 @@ public class Renderer {
   protected ShaderProgram shaders;
   
   
+  public ShaderProgram getShaders() {
+    return shaders;
+  }
+  
   public void init() {
     if (shaders == null) {
       try {
