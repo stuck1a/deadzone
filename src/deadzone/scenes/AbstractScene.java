@@ -1,6 +1,7 @@
 package deadzone.scenes;
 
 import deadzone.rendering.Renderable;
+import deadzone.rendering.ShaderProgram;
 
 import java.util.EnumMap;
 
@@ -21,6 +22,8 @@ public abstract class AbstractScene {
    * All visible objects of the scene are registered here
    */
   Renderable[] renderObjects;
+  
+  protected ShaderProgram shaders;
   
   
   /**
@@ -44,6 +47,12 @@ public abstract class AbstractScene {
   public static void setActiveScene(Scene newScene) {
     AbstractScene.activeScene = newScene;
   }
+  
+  
+  public ShaderProgram getShaders() {
+    return shaders;
+  }
+  
   
   /**
    * Adds a new visible object to the scene

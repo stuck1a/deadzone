@@ -20,6 +20,7 @@ public class ShaderProgram {
   private int fragmentShaderId;
   
   
+  
   /**
    * Creates a new empty OpenGL program
    */
@@ -30,14 +31,26 @@ public class ShaderProgram {
     }
   }
   
+  /**
+   * Activates this program for rendering
+   * by adding it to the rendering pipeline
+   */
   public void bind() {
     glUseProgram(programId);
   }
   
+  /**
+   * Deactivates this program for rendering
+   * by removing it from the rendering pipeline
+   */
   public void unbind() {
     glUseProgram(0);
   }
   
+  /**
+   * Removes all resources this program uses
+   * when they are no longer needed
+   */
   public void cleanup() {
     unbind();
     if (programId != 0) {
@@ -108,6 +121,9 @@ public class ShaderProgram {
   /**
    * Make sure all shaders are properly linked to the GPU.
    * Will be executed only if we are in debug mode.
+   * Note, that this validates against the current OpenGL state and therefore
+   * might fail even if the shaders are correct (i.e. if some data not updated yet).
+   * So don't throw an error if validation fails, just log it.
    */
   protected boolean validateShaders() {
     if (!Deadzone.getApplication().isDebugMode()) {

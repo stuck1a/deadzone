@@ -1,5 +1,6 @@
 package deadzone;
 
+import deadzone.rendering.ShaderProgram;
 import deadzone.scenes.AbstractScene;
 import deadzone.scenes.Launcher;
 import deadzone.scenes.Scene;
@@ -114,6 +115,12 @@ public class Deadzone {
     // Free the window callbacks and destroy the window
     glfwFreeCallbacks(window);
     glfwDestroyWindow(window);
+  
+    // Free up resources of the rendering pipeline
+    ShaderProgram shaders = AbstractScene.getActiveScene().getShaders();
+    if (shaders != null) {
+      shaders.cleanup();
+    }
   
     // Terminate GLFW and free the error callback
     glfwTerminate();
