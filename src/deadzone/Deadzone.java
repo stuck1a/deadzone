@@ -172,7 +172,7 @@ public class Deadzone {
     if ( !glfwInit() ) {
       throw new IllegalStateException("Unable to initialize GLFW");
     }
-    createRenderContext(800, 600, "Deadzone", NULL, NULL);
+    createRenderContext(Settings.launcherWidth, Settings.launcherHeight, Settings.windowTitle, NULL, NULL);
     
     // Get thread stack and generate initial frame
     try ( MemoryStack stack = stackPush() ) {
@@ -193,17 +193,18 @@ public class Deadzone {
     // Use OpenGL context
     glfwMakeContextCurrent(window);
     // Enable v-sync
-    glfwSwapInterval(1);
+    glfwSwapInterval(Settings.vSync ? 1 : 0);
     // Display application window
     glfwShowWindow(window);
     // Initialize timer and initial scene
     AbstractScene.setActiveScene(Scene.LAUNCHER);
-    timer = new GameTimer(30);  // default value  // TODO: use value from stored user config, if any
+    timer = new GameTimer(Settings.defaultFPS);  // default value  // TODO: use value from stored user config, if any
     Launcher launcherScene = new Launcher();
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
     // Set the base color of the application window
-    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+    float[] baseColor = Settings.baseColorRGBA;
+    glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
     // Set up the renderer
     renderer = new Renderer();
     renderer.init();
@@ -219,8 +220,8 @@ public class Deadzone {
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hide until init is done
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
     // Configure OpenGL 3.2 core profile
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Settings.majorVersionOpenGL);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Settings.minorVersionOpenGL);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);  // deactivate deprecated features
     // Create application window
