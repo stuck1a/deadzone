@@ -1,5 +1,6 @@
 package deadzone;
 
+import deadzone.rendering.Renderer;
 import deadzone.rendering.ShaderProgram;
 import deadzone.scenes.AbstractScene;
 import deadzone.scenes.Launcher;
@@ -25,6 +26,7 @@ public class Deadzone {
   private GameState gameState = GameState.STOPPED;
   private long window;
   private GameTimer timer;
+  private Renderer renderer;
   private static Deadzone app;
   private boolean debugMode = false;
   
@@ -39,6 +41,10 @@ public class Deadzone {
   
   public static Deadzone getApplication() {
     return app;
+  }
+  
+  public Renderer getRenderer() {
+    return renderer;
   }
   
   public GameState getGameState() {
@@ -86,8 +92,8 @@ public class Deadzone {
   public void loop() throws InterruptedException {
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
-    // Set black as base color of the application window
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    // Set the base color of the application window
+    glClearColor(1.0f, 0.0f, 0.0f, 0.5f);
     // Run the primary loop until window is closed
     while ( !glfwWindowShouldClose(window) ) {
       // Clear framebuffer
@@ -116,12 +122,7 @@ public class Deadzone {
     glfwFreeCallbacks(window);
     glfwDestroyWindow(window);
   
-    // Free up resources of the rendering pipeline
-    ShaderProgram shaders = AbstractScene.getActiveScene().getRenderer().getShaders();
-    if (shaders != null) {
-      shaders.unbind();
-      shaders.cleanup();
-    }
+
   
     // Terminate GLFW and free the error callback
     glfwTerminate();
@@ -155,8 +156,8 @@ public class Deadzone {
       System.out.println("----------------------------");
     }
 
-    // Render the current scene
-    AbstractScene.getActiveScene().renderScene();
+    // Render the current frame
+    renderer.renderRegisteredObjects();
   }
   
   
@@ -200,7 +201,11 @@ public class Deadzone {
     AbstractScene.setActiveScene(Scene.LAUNCHER);
     timer = new GameTimer(30);  // default value  // TODO: use value from stored user config, if any
     Launcher launcherScene = new Launcher();
+    // Set up the renderer
+    renderer = new Renderer();
+    renderer.init();
   }
+  
   
   /**
    * Set up GLFW to use the OpenGL 3.2 core profile for rendering

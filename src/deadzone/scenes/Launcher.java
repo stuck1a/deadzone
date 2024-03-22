@@ -15,14 +15,5 @@ public class Launcher extends AbstractScene {
     super(name);
   }
   
-
-  
-  public void renderScene() {
-  
-    renderer.init();
-    
-    System.out.println("###   Do some rendering here...   ###");
-    
-  }
   
 }

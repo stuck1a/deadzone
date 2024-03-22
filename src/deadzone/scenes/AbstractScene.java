@@ -1,8 +1,8 @@
 package deadzone.scenes;
 
+import deadzone.Deadzone;
 import deadzone.rendering.Renderable;
 import deadzone.rendering.Renderer;
-import deadzone.rendering.ShaderProgram;
 
 import java.util.EnumMap;
 
@@ -24,8 +24,6 @@ public abstract class AbstractScene {
    */
   Renderable[] renderObjects;
   
-  protected Renderer renderer;
-  
   
   /**
    * Base constructor for every scene. Generates the mapping,
@@ -33,12 +31,9 @@ public abstract class AbstractScene {
    */
   public AbstractScene(Scene name) {
     // Only add this scene to the scene class mapping on first initialization of the actual scene
-    // TODO: Move into static initializer block
     if (!sceneMappings.containsKey(name)) {
       sceneMappings.put(name, this);
     }
-    // Initialize renderer
-    renderer = new Renderer();
   }
   
   
@@ -50,11 +45,7 @@ public abstract class AbstractScene {
     AbstractScene.activeScene = newScene;
   }
   
-  
-  public Renderer getRenderer() {
-    return renderer;
-  }
-  
+
   
   /**
    * Adds a new visible object to the scene
@@ -76,12 +67,9 @@ public abstract class AbstractScene {
   
   
   /**
-   * Default renderer for scenes, called in every render loop
-   * If a scene doesn't provide an own scene rendere, this one is used which simply
-   * renders every registered object
+   * Sends a prepared renderable object to the renderer so that the renderer knows what and how to draw
    */
-  public void renderScene() {
-  
+  protected void addObjectToRenderer() {
+    Renderer renderer = Deadzone.getApplication().getRenderer();
   }
-  
 }
