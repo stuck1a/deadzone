@@ -7,17 +7,24 @@ import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
  * This class is responsible for creating and managing the game window with help of LWJGL
  */
 public class Window {
-
-  /** Stores the window handle */
   private static long handle;
+  private int height;
+  private int width;
+  private String title;
+  private long monitor;
   
   
   public Window(int width, int height, String title, long monitor, long share) {
+    // Fill class fields
+    this.width = width;
+    this.height = height;
+    this.title = title;
+    this.monitor = monitor;
     // Configure the window (launcher scene)
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hide until init is done
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
-    // Configure OpenGL 3.2 core profile
+    // Configure OpenGL
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Settings.majorVersionOpenGL);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Settings.minorVersionOpenGL);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -28,6 +35,22 @@ public class Window {
   
   public long getHandle() {
     return handle;
+  }
+  
+  public int getHeight() {
+    return height;
+  }
+  
+  public int getWidth() {
+    return width;
+  }
+  
+  public String getTitle() {
+    return title;
+  }
+  
+  public long getMonitorHandle() {
+    return monitor;
   }
   
 }

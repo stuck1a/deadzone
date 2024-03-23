@@ -67,6 +67,21 @@ public abstract class AbstractScene {
   
   
   /**
+   * Processes all user inputs the active scene provides
+   */
+  public void processInputs() {
+  
+  }
+  
+  
+  /**
+   * Updates all objects in the active scene
+   */
+  public void updateRegisteredObjects() {
+  
+  }
+  
+  /**
    * Sends a prepared renderable object to the renderer so that the renderer knows what and how to draw
    */
   protected void addObjectToRenderer() {
