@@ -1,10 +1,7 @@
 package deadzone.rendering;
 
-import deadzone.rendering.ShaderProgram;
-
 import java.util.ArrayList;
 
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
 
 
@@ -12,12 +9,14 @@ public class Renderer {
   /** Stores the shader program in which is the connector object to all shader programs in the GPU memory */
   protected ShaderProgram shaders;
   
-  /** Stores all handles of objects which are currently stored in the GPU memory for rendering */
-  ArrayList<Integer> registeredObjects = new ArrayList<>();
+  /** Stores all handles of VBO objects which are currently stored in the GPU memory for rendering */
+  ArrayList<VertexBufferObject> registeredVboObjects = new ArrayList<>();
   
+  /** Stores all handles of VAO objects which are currently stored in the GPU memory for rendering */
+  ArrayList<VertexArrayObject> registeredVaoObjects = new ArrayList<>();
   
   public Renderer() {
-
+    init();
   }
   
   public ShaderProgram getShaders() {
@@ -48,18 +47,30 @@ public class Renderer {
    * Renders a predefined triangle for testing purposes
    */
   private void drawTriangle() {
-    VertexBufferObject vboTriangle = new VertexBufferObject(
+    // Create the VAO
+    VertexArrayObject vaoTriangle1 = new VertexArrayObject();
+    vaoTriangle1.initialize();
+
+   // Create the VBO
+    VertexBufferObject vboTriangle1 = new VertexBufferObject(
       new float[]{
       //   x     y     z   R   G   B
-        0.5f, 1.0f, 0.0f, 1f, 1f, 1f,  // A
-        0.0f, 0.0f, 0.0f, 1f, 1f, 1f,  // B
-        1.0f, 0.0f, 0.0f, 1f, 1f, 1f   // C
+        0.5f, 1.0f, 0.0f, 1f, 0f, 0f,  // A
+        0.0f, 0.0f, 0.0f, 0f, 1f, 0f,  // B
+        1.0f, 0.0f, 0.0f, 0f, 0f, 1f   // C
       }
     );
-    vboTriangle.initialize();
+    vboTriangle1.initialize();
     
-    // Register the triangle
-    registeredObjects.add(vboTriangle.getID());
+    // TODO: Bind the VBO to the VAO ???
+    
+    
+    // Register all objects related to the triangle
+    registeredVboObjects.add(vboTriangle1);
+    registeredVaoObjects.add(vaoTriangle1);
+    
+    // Draw the Triangle
+    vboTriangle1.render();
   }
   
   
@@ -69,9 +80,12 @@ public class Renderer {
   public void cleanup() {
   
     // Iterate through all registered objects and remove their graphic data from the GPU
-    for (int handle : registeredObjects) {
-      glDeleteVertexArrays(handle);  // For VAOs
-      glDeleteBuffers(handle);      // For VBOs
+    for (VertexBufferObject vbo : registeredVboObjects) {
+      vbo.delete();
+    }
+    
+    for (VertexArrayObject vao : registeredVaoObjects) {
+      vao.delete();
     }
     
     // Remove the shaders from the GPU memory

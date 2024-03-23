@@ -1,5 +1,8 @@
 package deadzone.math;
 
+import java.nio.FloatBuffer;
+
+
 /**
  * This class represents a 4x4-Matrix.
  * GLSL equivalent to mat4.
@@ -16,9 +19,9 @@ public class Matrix4f {
     setIdentity();
   }
   
+  
   /**
    * Creates a 4x4 matrix with specified columns.
-   *
    * @param col1 Vector with values of the first column
    * @param col2 Vector with values of the second column
    * @param col3 Vector with values of the third column
@@ -46,6 +49,7 @@ public class Matrix4f {
     m33 = col4.w;
   }
   
+  
   /**
    * Sets this matrix to the identity matrix.
    */
@@ -69,11 +73,10 @@ public class Matrix4f {
     m32 = 0f;
   }
   
+  
   /**
    * Adds this matrix to another matrix.
-   *
    * @param other The other matrix
-   *
    * @return Sum of this + other
    */
   public Matrix4f add(Matrix4f other) {
@@ -102,31 +105,29 @@ public class Matrix4f {
     return result;
   }
   
+  
   /**
    * Negates this matrix.
-   *
    * @return Negated matrix
    */
   public Matrix4f negate() {
     return multiply(-1f);
   }
   
+  
   /**
    * Subtracts this matrix from another matrix.
-   *
    * @param other The other matrix
-   *
    * @return Difference of this - other
    */
   public Matrix4f subtract(Matrix4f other) {
     return this.add(other.negate());
   }
   
+  
   /**
    * Multiplies this matrix with a scalar.
-   *
    * @param scalar The scalar
-   *
    * @return Scalar product of this * scalar
    */
   public Matrix4f multiply(float scalar) {
@@ -155,11 +156,10 @@ public class Matrix4f {
     return result;
   }
   
+  
   /**
    * Multiplies this matrix to a vector.
-   *
    * @param vector The vector
-   *
    * @return Vector product of this * other
    */
   public Vector4f multiply(Vector4f vector) {
@@ -170,11 +170,10 @@ public class Matrix4f {
     return new Vector4f(x, y, z, w);
   }
   
+  
   /**
    * Multiplies this matrix to another matrix.
-   *
    * @param other The other matrix
-   *
    * @return Matrix product of this * other
    */
   public Matrix4f multiply(Matrix4f other) {
@@ -203,9 +202,9 @@ public class Matrix4f {
     return result;
   }
   
+  
   /**
    * Transposes this matrix.
-   *
    * @return Transposed matrix
    */
   public Matrix4f transpose() {
@@ -234,9 +233,9 @@ public class Matrix4f {
     return result;
   }
   
+  
   /**
    * Stores the matrix in a given Buffer.
-   *
    * @param buffer The buffer to store the matrix data
    */
   public void toBuffer(FloatBuffer buffer) {
@@ -247,17 +246,16 @@ public class Matrix4f {
     buffer.flip();
   }
   
+  
   /**
    * Creates a orthographic projection matrix. Similar to
    * <code>glOrtho(left, right, bottom, top, near, far)</code>.
-   *
    * @param left   Coordinate for the left vertical clipping pane
    * @param right  Coordinate for the right vertical clipping pane
    * @param bottom Coordinate for the bottom horizontal clipping pane
    * @param top    Coordinate for the bottom horizontal clipping pane
    * @param near   Coordinate for the near depth clipping pane
    * @param far    Coordinate for the far depth clipping pane
-   *
    * @return Orthographic matrix
    */
   public static Matrix4f orthographic(float left, float right, float bottom, float top, float near, float far) {
@@ -277,19 +275,16 @@ public class Matrix4f {
     return ortho;
   }
   
+  
   /**
    * Creates a perspective projection matrix. Similar to
    * <code>glFrustum(left, right, bottom, top, near, far)</code>.
-   *
    * @param left   Coordinate for the left vertical clipping pane
    * @param right  Coordinate for the right vertical clipping pane
    * @param bottom Coordinate for the bottom horizontal clipping pane
    * @param top    Coordinate for the bottom horizontal clipping pane
-   * @param near   Coordinate for the near depth clipping pane, must be
-   *               positive
-   * @param far    Coordinate for the far depth clipping pane, must be
-   *               positive
-   *
+   * @param near   Coordinate for the near depth clipping pane, must be positive
+   * @param far    Coordinate for the far depth clipping pane, must be positive
    * @return Perspective matrix
    */
   public static Matrix4f frustum(float left, float right, float bottom, float top, float near, float far) {
@@ -312,17 +307,14 @@ public class Matrix4f {
     return frustum;
   }
   
+  
   /**
    * Creates a perspective projection matrix. Similar to
    * <code>gluPerspective(fovy, aspec, zNear, zFar)</code>.
-   *
    * @param fovy   Field of view angle in degrees
    * @param aspect The aspect ratio is the ratio of width to height
-   * @param near   Distance from the viewer to the near clipping plane, must
-   *               be positive
-   * @param far    Distance from the viewer to the far clipping plane, must be
-   *               positive
-   *
+   * @param near   Distance from the viewer to the near clipping plane, must be positive
+   * @param far    Distance from the viewer to the far clipping plane, must be positive
    * @return Perspective matrix
    */
   public static Matrix4f perspective(float fovy, float aspect, float near, float far) {
@@ -340,14 +332,13 @@ public class Matrix4f {
     return perspective;
   }
   
+  
   /**
    * Creates a translation matrix. Similar to
    * <code>glTranslate(x, y, z)</code>.
-   *
    * @param x x coordinate of translation vector
    * @param y y coordinate of translation vector
    * @param z z coordinate of translation vector
-   *
    * @return Translation matrix
    */
   public static Matrix4f translate(float x, float y, float z) {
@@ -360,15 +351,14 @@ public class Matrix4f {
     return translation;
   }
   
+  
   /**
    * Creates a rotation matrix. Similar to
    * <code>glRotate(angle, x, y, z)</code>.
-   *
    * @param angle Angle of rotation in degrees
    * @param x     x coordinate of the rotation vector
    * @param y     y coordinate of the rotation vector
    * @param z     z coordinate of the rotation vector
-   *
    * @return Rotation matrix
    */
   public static Matrix4f rotate(float angle, float x, float y, float z) {
@@ -396,6 +386,7 @@ public class Matrix4f {
     
     return rotation;
   }
+  
   
   /**
    * Creates a scaling matrix. Similar to <code>glScale(x, y, z)</code>.

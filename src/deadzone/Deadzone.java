@@ -155,7 +155,6 @@ public class Deadzone {
     }
 
     // Render the current frame
-
     renderer.renderRegisteredObjects();
   }
   
@@ -207,7 +206,6 @@ public class Deadzone {
     glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
     // Set up the renderer
     renderer = new Renderer();
-    renderer.init();
   }
   
   

@@ -3,7 +3,6 @@ package deadzone.rendering;
 import deadzone.Deadzone;
 import org.lwjgl.system.MemoryStack;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -67,8 +66,8 @@ public class VertexBufferObject {
     // Specify how to use the received data
     specifyVertexAttributes();
 
-    // Set up uniform variables to allow transformations for camera rotation etc
-    specifyUniformData();
+    // Set up uniform variables to allow transformations for camera rotation and such
+    //specifyUniformData();
   }
   
   
@@ -128,21 +127,16 @@ public class VertexBufferObject {
   
   
   /**
-   * Generates some matrices which reflect the vertex data, so we can transform it, if necessary
+   * Generates uniform data for whatever
    */
   private void specifyUniformData() {
-    //int uniModel = glGetUniformLocation(shaderProgram, "model");
-    //Matrix4f model = new Matrix4f();
-    //glUniformMatrix4fv(uniModel, false, model.getBuffer());
-    
-    //int uniView = glGetUniformLocation(shaderProgram, "view");
-    //Matrix4f view = new Matrix4f();
-    //glUniformMatrix4fv(uniView, false, view.getBuffer());
-    
-    //int uniProjection = glGetUniformLocation(shaderProgram, "projection");
-    //float ratio = 640f / 480f;
-    //Matrix4f projection = Matrix4f.orthographic(-ratio, ratio, -1f, 1f, -1f, 1f);
-    //glUniformMatrix4fv(uniProjection, false, projection.getBuffer());
+    int shaderProgram = Deadzone.getApplication().getRenderer().getShaders().getProgramId();
+    int uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, false, vertices);
+    int uniView = glGetUniformLocation(shaderProgram, "view");
+    glUniformMatrix4fv(uniView, false, vertices);
+    int uniProjection = glGetUniformLocation(shaderProgram, "projection");
+    glUniformMatrix4fv(uniProjection, false, vertices);
   }
   
 }

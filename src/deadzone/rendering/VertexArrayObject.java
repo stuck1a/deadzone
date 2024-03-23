@@ -9,7 +9,7 @@ import static org.lwjgl.opengl.GL30.*;
  */
 public class VertexArrayObject {
 
-  /** The handler to access the native VAO variant OpenGL uses */
+  /** The handler to access the native VAO object in the GPU */
   private final int vaoId;
   
   
@@ -17,19 +17,24 @@ public class VertexArrayObject {
     vaoId = glGenVertexArrays();
   }
   
+  
+  public void initialize() {
+    bind();
+  }
+  
+  
   public int getID() {
     return vaoId;
   }
   
-  public void bind() {
-    glBindVertexArray(vaoId);
-  }
   
   public void delete() {
     glDeleteVertexArrays(vaoId);
   }
   
-
   
+  private void bind() {
+    glBindVertexArray(vaoId);
+  }
   
 }
