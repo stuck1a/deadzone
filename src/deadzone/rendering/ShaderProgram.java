@@ -30,6 +30,30 @@ public class ShaderProgram {
     }
   }
   
+  
+  /**
+   * Returns the program handle which points to the shader program in the GPU memory
+   */
+  public int getProgramId() {
+    return programId;
+  }
+  
+  /**
+   * Returns the vertex shader handle which points to the vertex shader in the GPU memory
+   */
+  public int getVertexShaderId() {
+    return vertexShaderId;
+  }
+  
+  /**
+   * Returns the fragment shader handle which points to the vertex shader in the GPU memory
+   */
+  public int getFragmentShaderId() {
+    return fragmentShaderId;
+  }
+  
+  
+  
   /**
    * Activates this program for rendering
    * by adding it to the rendering pipeline

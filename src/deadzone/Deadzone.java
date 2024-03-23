@@ -119,7 +119,7 @@ public class Deadzone {
     glfwFreeCallbacks(window);
     glfwDestroyWindow(window);
   
-    // Remove all objects from GPU memory
+    // Remove all graphic data from GPU
     renderer.cleanup();
     
     // Terminate GLFW and free the error callback
