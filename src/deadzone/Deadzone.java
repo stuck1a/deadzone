@@ -1,7 +1,6 @@
 package deadzone;
 
 import deadzone.rendering.Renderer;
-import deadzone.rendering.ShaderProgram;
 import deadzone.scenes.AbstractScene;
 import deadzone.scenes.Launcher;
 import deadzone.scenes.Scene;
@@ -24,14 +23,14 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Deadzone {
   private GameState gameState = GameState.STOPPED;
-  private long window;
+  private Window window;
   private GameTimer timer;
   private Renderer renderer;
   private static Deadzone app;
   private boolean debugMode = false;
   
   
-  public long getWindowHandle() {
+  public Window getWindowHandle() {
     return window;
   }
   
@@ -90,13 +89,13 @@ public class Deadzone {
    * The primary execution loop
    */
   public void loop() throws InterruptedException {
-
+    long windowHandle = window.getHandle();
     // Run the primary loop until window is closed
-    while ( !glfwWindowShouldClose(window) ) {
+    while ( !glfwWindowShouldClose(windowHandle) ) {
       // Clear framebuffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       // Swap color buffers
-      glfwSwapBuffers(window);
+      glfwSwapBuffers(windowHandle);
       // Check for events like pressed keys and such
       glfwPollEvents();
       // Execute all content related game loop subroutines
@@ -114,13 +113,15 @@ public class Deadzone {
    * Executed when the application will or shall be closed.
    */
   public void shutdown() {
-    // Free up all resources and release callbacks
-    // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
+    long windowHandle = window.getHandle();
   
     // Remove all graphic data from GPU
     renderer.cleanup();
+    
+    // Free up all resources and release callbacks
+    // Free the window callbacks and destroy the window
+    glfwFreeCallbacks(windowHandle);
+    glfwDestroyWindow(windowHandle);
     
     // Terminate GLFW and free the error callback
     glfwTerminate();
@@ -171,33 +172,36 @@ public class Deadzone {
     if ( !glfwInit() ) {
       throw new IllegalStateException("Unable to initialize GLFW");
     }
-    createRenderContext(Settings.launcherWidth, Settings.launcherHeight, Settings.windowTitle, NULL, NULL);
+    
+    // Create render context (also creates the window)
+    createRenderContext();
+    long windowHandle = window.getHandle();
     
     // Get thread stack and generate initial frame
     try ( MemoryStack stack = stackPush() ) {
       IntBuffer pWidth = stack.mallocInt(1); // int*
       IntBuffer pHeight = stack.mallocInt(1); // int*
       // Get the window size passed to glfwCreateWindow
-      glfwGetWindowSize(window, pWidth, pHeight);
+      glfwGetWindowSize(windowHandle, pWidth, pHeight);
       // Get primary monitor resolution
       GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
       // Center window
       assert vidmode != null;
       glfwSetWindowPos(
-        window,
+        windowHandle,
         (vidmode.width() - pWidth.get(0)) / 2,
         (vidmode.height() - pHeight.get(0)) / 2
       );
     }
     // Use OpenGL context
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(windowHandle);
     // Enable v-sync
     glfwSwapInterval(Settings.vSync ? 1 : 0);
     // Display application window
-    glfwShowWindow(window);
+    glfwShowWindow(windowHandle);
     // Initialize timer and initial scene
     AbstractScene.setActiveScene(Scene.LAUNCHER);
-    timer = new GameTimer(Settings.defaultFPS);  // default value  // TODO: use value from stored user config, if any
+    timer = new GameTimer(Settings.targetFPS);
     Launcher launcherScene = new Launcher();
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
@@ -210,29 +214,18 @@ public class Deadzone {
   
   
   /**
-   * Set up GLFW to use the OpenGL 3.2 core profile for rendering
+   * Set up GLFW to use the desired OpenGL version with core profile for rendering
    */
-  private void createRenderContext(int width, int height, String title, long monitor, long share) {
-    // Configure the window (launcher scene)
-    glfwDefaultWindowHints();
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hide until init is done
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
-    // Configure OpenGL 3.2 core profile
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Settings.majorVersionOpenGL);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Settings.minorVersionOpenGL);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);  // deactivate deprecated features
-    // Create application window
-    window = glfwCreateWindow(width, height, title, monitor, share);
-    // Exit if the users graphic cards doesn't support OpenGL 3.2
-    if ( window == NULL ) {
+  private void createRenderContext() {
+    window = new Window(Settings.launcherWidth, Settings.launcherHeight, Settings.windowTitle, NULL, NULL);
+    // Exit if the users graphic cards doesn't support the required OpenGL version
+    if ( window.getHandle() == NULL ) {
+      String msg = "Your graphics card does not support OpenGL "
+                 + Settings.majorVersionOpenGL + "." + Settings.minorVersionOpenGL + ".\n"
+                 + "Unfortunately, this means that '" + Settings.windowTitle + "' will not run on your system.\n"
+                 + "You can try to update your graphic card drivers to solve this, but there is no guarantee.";
       final JPanel panel = new JPanel();
-      JOptionPane.showMessageDialog(
-        panel,
-        "It appears that your graphics card does not support OpenGL 3.1.\nUnfortunately, this means that 'Deadzone' will not run on your system.",
-        "Failed to create the GLFW window",
-        JOptionPane.ERROR_MESSAGE
-      );
+      JOptionPane.showMessageDialog(panel, msg, "Failed to create the GLFW window", JOptionPane.ERROR_MESSAGE);
       glfwTerminate();
       throw new RuntimeException("Failed to create the GLFW window");
     }
