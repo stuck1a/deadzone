@@ -2,6 +2,8 @@ package deadzone.rendering;
 
 import deadzone.rendering.ShaderProgram;
 
+import java.util.ArrayList;
+
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
 
@@ -11,11 +13,11 @@ public class Renderer {
   protected ShaderProgram shaders;
   
   /** Stores all handles of objects which are currently stored in the GPU memory for rendering */
-  int[] registeredObjects;
+  ArrayList<Integer> registeredObjects = new ArrayList<>();
   
   
   public Renderer() {
-  
+
   }
   
   public ShaderProgram getShaders() {
@@ -46,19 +48,18 @@ public class Renderer {
    * Renders a predefined triangle for testing purposes
    */
   private void drawTriangle() {
-    // Initialize the triangle
     VertexBufferObject vboTriangle = new VertexBufferObject(
       new float[]{
-      //  x      y    z   r   g   b
-        -0.6f, -0.4f, 0f, 1f, 0f, 0f,
-         0.6f, -0.4f, 0f, 0f, 1f, 0f,
-         0.0f,  0.6f, 0f, 0f, 0f, 1f
+      //   x     y     z   R   G   B
+        0.5f, 1.0f, 0.0f, 1f, 1f, 1f,  // A
+        0.0f, 0.0f, 0.0f, 1f, 1f, 1f,  // B
+        1.0f, 0.0f, 0.0f, 1f, 1f, 1f   // C
       }
     );
+    vboTriangle.initialize();
     
-    // Register the triangle, so we can clean up its graphic data on shutdown (we need at least the VAO and VBO handles)
-    
-    
+    // Register the triangle
+    registeredObjects.add(vboTriangle.getID());
   }
   
   
@@ -68,8 +69,10 @@ public class Renderer {
   public void cleanup() {
   
     // Iterate through all registered objects and remove their graphic data from the GPU
-    //glDeleteVertexArrays(vao);
-    //glDeleteBuffers(vbo);
+    for (int handle : registeredObjects) {
+      glDeleteVertexArrays(handle);  // For VAOs
+      glDeleteBuffers(handle);      // For VBOs
+    }
     
     // Remove the shaders from the GPU memory
     int vertexShader = shaders.getVertexShaderId();
