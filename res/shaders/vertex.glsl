@@ -1,7 +1,16 @@
-#version 330
+#version 150 core
 
-layout (location=0) in vec3 position;
+in vec3 position;
+in vec3 color;
+
+out vec3 vertexColor;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main() {
-    gl_Position = vec4(position, 1.0);
+  vertexColor = color;
+  mat4 mvp = projection * view * model;
+  gl_Position = mvp * vec4(position, 1.0);
 }

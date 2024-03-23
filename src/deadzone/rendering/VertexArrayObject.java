@@ -1,5 +1,7 @@
 package deadzone.rendering;
 
+import static org.lwjgl.opengl.GL30.*;
+
 /**
  * This class represents a single renderable object in the GPU memory with all its data in an OpenGL compatible format.
  * It consists of multiple VBOs and groups them all together.
@@ -7,4 +9,15 @@ package deadzone.rendering;
  */
 public class VertexArrayObject {
 
+  /** The handler to access the native VAO variant OpenGL uses */
+  private int vaoId;
+  
+  
+  public VertexArrayObject() {
+    vaoId = glGenVertexArrays();
+    glBindVertexArray(vaoId);
+  }
+  
+  
+  
 }
