@@ -109,34 +109,21 @@ public class VertexBufferObject {
   
   
   /**
-   * Defines exactly what value of the input shall be used for and where it is located in the buffer
+   * Defines exactly what value of the input shall be used for and where it is located in the buffer.
+   * OpenGL will automatically link the attribute information to the currently bound VAO.
    */
   private void specifyVertexAttributes() {
-    int shaderProgram = Deadzone.getApplication().getRenderer().getShaders().getProgramId();
+    int shaderProgram = Deadzone.getApplication().getRenderer().getShaderProgram().getProgramId();
     
-    // Define the position data (float values 1-3)
+    // Define the position data (float values 1+2)
     int positionAttribute = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, false, 6 * Float.BYTES, 0);
+    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 0, 0);
     
-    // Define the color data (float values 4-6)
+    // Define the color data (float values 3-5)
     int colorAttribute = glGetAttribLocation(shaderProgram, "color");
     glEnableVertexAttribArray(colorAttribute);
-    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
-  }
-  
-  
-  /**
-   * Generates uniform data for whatever
-   */
-  private void specifyUniformData() {
-    int shaderProgram = Deadzone.getApplication().getRenderer().getShaders().getProgramId();
-    int uniModel = glGetUniformLocation(shaderProgram, "model");
-    glUniformMatrix4fv(uniModel, false, vertices);
-    int uniView = glGetUniformLocation(shaderProgram, "view");
-    glUniformMatrix4fv(uniView, false, vertices);
-    int uniProjection = glGetUniformLocation(shaderProgram, "projection");
-    glUniformMatrix4fv(uniProjection, false, vertices);
+    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, false, 0, 2 * Float.BYTES);
   }
   
 }

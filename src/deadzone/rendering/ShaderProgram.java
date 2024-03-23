@@ -3,7 +3,7 @@ package deadzone.rendering;
 import deadzone.Deadzone;
 import deadzone.Util;
 
-import static org.lwjgl.opengl.GL20C.*;
+import static org.lwjgl.opengl.GL20.*;
 
 
 /**
@@ -108,7 +108,7 @@ public class ShaderProgram {
   
   
   /**
-   * Initializes the vertex and fragment shader
+   * Set up the vertex and fragment shader
    */
   public void initializeBaseShaders() throws Exception {
     String shadersDir = Util.getShadersDir();

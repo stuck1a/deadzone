@@ -17,24 +17,16 @@ public class VertexArrayObject {
     vaoId = glGenVertexArrays();
   }
   
-  
-  public void initialize() {
-    bind();
-  }
-  
-  
   public int getID() {
     return vaoId;
   }
   
+  public void bind() {
+    glBindVertexArray(vaoId);
+  }
   
   public void delete() {
     glDeleteVertexArrays(vaoId);
-  }
-  
-  
-  private void bind() {
-    glBindVertexArray(vaoId);
   }
   
 }

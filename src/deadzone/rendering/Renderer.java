@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer {
   /** Stores the shader program in which is the connector object to all shader programs in the GPU memory */
-  protected ShaderProgram shaders;
+  protected ShaderProgram shaderProgram;
   
   /** Stores all handles of VBO objects which are currently stored in the GPU memory for rendering */
   ArrayList<VertexBufferObject> registeredVboObjects = new ArrayList<>();
@@ -19,19 +19,19 @@ public class Renderer {
     init();
   }
   
-  public ShaderProgram getShaders() {
-    return shaders;
+  public ShaderProgram getShaderProgram() {
+    return shaderProgram;
   }
   
   public void init() {
-    if (shaders == null) {
+    if (shaderProgram == null) {
       try {
-        shaders = new ShaderProgram();
-        shaders.initializeBaseShaders();
-        shaders.bind();
+        shaderProgram = new ShaderProgram();
+        shaderProgram.initializeBaseShaders();
+        glBindFragDataLocation(shaderProgram.getProgramId(), 0, "outColor");
+        shaderProgram.bind();
       } catch (Exception e) {
         System.err.println("Could not initialize shaders.\n" + e.getMessage());
-        return;
       }
     }
   }
@@ -49,21 +49,16 @@ public class Renderer {
   private void drawTriangle() {
     // Create the VAO
     VertexArrayObject vaoTriangle1 = new VertexArrayObject();
-    vaoTriangle1.initialize();
+    vaoTriangle1.bind();
 
    // Create the VBO
-    VertexBufferObject vboTriangle1 = new VertexBufferObject(
-      new float[]{
-      //   x     y     z   R   G   B
-        0.5f, 1.0f, 0.0f, 1f, 0f, 0f,  // A
-        0.0f, 0.0f, 0.0f, 0f, 1f, 0f,  // B
-        1.0f, 0.0f, 0.0f, 0f, 0f, 1f   // C
-      }
-    );
+    VertexBufferObject vboTriangle1 = new VertexBufferObject(new float[]{
+     //  x     y   R   G   B
+      0.5f, 1.0f, 1f, 0f, 0f,  // Point A
+      0.0f, 0.0f, 0f, 1f, 0f,  // Point B
+      1.0f, 0.0f, 0f, 0f, 1f   // Point C
+    });
     vboTriangle1.initialize();
-    
-    // TODO: Bind the VBO to the VAO ???
-    
     
     // Register all objects related to the triangle
     registeredVboObjects.add(vboTriangle1);
@@ -89,19 +84,16 @@ public class Renderer {
     }
     
     // Remove the shaders from the GPU memory
-    int vertexShader = shaders.getVertexShaderId();
-    int fragmentShader = shaders.getFragmentShaderId();
-    int shaderProgram = shaders.getProgramId();
-    
+    int vertexShader = shaderProgram.getVertexShaderId();
+    int fragmentShader = shaderProgram.getFragmentShaderId();
+
     if (vertexShader != 0) {
       glDeleteShader(vertexShader);
     }
     if (fragmentShader != 0) {
       glDeleteShader(fragmentShader);
     }
-    if (shaderProgram != 0) {
-      glDeleteProgram(shaderProgram);
-    }
+    this.shaderProgram.cleanup();
   }
   
 }

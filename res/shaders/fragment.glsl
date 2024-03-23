@@ -2,8 +2,8 @@
 
 in vec3 vertexColor;
 
-out vec4 fragColor;
+out vec4 outColor;
 
 void main() {
-  fragColor = vec4(vertexColor, 1.0);
+  outColor = vec4(vertexColor, 1.0);
 }
