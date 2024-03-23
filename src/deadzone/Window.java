@@ -20,7 +20,7 @@ public class Window {
     this.height = height;
     this.title = title;
     this.monitor = monitor;
-    // Configure the window (launcher scene)
+    // Configure the window for the launcher scene
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hide until init is done
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable

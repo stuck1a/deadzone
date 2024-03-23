@@ -63,6 +63,12 @@ public class Deadzone {
    * @param args Launcher arguments
    */
   public static void main(String[] args) throws InterruptedException {
+    
+    // ONLY DO THE RENDER TEST, NOTHING ELSE
+    TestForOpenGL testing = new TestForOpenGL();
+    testing.executeTest();
+    
+    /*
     app = new Deadzone();
     // Process arguments
     for (String arg: args) {
@@ -73,6 +79,7 @@ public class Deadzone {
       }
     }
     app.run();
+    */
   }
   
   /**
