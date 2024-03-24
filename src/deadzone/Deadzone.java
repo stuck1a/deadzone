@@ -63,19 +63,6 @@ public class Deadzone {
    * @param args Launcher arguments
    */
   public static void main(String[] args) throws InterruptedException {
-    
-    // USE THE RENDER TEST CLASS 1
-    TestForOpenGL_1 testing = new TestForOpenGL_1();
-//    TestForOpenGL_2 testing = new TestForOpenGL_2();
-    
-    try {
-      testing.executeTest();
-    } catch (java.lang.Exception e) {
-      System.err.println(e.getMessage());
-    }
-  
-
-    /*
     app = new Deadzone();
     // Process arguments
     for (String arg: args) {
@@ -86,7 +73,6 @@ public class Deadzone {
       }
     }
     app.run();
-    */
   }
   
   /**
@@ -108,14 +94,14 @@ public class Deadzone {
     while ( !glfwWindowShouldClose(windowHandle) ) {
       // Clear framebuffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      // Swap color buffers
-      glfwSwapBuffers(windowHandle);
       // Check for events like pressed keys and such
       glfwPollEvents();
       // Execute all content related game loop subroutines
       input();
       update();
       render();
+      // Swap color buffers
+      glfwSwapBuffers(windowHandle);
       // Update the game timer
       timer.updateTimer();
       // Keep the target frame rate
@@ -213,7 +199,7 @@ public class Deadzone {
     glfwSwapInterval(Settings.vSync ? 1 : 0);
     // Display application window
     glfwShowWindow(windowHandle);
-    // Initialize timer and initial scene
+    // Initialize timer
     AbstractScene.setActiveScene(Scene.LAUNCHER);
     timer = new GameTimer(Settings.targetFPS);
     Launcher launcherScene = new Launcher();
@@ -244,5 +230,9 @@ public class Deadzone {
       throw new RuntimeException("Failed to create the GLFW window");
     }
   }
+  
+  
+  
+  
   
 }
