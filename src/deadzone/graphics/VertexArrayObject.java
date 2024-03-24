@@ -1,4 +1,4 @@
-package deadzone.rendering;
+package deadzone.graphics;
 
 import static org.lwjgl.opengl.GL30.*;
 

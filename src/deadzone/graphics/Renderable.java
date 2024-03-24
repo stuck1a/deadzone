@@ -1,4 +1,4 @@
-package deadzone.rendering;
+package deadzone.graphics;
 
 import deadzone.scenes.Scene;
 

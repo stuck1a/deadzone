@@ -1,6 +1,6 @@
 package deadzone;
 
-import deadzone.rendering.Renderer;
+import deadzone.graphics.Renderer;
 import deadzone.scenes.AbstractScene;
 import deadzone.scenes.Launcher;
 import deadzone.scenes.Scene;
