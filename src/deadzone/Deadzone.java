@@ -66,7 +66,12 @@ public class Deadzone {
     
     // ONLY DO THE RENDER TEST, NOTHING ELSE
     TestForOpenGL testing = new TestForOpenGL();
-    testing.executeTest();
+    try {
+      testing.executeTest();
+    } catch (java.lang.Exception e) {
+      System.err.println(e.getMessage());
+    }
+    
     
     /*
     app = new Deadzone();
