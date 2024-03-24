@@ -85,95 +85,106 @@ public class TestForOpenGL {
   }
   
   
-  private void render() throws Exception {
+  private void render() throws RuntimeException {
     /* Set up the shader program, if not done yet */
     if (shaderProgramId == 0) {
-      try {
-        shaderProgramId = glCreateProgram();
-        if (shaderProgramId == 0) throw new Exception("Could not create shader program");
-        
-        // Create, compile and attach vertex shader
-        String vertexShaderCode =
-          "#version 150 core\n" +
-          "in vec2 position;\n" +
-          "in vec3 color;\n" +
-          "out vec3 vertexColor;\n" +
-          "void main() { vertexColor = color; gl_Position = vec4(position, 0.0, 1.0); }";
-        vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-        if (vertexShaderId == 0) throw new RuntimeException("Failed to create vertex shader!");
-        glShaderSource(vertexShaderId, vertexShaderCode);
-        glCompileShader(vertexShaderId);
-        if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling vertex shader!\n" + glGetShaderInfoLog(vertexShaderId, 1024));
-        glAttachShader(shaderProgramId, vertexShaderId);
-        
-        // Create, compile and attach fragment shader
-        String fragmentShaderCode =
-          "#version 150 core\n\n" +
-          "in vec3 vertexColor;\n\n" +
-          "out vec4 outColor;\n\n" +
-          "void main() { outColor = vec4(vertexColor, 1.0);}";
-        fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-        if (fragmentShaderId == 0) throw new RuntimeException("Failed to create fragment shader!");
-        glShaderSource(fragmentShaderId, fragmentShaderCode);
-        glCompileShader(fragmentShaderId);
-        if (glGetShaderi(fragmentShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling fragment shader!\n" + glGetShaderInfoLog(fragmentShaderId, 1024));
-        glAttachShader(shaderProgramId, fragmentShaderId);
-      } catch (Exception e) {
-        System.err.println("Could not initialize shaders.\n" + e.getMessage());
-      }
+      // Create a new shader program
+      shaderProgramId = glCreateProgram();
+      if (shaderProgramId == 0) throw new RuntimeException("Failed to create a new shader program!");
+      
+      // Create, compile and attach the vertex shader
+      CharSequence vertexShaderCode =
+        "#version 150 core\n\n" +
+        "in vec2 position;\n" +
+        "in vec3 color;\n\n" +
+        "out vec3 Color;\n\n" +
+        "void main()\n" +
+        "{\n" +
+        "    Color = color;\n" +
+        "    gl_Position = vec4(position, 0.0, 1.0);\n" +
+        "}";
+      vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+      if (vertexShaderId == 0) throw new RuntimeException("Failed to create a new vertex shader!");
+      glShaderSource(vertexShaderId, vertexShaderCode);
+      glCompileShader(vertexShaderId);
+      if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling vertex shader!\n" + glGetShaderInfoLog(vertexShaderId, 1024));
+      glAttachShader(shaderProgramId, vertexShaderId);
+      
+      // Create and compile the fragment shader
+      CharSequence fragmentShaderCode =
+        "#version 150 core\n\n" +
+        "in vec3 Color;\n\n" +
+        "out vec4 outColor;\n\n" +
+        "void main()\n" +
+        "{\n" +
+        "    outColor = vec4(Color, 1.0);\n" +
+        "}";
+      fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+      if (fragmentShaderId == 0) throw new RuntimeException("Failed to create a new fragment shader!");
+      glShaderSource(fragmentShaderId, fragmentShaderCode);
+      glCompileShader(fragmentShaderId);
+      if (glGetShaderi(fragmentShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling fragment shader!\n" + glGetShaderInfoLog(fragmentShaderId, 1024));
+      glAttachShader(shaderProgramId, fragmentShaderId);
     }
     
-    // Link shader program --- THIS ONE FAILS
-    glLinkProgram(shaderProgramId);
-    if (glGetProgrami(shaderProgramId, GL_LINK_STATUS) == 0) throw new Exception("Error linking shader");
+    // Define the out variable "outColor" of the fragment shader as the RGB color value which shall be used for rendering
+    glBindFragDataLocation(shaderProgramId, 0, "outColor");
     
-    // Detach shaders because we have the executable program itself now in the GPU memory
+    // Link the shader program itself
+    glLinkProgram(shaderProgramId);
+    if (glGetProgrami(shaderProgramId, GL_LINK_STATUS) == 0) throw new RuntimeException("Failed to link shader program!");
+    
+    // Detach shaders because we have the executable shader program itself with the attached shaders now in the GPU memory
     glDetachShader(shaderProgramId, vertexShaderId);
     glDetachShader(shaderProgramId, fragmentShaderId);
   
-    // Validate shaders
-    glValidateProgram(shaderProgramId);
-    if (glGetProgrami(shaderProgramId, GL_VALIDATE_STATUS) == 0) {
-      System.err.println("Failed to validate shaders");
-    }
-    
-    // Prepare and use shader program
-    glBindFragDataLocation(shaderProgramId, 0, "outColor");
+    // Tell OpenGL to use the defined shader program for rendering
     glUseProgram(shaderProgramId);
+  
+    // Validate the shader program
+    glValidateProgram(shaderProgramId);
+    if (glGetProgrami(shaderProgramId, GL_VALIDATE_STATUS) == 0) throw new RuntimeException("Failed to validate shaders!");
     
-    /* VAO */
+    
+    /* Create the triangle */
+    
+    // Create and bind a new VAO
     vaoId = glGenVertexArrays();
     glBindVertexArray(vaoId);
+  
+    // Specify the input attributes for the shader program
+    int positionAttribute = glGetAttribLocation(shaderProgramId, "position");
+    glEnableVertexAttribArray(positionAttribute);
+    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 5 * Float.BYTES, 0);
+    int colorAttribute = glGetAttribLocation(shaderProgramId, "color");
+    glEnableVertexAttribArray(colorAttribute);
+    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, false, 5 * Float.BYTES, 2 * Float.BYTES);
     
-    /* VBO */
+    // Create a new VBO
     float[] triangleInput = {
-      // x     y   R   G   B
-      0.5f, 0.9f, 1f, 0f, 0f,  // Point A
-      0.1f, 0.1f, 1f, 0f, 0f,  // Point B
-      0.9f, 0.1f, 1f, 0f, 0f   // Point C
+      //  x      y     R     G     B
+       0.0f,  0.5f, 1.0f, 0.0f, 0.0f,  // Point A
+       0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Point B
+      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f   // Point C
     };
+  
+    // Bind the VBO
+    vboId = glGenBuffers();
+    glBindBuffer(GL_ARRAY_BUFFER, vboId);
+    
+    // Add a new stack frame and allocate the required amount of GPU memory for it
     MemoryStack stack = MemoryStack.stackPush();
     FloatBuffer vertices = stack.mallocFloat(triangleInput.length);
+  
+    // Put the triangle data into the new stack frame
     for (float val : triangleInput) {
       vertices.put(val);
     }
     vertices.flip();
     
-    // Bind VBO
-    vboId = glGenBuffers();
-    glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    
-    // Upload vertices to the GPU
+    // Upload the triangle vertices to the GPU, remove our stack frame and restore the original stack pointer
     glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
     MemoryStack.stackPop();
-  
-    // Specify vertex attributes
-    int positionAttribute = glGetAttribLocation(shaderProgramId, "position");
-    glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 0, 0);
-    int colorAttribute = glGetAttribLocation(shaderProgramId, "color");
-    glEnableVertexAttribArray(colorAttribute);
-    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, false, 0, 2 * Float.BYTES);
     
     /* Draw the triangle */
     glClear(GL_COLOR_BUFFER_BIT);
