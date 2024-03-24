@@ -123,9 +123,11 @@ public class TestForOpenGL {
       }
     }
     
-    // Link shader program and detach shaders from RAM
+    // Link shader program --- THIS ONE FAILS
     glLinkProgram(shaderProgramId);
     if (glGetProgrami(shaderProgramId, GL_LINK_STATUS) == 0) throw new Exception("Error linking shader");
+    
+    // Detach shaders because we have the executable program itself now in the GPU memory
     glDetachShader(shaderProgramId, vertexShaderId);
     glDetachShader(shaderProgramId, fragmentShaderId);
   
