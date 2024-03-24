@@ -64,15 +64,17 @@ public class Deadzone {
    */
   public static void main(String[] args) throws InterruptedException {
     
-    // ONLY DO THE RENDER TEST, NOTHING ELSE
-    TestForOpenGL testing = new TestForOpenGL();
+    // USE THE RENDER TEST CLASS 1
+    TestForOpenGL_1 testing = new TestForOpenGL_1();
+//    TestForOpenGL_2 testing = new TestForOpenGL_2();
+    
     try {
-      testing.executeTest2();
+      testing.executeTest();
     } catch (java.lang.Exception e) {
       System.err.println(e.getMessage());
     }
-    
-    
+  
+
     /*
     app = new Deadzone();
     // Process arguments

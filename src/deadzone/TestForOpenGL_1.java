@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Temporary Test class for testing OpenGL rendering with LWJGL.
  */
-public class TestForOpenGL {
+public class TestForOpenGL_1 {
   private long windowId;
   
   private int shaderProgramId = 0;
@@ -34,7 +34,7 @@ public class TestForOpenGL {
   
   
 
-  public void executeTest1() throws InterruptedException {
+  public void executeTest() throws InterruptedException {
     // Create render context
     createWindow();
     
@@ -55,121 +55,21 @@ public class TestForOpenGL {
   }
   
   
+  
 
-  public void executeTest2() throws InterruptedException {
-    // Create render context
-    createWindow();
-    
-    // Create the shader program
-    generateShaderProgram();
-    
-    // Create and bind a new VAO
-    vaoId = glGenVertexArrays();
-    glBindVertexArray(vaoId);
-  
-    // Define our triangle data
-    float[] triangleInput = {
-       0.0f,  0.5f,
-      -0.5f, -0.5f,
-       0.5f, -0.5f
-    };
-  
-    // Create a new buffer and store the pointer in vboId
-    vboId = glGenBuffers();
-    // Make this buffer the active buffer
-    glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    // Put the triangle data into the buffer
-    MemoryStack stack = MemoryStack.stackPush();
-    FloatBuffer vertices = stack.mallocFloat(triangleInput.length);
-    for (float val : triangleInput) { vertices.put(val); }
-    vertices.flip();
-    glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-    
-    
-    
-    // Render loop
-    while ( !glfwWindowShouldClose(windowId) ) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
-      // Specify vertex attribute
-      glEnableVertexAttribArray(0);
-      glBindBuffer(GL_ARRAY_BUFFER, vboId);
-      glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
-      
-      // Draw the triangle
-      glUseProgram(shaderProgramId);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
-      glDisableVertexAttribArray(0);
-      
-      
-      glfwSwapBuffers(windowId);
-      glfwPollEvents();
-      sleep(1000L / 30L);
-    }
-    
-    
-    dispose();
-    
-    
-  }
-  
-  
-  
-  
-  private void createWindow() {
-    // Initialize LWJGL
-    GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.err);
-    glfwSetErrorCallback(errorCallback);
-    if ( !glfwInit() ) throw new IllegalStateException("Unable to initialize GLFW");
-  
-    // Create render context (the application window)
-    glfwDefaultWindowHints();
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-    windowId = glfwCreateWindow(800, 600, "Render test", NULL, NULL);
-    if ( windowId == NULL ) {
-      glfwTerminate();
-      throw new RuntimeException("Failed to create the GLFW window");
-    }
-    try ( MemoryStack stack = stackPush() ) {
-      IntBuffer pWidth = stack.mallocInt(1);
-      IntBuffer pHeight = stack.mallocInt(1);
-      glfwGetWindowSize(windowId, pWidth, pHeight);
-      GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-      assert vidmode != null;
-      glfwSetWindowPos(windowId, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
-    }
-    glfwMakeContextCurrent(windowId);
-    glfwSwapInterval(1);
-    glfwShowWindow(windowId);
-    GL.createCapabilities();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-  }
-  
   
   
   private void generateShaderProgram() {
     // Create and compile the vertex shader
-//    CharSequence vertexShaderCode =
-//      "#version 150 core\n" +
-//        "in vec2 position;\n" +
-//        "in vec3 color;\n" +
-//        "out vec3 Color;\n" +
-//        "void main()\n" +
-//        "{\n" +
-//        "    Color = color;\n" +
-//        "    gl_Position = vec4(position, 0.0, 1.0);\n" +
-//        "}";
     String vertexShaderCode =
       "#version 150 core\n" +
-        "in vec2 position;\n" +
-        "void main() {\n" +
-        "  gl_Position = vec4(position, 0, 1);\n" +
-        "}";
+      "in vec2 position;\n" +
+      "in vec3 color;\n" +
+      "out vec3 Color;\n" +
+      "void main() {\n" +
+      "  Color = color;\n" +
+      "  gl_Position = vec4(position, 0.0, 1.0);\n" +
+      "}";
     vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     if (vertexShaderId == 0) throw new RuntimeException("Failed to create a new vertex shader!");
     glShaderSource(vertexShaderId, vertexShaderCode);
@@ -177,21 +77,13 @@ public class TestForOpenGL {
     if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling vertex shader!\n" + glGetShaderInfoLog(vertexShaderId, 1024));
     
     // Create and compile the fragment shader
-//    CharSequence fragmentShaderCode =
-//      "#version 150 core\n" +
-//        "in vec3 Color;\n" +
-//        "out vec4 outColor;\n" +
-//        "void main()\n" +
-//        "{\n" +
-//        "  outColor = vec4(Color, 1.0);\n" +
-//        "}";
     String fragmentShaderCode =
       "#version 150 core\n" +
-        "out vec3 color;\n" +
-        "void main()\n" +
-        "{\n" +
-        "  color = vec3(1,0,0);\n" +
-        "}";
+      "in vec3 Color;\n" +
+      "out vec4 outColor;\n" +
+      "void main() {\n" +
+      "  outColor = vec4(Color, 1.0);\n" +
+      "}";
     fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
     if (fragmentShaderId == 0) throw new RuntimeException("Failed to create a new fragment shader!");
     glShaderSource(fragmentShaderId, fragmentShaderCode);
@@ -272,9 +164,6 @@ public class TestForOpenGL {
   }
   
   
-  /**
-   * Free all used resources
-   */
   private void dispose() {
     // Dispose render data
     glUseProgram(0);
@@ -289,5 +178,41 @@ public class TestForOpenGL {
     Objects.requireNonNull(glfwSetErrorCallback(null)).free();
   }
   
-
+  
+  
+  private void createWindow() {
+    // Initialize LWJGL
+    GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.err);
+    glfwSetErrorCallback(errorCallback);
+    if ( !glfwInit() ) throw new IllegalStateException("Unable to initialize GLFW");
+    
+    // Create render context (the application window)
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+    windowId = glfwCreateWindow(800, 600, "Render test", NULL, NULL);
+    if ( windowId == NULL ) {
+      glfwTerminate();
+      throw new RuntimeException("Failed to create the GLFW window");
+    }
+    try ( MemoryStack stack = stackPush() ) {
+      IntBuffer pWidth = stack.mallocInt(1);
+      IntBuffer pHeight = stack.mallocInt(1);
+      glfwGetWindowSize(windowId, pWidth, pHeight);
+      GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+      assert vidmode != null;
+      glfwSetWindowPos(windowId, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
+    }
+    glfwMakeContextCurrent(windowId);
+    glfwSwapInterval(1);
+    glfwShowWindow(windowId);
+    GL.createCapabilities();
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  }
+  
+  
 }
