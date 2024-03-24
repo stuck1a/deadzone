@@ -12,11 +12,12 @@ import java.util.Objects;
 import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glDeleteShader;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
 
 /**
  * Temporary Test class for testing OpenGL rendering with LWJGL.
@@ -33,14 +34,96 @@ public class TestForOpenGL {
   
   
   /**
+   * Executes the render test - the target is to display a triangle using a custom shader program
+   */
+  public void executeTest1() throws InterruptedException {
+    // Create render context
+    createWindow();
+    
+    // Create shader program
+    generateShaderProgram();
+    
+    // Render loop
+    while ( !glfwWindowShouldClose(windowId) ) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glUseProgram(shaderProgramId);
+      render();
+      glfwPollEvents();
+      glfwSwapBuffers(windowId);
+      sleep(1000L / 30L);
+    }
+  
+    dispose();
+  }
+  
+  
+  /**
    * Executes the render test - the target is to display a triangle
    */
-  public void executeTest() throws Exception {
+  public void executeTest2() throws InterruptedException {
+    // Create render context
+    createWindow();
+  
+  
+    // Create and bind a new VAO
+    vaoId = glGenVertexArrays();
+    glBindVertexArray(vaoId);
+  
+    // Define our triangle data
+    float[] triangleInput = {
+       0.0f,  0.5f, 0.0f,
+       0.5f, -0.5f, 0.0f,
+      -0.5f, -0.5f, 0.0f
+    };
+  
+    // Create a new buffer and store the pointer in vboId
+    vboId = glGenBuffers();
+    // Make this buffer the active buffer
+    glBindBuffer(GL_ARRAY_BUFFER, vboId);
+    // Put the triangle data into the buffer
+    MemoryStack stack = MemoryStack.stackPush();
+    FloatBuffer vertices = stack.mallocFloat(triangleInput.length);
+    for (float val : triangleInput) { vertices.put(val); }
+    vertices.flip();
+    glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+    
+    
+    // Create the shader program
+    generateShaderProgram();
+    
+    // Render loop
+    while ( !glfwWindowShouldClose(windowId) ) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
+      // Specify vertex attribute
+      glEnableVertexAttribArray(0);
+      glBindBuffer(GL_ARRAY_BUFFER, vboId);
+      glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+      
+      // Draw the triangle
+      glUseProgram(shaderProgramId);
+      glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDisableVertexAttribArray(0);
+      
+      
+      glfwSwapBuffers(windowId);
+      glfwPollEvents();
+      sleep(1000L / 30L);
+    }
+    
+    
+    
+  }
+  
+  
+  
+  
+  private void createWindow() {
     // Initialize LWJGL
     GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.err);
     glfwSetErrorCallback(errorCallback);
     if ( !glfwInit() ) throw new IllegalStateException("Unable to initialize GLFW");
-    
+  
     // Create render context (the application window)
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
@@ -67,65 +150,65 @@ public class TestForOpenGL {
     glfwShowWindow(windowId);
     GL.createCapabilities();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    
-    // Render loop
-    while ( !glfwWindowShouldClose(windowId) ) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glfwSwapBuffers(windowId);
-      glfwPollEvents();
-      render();
-      sleep(1000L / 30L);
-    }
-
-    // Shutdown
-    glfwFreeCallbacks(windowId);
-    glfwDestroyWindow(windowId);
-    glfwTerminate();
-    Objects.requireNonNull(glfwSetErrorCallback(null)).free();
   }
   
   
-  private void render() throws RuntimeException {
-    /* Set up the shader program, if not done yet */
-    if (shaderProgramId == 0) {
-      // Create a new shader program
-      shaderProgramId = glCreateProgram();
-      if (shaderProgramId == 0) throw new RuntimeException("Failed to create a new shader program!");
-      
-      // Create, compile and attach the vertex shader
-      CharSequence vertexShaderCode =
-        "#version 150 core\n\n" +
-        "in vec2 position;\n" +
-        "in vec3 color;\n\n" +
-        "out vec3 Color;\n\n" +
+  
+  private void generateShaderProgram() {
+    // Create and compile the vertex shader
+//    CharSequence vertexShaderCode =
+//      "#version 150 core\n" +
+//        "in vec2 position;\n" +
+//        "in vec3 color;\n" +
+//        "out vec3 Color;\n" +
+//        "void main()\n" +
+//        "{\n" +
+//        "    Color = color;\n" +
+//        "    gl_Position = vec4(position, 0.0, 1.0);\n" +
+//        "}";
+    CharSequence vertexShaderCode =
+      "#version 330 core\n" +
+        "layout(location = 0) in vec3 vertexPosition_modelspace;\n" +
         "void main()\n" +
         "{\n" +
-        "    Color = color;\n" +
-        "    gl_Position = vec4(position, 0.0, 1.0);\n" +
+        "  gl_Position.xyz = vertexPosition_modelspace;\n" +
+        "  gl_Position.w = 1.0;\n" +
         "}";
-      vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-      if (vertexShaderId == 0) throw new RuntimeException("Failed to create a new vertex shader!");
-      glShaderSource(vertexShaderId, vertexShaderCode);
-      glCompileShader(vertexShaderId);
-      if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling vertex shader!\n" + glGetShaderInfoLog(vertexShaderId, 1024));
-      glAttachShader(shaderProgramId, vertexShaderId);
-      
-      // Create and compile the fragment shader
-      CharSequence fragmentShaderCode =
-        "#version 150 core\n\n" +
-        "in vec3 Color;\n\n" +
-        "out vec4 outColor;\n\n" +
+    vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+    if (vertexShaderId == 0) throw new RuntimeException("Failed to create a new vertex shader!");
+    glShaderSource(vertexShaderId, vertexShaderCode);
+    glCompileShader(vertexShaderId);
+    if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling vertex shader!\n" + glGetShaderInfoLog(vertexShaderId, 1024));
+    
+    // Create and compile the fragment shader
+//    CharSequence fragmentShaderCode =
+//      "#version 150 core\n" +
+//        "in vec3 Color;\n" +
+//        "out vec4 outColor;\n" +
+//        "void main()\n" +
+//        "{\n" +
+//        "  outColor = vec4(Color, 1.0);\n" +
+//        "}";
+    CharSequence fragmentShaderCode =
+      "#version 330 core\n" +
+        "out vec3 color;\n" +
         "void main()\n" +
         "{\n" +
-        "    outColor = vec4(Color, 1.0);\n" +
+        "  color = vec3(1,0,0);\n" +
         "}";
-      fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-      if (fragmentShaderId == 0) throw new RuntimeException("Failed to create a new fragment shader!");
-      glShaderSource(fragmentShaderId, fragmentShaderCode);
-      glCompileShader(fragmentShaderId);
-      if (glGetShaderi(fragmentShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling fragment shader!\n" + glGetShaderInfoLog(fragmentShaderId, 1024));
-      glAttachShader(shaderProgramId, fragmentShaderId);
-    }
+    fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+    if (fragmentShaderId == 0) throw new RuntimeException("Failed to create a new fragment shader!");
+    glShaderSource(fragmentShaderId, fragmentShaderCode);
+    glCompileShader(fragmentShaderId);
+    if (glGetShaderi(fragmentShaderId, GL_COMPILE_STATUS) == 0) throw new RuntimeException("Error compiling fragment shader!\n" + glGetShaderInfoLog(fragmentShaderId, 1024));
+    
+    // Create a new shader program
+    shaderProgramId = glCreateProgram();
+    if (shaderProgramId == 0) throw new RuntimeException("Failed to create a new shader program!");
+    
+    // Attach the compiled shaders to the shader program
+    glAttachShader(shaderProgramId, vertexShaderId);
+    glAttachShader(shaderProgramId, fragmentShaderId);
     
     // Define the out variable "outColor" of the fragment shader as the RGB color value which shall be used for rendering
     glBindFragDataLocation(shaderProgramId, 0, "outColor");
@@ -133,21 +216,23 @@ public class TestForOpenGL {
     // Link the shader program itself
     glLinkProgram(shaderProgramId);
     if (glGetProgrami(shaderProgramId, GL_LINK_STATUS) == 0) throw new RuntimeException("Failed to link shader program!");
-    
-    // Detach shaders because we have the executable shader program itself with the attached shaders now in the GPU memory
-    glDetachShader(shaderProgramId, vertexShaderId);
-    glDetachShader(shaderProgramId, fragmentShaderId);
-  
-    // Tell OpenGL to use the defined shader program for rendering
-    glUseProgram(shaderProgramId);
   
     // Validate the shader program
     glValidateProgram(shaderProgramId);
     if (glGetProgrami(shaderProgramId, GL_VALIDATE_STATUS) == 0) throw new RuntimeException("Failed to validate shaders!");
     
+    // Remove the shaders because we have them now in the executable shader program itself
+    glDetachShader(shaderProgramId, vertexShaderId);
+    glDetachShader(shaderProgramId, fragmentShaderId);
+    glDeleteShader(vertexShaderId);
+    glDeleteShader(fragmentShaderId);
     
-    /* Create the triangle */
-    
+
+  }
+  
+  
+  
+  private void render() throws RuntimeException {
     // Create and bind a new VAO
     vaoId = glGenVertexArrays();
     glBindVertexArray(vaoId);
@@ -162,12 +247,11 @@ public class TestForOpenGL {
     
     // Create a new VBO
     float[] triangleInput = {
-      //  x      y     R     G     B
-       0.0f,  0.5f, 1.0f, 0.0f, 0.0f,  // Point A
-       0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Point B
-      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f   // Point C
+       0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
+       0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f
     };
-  
+    
     // Bind the VBO
     vboId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
@@ -176,27 +260,40 @@ public class TestForOpenGL {
     MemoryStack stack = MemoryStack.stackPush();
     FloatBuffer vertices = stack.mallocFloat(triangleInput.length);
   
-    // Put the triangle data into the new stack frame
-    for (float val : triangleInput) {
-      vertices.put(val);
-    }
+    // Put the triangle data into the new stack frame and prepare the buffer for reading
+    for (float val : triangleInput) { vertices.put(val); }
     vertices.flip();
     
     // Upload the triangle vertices to the GPU, remove our stack frame and restore the original stack pointer
     glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
     MemoryStack.stackPop();
     
-    /* Draw the triangle */
-    glClear(GL_COLOR_BUFFER_BIT);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-  
-    /* Free resources */
+    // Draw the triangle
+    glDrawArrays(GL_TRIANGLES, 0, 3);   // THIS ONE FAILS
+    
+    // Free resources
     glDeleteBuffers(vboId);
     glDeleteVertexArrays(vaoId);
-    if (vertexShaderId != 0) glDeleteShader(vertexShaderId);
-    if (fragmentShaderId != 0) glDeleteShader(fragmentShaderId);
-    glUseProgram(0);
-    if (shaderProgramId != 0) glDeleteProgram(shaderProgramId);
+
   }
   
+  
+  /**
+   * Free all used resources
+   */
+  private void dispose() {
+    // Dispose render data
+    glUseProgram(0);
+    if (vertexShaderId != 0) glDeleteShader(vertexShaderId);
+    if (fragmentShaderId != 0) glDeleteShader(fragmentShaderId);
+    if (shaderProgramId != 0) glDeleteProgram(shaderProgramId);
+  
+    // Dispose window data
+    glfwFreeCallbacks(windowId);
+    glfwDestroyWindow(windowId);
+    glfwTerminate();
+    Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+  }
+  
+
 }
