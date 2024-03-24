@@ -33,9 +33,7 @@ public class TestForOpenGL {
   private int vboId = 0;
   
   
-  /**
-   * Executes the render test - the target is to display a triangle using a custom shader program
-   */
+
   public void executeTest1() throws InterruptedException {
     // Create render context
     createWindow();
@@ -57,23 +55,23 @@ public class TestForOpenGL {
   }
   
   
-  /**
-   * Executes the render test - the target is to display a triangle
-   */
+
   public void executeTest2() throws InterruptedException {
     // Create render context
     createWindow();
-  
-  
+    
+    // Create the shader program
+    generateShaderProgram();
+    
     // Create and bind a new VAO
     vaoId = glGenVertexArrays();
     glBindVertexArray(vaoId);
   
     // Define our triangle data
     float[] triangleInput = {
-       0.0f,  0.5f, 0.0f,
-       0.5f, -0.5f, 0.0f,
-      -0.5f, -0.5f, 0.0f
+       0.0f,  0.5f,
+      -0.5f, -0.5f,
+       0.5f, -0.5f
     };
   
     // Create a new buffer and store the pointer in vboId
@@ -88,8 +86,6 @@ public class TestForOpenGL {
     glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
     
     
-    // Create the shader program
-    generateShaderProgram();
     
     // Render loop
     while ( !glfwWindowShouldClose(windowId) ) {
@@ -98,7 +94,7 @@ public class TestForOpenGL {
       // Specify vertex attribute
       glEnableVertexAttribArray(0);
       glBindBuffer(GL_ARRAY_BUFFER, vboId);
-      glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+      glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
       
       // Draw the triangle
       glUseProgram(shaderProgramId);
@@ -111,6 +107,8 @@ public class TestForOpenGL {
       sleep(1000L / 30L);
     }
     
+    
+    dispose();
     
     
   }
@@ -166,13 +164,11 @@ public class TestForOpenGL {
 //        "    Color = color;\n" +
 //        "    gl_Position = vec4(position, 0.0, 1.0);\n" +
 //        "}";
-    CharSequence vertexShaderCode =
-      "#version 330 core\n" +
-        "layout(location = 0) in vec3 vertexPosition_modelspace;\n" +
-        "void main()\n" +
-        "{\n" +
-        "  gl_Position.xyz = vertexPosition_modelspace;\n" +
-        "  gl_Position.w = 1.0;\n" +
+    String vertexShaderCode =
+      "#version 150 core\n" +
+        "in vec2 position;\n" +
+        "void main() {\n" +
+        "  gl_Position = vec4(position, 0, 1);\n" +
         "}";
     vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     if (vertexShaderId == 0) throw new RuntimeException("Failed to create a new vertex shader!");
@@ -189,8 +185,8 @@ public class TestForOpenGL {
 //        "{\n" +
 //        "  outColor = vec4(Color, 1.0);\n" +
 //        "}";
-    CharSequence fragmentShaderCode =
-      "#version 330 core\n" +
+    String fragmentShaderCode =
+      "#version 150 core\n" +
         "out vec3 color;\n" +
         "void main()\n" +
         "{\n" +
@@ -226,8 +222,6 @@ public class TestForOpenGL {
     glDetachShader(shaderProgramId, fragmentShaderId);
     glDeleteShader(vertexShaderId);
     glDeleteShader(fragmentShaderId);
-    
-
   }
   
   
@@ -240,10 +234,10 @@ public class TestForOpenGL {
     // Specify the input attributes for the shader program
     int positionAttribute = glGetAttribLocation(shaderProgramId, "position");
     glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 5 * Float.BYTES, 0);
+    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 0, 0);
     int colorAttribute = glGetAttribLocation(shaderProgramId, "color");
     glEnableVertexAttribArray(colorAttribute);
-    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, false, 5 * Float.BYTES, 2 * Float.BYTES);
+    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, false, 0, 2 * Float.BYTES);
     
     // Create a new VBO
     float[] triangleInput = {
