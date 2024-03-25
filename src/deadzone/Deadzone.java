@@ -4,21 +4,21 @@ import deadzone.graphics.Renderer;
 import deadzone.scenes.AbstractScene;
 import deadzone.scenes.Launcher;
 import deadzone.scenes.Scene;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
-import java.nio.*;
+import javax.swing.*;
+import java.nio.IntBuffer;
 import java.util.Objects;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import static java.lang.Thread.sleep;
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 
 public class Deadzone {
@@ -210,6 +210,8 @@ public class Deadzone {
     glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
     // Set up the renderer
     renderer = new Renderer();
+  
+
   }
   
   

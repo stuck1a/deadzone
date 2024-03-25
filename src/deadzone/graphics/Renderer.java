@@ -38,34 +38,40 @@ public class Renderer {
   
   
   public void renderRegisteredObjects() {
-    // Render a triangle for testing. Later we will iterate through all registered objects here and only reinitialize them if they have changed
-    drawTriangle();
+    // Render a red triangle for testing
+    drawTriangle(new float[] {
+       0.0f,  0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
+      -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
+       0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f
+    });
+    
+    // Render a green triangle a bit above the red one for testing
+//    drawTriangle(new float[] {
+//       0.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.5f,
+//      -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 0.5f,
+//       0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 0.5f
+//    });
   }
   
   
   /**
    * Renders a predefined triangle for testing purposes
    */
-  private void drawTriangle() {
+  private void drawTriangle(float[] input) {
     // Create the VAO
-    VertexArrayObject vaoTriangle1 = new VertexArrayObject();
-    vaoTriangle1.bind();
+    VertexArrayObject vaoTriangle = new VertexArrayObject();
+    vaoTriangle.bind();
 
    // Create the VBO
-    VertexBufferObject vboTriangle1 = new VertexBufferObject(new float[]{
-     //   x      y     R     G     B     A
-       0.0f,  0.5f, 1.0f, 0.0f, 0.0f, 0.5f,  // Point A
-      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.5f,  // Point B
-       0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.5f,  // Point C
-    });
-    vboTriangle1.initialize();
+    VertexBufferObject vboTriangle = new VertexBufferObject(input);
+    vboTriangle.initialize();
     
     // Register all objects related to the triangle
-    registeredVboObjects.add(vboTriangle1);
-    registeredVaoObjects.add(vaoTriangle1);
+    registeredVboObjects.add(vboTriangle);
+    registeredVaoObjects.add(vaoTriangle);
     
     // Draw the Triangle
-    vboTriangle1.render();
+    vboTriangle.render();
   }
   
   

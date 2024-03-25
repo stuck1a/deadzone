@@ -150,6 +150,10 @@ public class TestForOpenGL {
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
   
+
+    
+    // TEST END
+    
     // Draw the triangle
     glUseProgram(shaderProgramId);
     glDrawArrays(GL_TRIANGLES, 0, 3);
