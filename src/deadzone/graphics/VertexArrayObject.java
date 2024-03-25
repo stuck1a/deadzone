@@ -12,8 +12,12 @@ public class VertexArrayObject {
   /** The handler to access the native VAO object in the GPU */
   private final int vaoId;
   
+  /** Because we use one VAO per OpenGL render type (like GL_TRIANGLES, ...) we must specify for which one this VAO is made for */
+  public final int GL_RENDER_TYPE;
   
-  public VertexArrayObject() {
+  
+  public VertexArrayObject(int GL_RENDER_TYPE) {
+    this.GL_RENDER_TYPE = GL_RENDER_TYPE;
     vaoId = glGenVertexArrays();
   }
   

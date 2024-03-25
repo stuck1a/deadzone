@@ -7,5 +7,4 @@ package deadzone.graphics;
  * as objects derived from them such as UI elements like buttons, menus etc
  */
 public interface IShape extends IRenderable {
-
 }

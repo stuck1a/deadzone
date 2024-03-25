@@ -1,6 +1,7 @@
 package deadzone.graphics;
 
-import deadzone.scenes.AbstractScene;
+import java.util.ArrayList;
+
 
 /**
  * Every object that shall be displayed need to implement this interface.
@@ -8,22 +9,11 @@ import deadzone.scenes.AbstractScene;
  */
 public interface IRenderable {
   
-  /**
-   * Returns the x position of the object from bottom left
-   * @return Pixel value
-   */
-  int getX();
   
-  /**
-   * Returns the y position of the object from bottom left
-   * @return Pixel value
-   */
-  int getY();
+  /** Returns the OpenGL object type the renderable object uses, so the renderer knows to which VertexArray this shape must be attached */
+  public int getGL_TYPE();
   
-  /**
-   * Returns the scene object in which this object will be rendered
-   * @return scene object
-   */
-  AbstractScene getSceneName();
+  /** Set up all vertex attributes for all VBOs the actual renderable object requires */
+  public ArrayList<VertexBufferObject> prepareVBOs();
   
 }

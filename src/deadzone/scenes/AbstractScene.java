@@ -4,12 +4,14 @@ import deadzone.Deadzone;
 import deadzone.graphics.IRenderable;
 import deadzone.graphics.Renderer;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 
 /**
  * Base class for any existing scene.
  * Provides general functions for scene management and their mapping and the object catalogue every scene must have.
+ * TODO: Ist ein Interface hier vielleicht besser geeignet?
  */
 public abstract class AbstractScene {
   
@@ -20,10 +22,10 @@ public abstract class AbstractScene {
   static EnumMap<Scene, AbstractScene> sceneMappings = new EnumMap<>(Scene.class);
   
   /**
-   * All visible objects of the scene are registered here
+   * All visible objects of the scene are registered here.
+   * They will be rendered in the order they were added to the list.
    */
-  IRenderable[] renderObjects;
-  
+  ArrayList<IRenderable> renderObjects = new ArrayList<>();
   
   /**
    * Base constructor for every scene. Generates the mapping,
@@ -52,8 +54,8 @@ public abstract class AbstractScene {
    * @param obj The new object to add
    * @return Succeeded or not
    */
-  public boolean addObject(IRenderable obj) {
-    return true;
+  public void addObject(IRenderable obj) {
+    renderObjects.add(obj);
   }
   
   /**
@@ -61,13 +63,15 @@ public abstract class AbstractScene {
    * @param id The object id
    * @return Succeeded or not
    */
-  public boolean removeObject(int id) {
-    return true;
+  public void removeObject(int id) {
+    // TODO: Introduce a ID/Name or any other possibility to find and detect the objects later again
+    //       so we can remove them at runtime if necessary.
+    //       (for example if a world object shall disappear from the screen)
   }
   
   
   /**
-   * Processes all user inputs the active scene provides
+   * This is the input part of the current loop for the actual scene.
    */
   public void processInputs() {
   
@@ -75,16 +79,18 @@ public abstract class AbstractScene {
   
   
   /**
-   * Updates all objects in the active scene
+   * This is the update loop for the actual scene.
    */
   public void updateRegisteredObjects() {
-  
-  }
-  
-  /**
-   * Sends a prepared renderable object to the renderer so that the renderer knows what and how to draw
-   */
-  protected void addObjectToRenderer() {
+    // add/change/remove any registered objects based on user inputs and object internal game mechanics...
+    // ...
+    
+    // Now after all objects are adjusted accordingly, they are sent to the renderer with all their updated data for the next render loop
     Renderer renderer = Deadzone.getApplication().getRenderer();
+    for (IRenderable obj : renderObjects) {
+      renderer.registerObject(obj);
+    }
   }
+
+  
 }

@@ -71,17 +71,6 @@ public class VertexBufferObject {
   }
   
   
-  /**
-   * Draws the fully initialized object
-   */
-  public void render() {
-    // Clear the color buffer of the screen, otherwise we would get weird results
-    glClear(GL_COLOR_BUFFER_BIT);
-    // Render all 3 vertices of the triangle, so we start at 0 and render 3 vertices
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-  }
-  
-  
   public void delete() {
     glDeleteBuffers(vboId);
   }
