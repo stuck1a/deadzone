@@ -99,7 +99,7 @@ public class Renderer {
     // Create, prepare and bind all VBOs of all renderable objects which use GL_TRIANGLES
     for ( IRenderable obj : registeredRenderableObjects ) {
       if (obj.getGL_TYPE() == GL_TRIANGLES) {
-        ArrayList<VertexBufferObject> vboList = obj.prepareVBOs();
+        ArrayList<VertexBufferObject> vboList = obj.getVBOs();
         vertexCount += obj.getVertexCount();
         for ( VertexBufferObject vbo : vboList ) {
           vbo.initialize();

@@ -92,18 +92,18 @@ public class Deadzone {
     long windowHandle = window.getHandle();
     // Run the primary loop until window is closed
     while ( !glfwWindowShouldClose(windowHandle) ) {
-      // Clear framebuffer
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      // Update the game timer
+      timer.updateTimer();
       // Check for events like pressed keys and such
       glfwPollEvents();
       // Execute all content related game loop subroutines
       input();
       update();
+      // Clear framebuffer to prepare the upcoming render loop
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       render();
       // Swap color buffers
       glfwSwapBuffers(windowHandle);
-      // Update the game timer
-      timer.updateTimer();
       // Keep the target frame rate
       sleep(timer.getSleepTime());
     }

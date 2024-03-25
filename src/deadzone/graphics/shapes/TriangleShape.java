@@ -17,6 +17,8 @@ public class TriangleShape implements IShape {
   /** The amount of vertices which are added through VBOs for each TriangleShape which is created */
   private static final int vertexCount = 3;
   
+  /** Stores all VBOs which represent this object in the GPU memory */
+  private ArrayList<VertexBufferObject> vboList;
   
   public float x1;
   public float y1;
@@ -32,26 +34,30 @@ public class TriangleShape implements IShape {
   public TriangleShape(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
     this.x1 = x1;
     this.y1 = y1;
-    
     this.x2 = x2;
     this.y2 = y2;
-    
     this.x3 = x3;
     this.y3 = y3;
-    
     this.color = color;
   }
   
-  /**
-   * Called from the renderer after binding the proper VAO.
-   * One TriangleShape is reflected in OpenGL by one VBO of type GL_TRIANGLES.
-   */
-  public ArrayList<VertexBufferObject> prepareVBOs() {
-    // DEV NOTE: If this would be the RectangleShape, we would set up two VBOs here since we need to GL_TRIANGLES to form a rectangle
   
-    ArrayList<VertexBufferObject> vboList = new ArrayList<>();
+  /**
+   * Returns a list of all VBOs which represent this object.
+   * If necessary, they will be created before
+   * Note, that the returned VBOs are not yet bound to the VAO to allow modifications.
+   * To do so, call initialize() on each returned VBO.
+   */
+  @Override
+  public ArrayList<VertexBufferObject> getVBOs() {
+    if (vboList != null) {
+      return vboList;
+    }
+    
+    vboList = new ArrayList<>();
     
     // Create the VBO which represents the triangle
+    // DEV NOTE: If this would be the RectangleShape, we would set up two VBOs here since we need two GL_TRIANGLES to form a rectangle
     final float red = color.getRedNormalized();
     final float green = color.getGreenNormalized();
     final float blue = color.getBlueNormalized();
@@ -66,6 +72,7 @@ public class TriangleShape implements IShape {
     return vboList;
   }
   
+  
   /**
    * Returns the total count of vertices the actual renderable object uses, so that the renderer knows the total count in the render loop
    */
@@ -74,6 +81,7 @@ public class TriangleShape implements IShape {
     return vertexCount;
   }
   
+  
   /**
    * Returns the OpenGL object type the renderable object uses, so the renderer knows to which VertexArray this shape must be attached
    */
@@ -81,7 +89,5 @@ public class TriangleShape implements IShape {
   public int getGL_TYPE() {
     return glRenderType;
   }
-  
-  
   
 }

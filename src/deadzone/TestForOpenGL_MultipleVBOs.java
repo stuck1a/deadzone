@@ -101,6 +101,9 @@ public class TestForOpenGL_MultipleVBOs {
   
 
     glUseProgram(shaderProgramId);
+    // Initialize the VAO for the triangles
+    int vao_Triangles = glGenVertexArrays();
+    glBindVertexArray(vao_Triangles);
     
     
     // Render loop
@@ -108,9 +111,7 @@ public class TestForOpenGL_MultipleVBOs {
       glfwPollEvents();
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       
-      // Initialize the VAO for the triangles
-      int vao_Triangles = glGenVertexArrays();
-      glBindVertexArray(vao_Triangles);
+
   
   
       // Initialize the red triangle
@@ -158,7 +159,7 @@ public class TestForOpenGL_MultipleVBOs {
       // Clean up
       glDeleteBuffers(vbo_RedTriangle);
       glDeleteBuffers(vbo_GreenTriangle);
-      glDeleteVertexArrays(vao_Triangles);
+
       
       // Clear graphic buffers
       glfwSwapBuffers(windowId);
@@ -167,6 +168,7 @@ public class TestForOpenGL_MultipleVBOs {
     
 
     // Dispose
+    glDeleteVertexArrays(vao_Triangles);
     glUseProgram(0);
     glDeleteShader(vertexShaderId);
     glDeleteShader(fragmentShaderId);
