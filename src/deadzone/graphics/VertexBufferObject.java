@@ -23,9 +23,6 @@ public class VertexBufferObject {
   /** The memory stack with support of garbage collector which automatically free up the memory when necessary */
   MemoryStack stack;
   
-  /** Holds the raw input data for vertices and color attributes */
-  float[] data;
-  
   /** Buffer which stores the vertices to handover it to the GPU */
   FloatBuffer vertices;
   
@@ -61,12 +58,12 @@ public class VertexBufferObject {
     
     // Upload vertices to the GPU
     uploadData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-    MemoryStack.stackPop();
+    MemoryStack.stackPop();   // TODO: Testen ob es hilft, wenn ich beide inits innerhalb von einem stack frame mach...
   
     // Specify how to use the received data
     specifyVertexAttributes();
 
-    // Set up uniform variables to allow transformations for camera rotation and such
+    // Set up uniform variables to allow transformations translations etc without re-creating everything from scratch
     //specifyUniformData();
   }
   

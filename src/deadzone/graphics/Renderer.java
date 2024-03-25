@@ -2,6 +2,7 @@ package deadzone.graphics;
 
 import java.util.ArrayList;
 
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.*;
 
 
@@ -46,7 +47,6 @@ public class Renderer {
    * next render loop.
    */
   public void renderRegisteredObjects() {
-    glClear(GL_COLOR_BUFFER_BIT);
     int totalVerticesInCurrentVAO;
     int vertexPointer = 0;
     
@@ -64,6 +64,9 @@ public class Renderer {
     
     // TODO: Ist es vielleicht doch einfacher, auch die verschiedenen GL_TYPES alle in ein zentrales VAO zu stecken?
     //       Denn das mit dem Pointer könnte sonst noch Schwierigkeiten bereiten je nachden...
+  
+    glDisableVertexAttribArray(0);   // TODO: Mal checken, das hatte nämlich gefehlt. Muss aber vermutlich 4x insgesamt aufgerufen werden für die 2 Triangles...
+
     
     // Remove all graphics data for the next turn
     for (VertexBufferObject vbo : attachedVboObjects) {
