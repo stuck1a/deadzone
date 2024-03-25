@@ -118,7 +118,7 @@ public class VertexBufferObject {
     // Define the position data (float values 1+2)
     int positionAttribute = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 0, 0);
+    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 5 * Float.BYTES, 0);
     
     // Define the color data (float values 3-5)
     int colorAttribute = glGetAttribLocation(shaderProgram, "color");
