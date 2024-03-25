@@ -26,44 +26,32 @@ public class VertexBufferObject {
   /** Buffer which stores the vertices to handover it to the GPU */
   FloatBuffer vertices;
   
+  /** Stores the raw data received from the constructor for later use when initialized */
+  private float[] vertexData;
+  
   
   /**
-   * Creates a new VBO by allocating the required amount of GPU memory
-   * @param vertexData Base on our shader programs, each vertex consists of 6 float values: x, y, z, r, g, b
-   *                   By convention, it's recommend to provide the points counter-clockwise.
-   *                   For example a triangle with 3 points in 3 different colors:
-   *                   -0.6f, -0.4f, 0f, 1f, 0f, 0f,
-   *                    0.6f, -0.4f, 0f, 0f, 1f, 0f,
-   *                    0f,    0.6f, 0f, 0f, 0f, 1f
+   * Creates a new VBO by allocating the required amount of GPU memory and adding the vertex data in it
+   * @param vertexData Each vertex consists of 6 float values: x, y, r, g, b, a
    */
   public VertexBufferObject(float[] vertexData) {
-    // Create the buffer
-    stack = MemoryStack.stackPush();
-    vertices = stack.mallocFloat(vertexData.length);
-    
-    // Add the position and color data to the buffer
-    for (float val : vertexData) {
-      vertices.put(val);
-    }
-    vertices.flip();
+    this.vertexData = vertexData;
   }
+  
   
   /**
    * Set up the GPU object which is related to this java-sided object
    */
   public void initialize() {
-    // Generate GPU buffer and bind it to the correct buffer type
     vboId = glGenBuffers();
-    bind(GL_ARRAY_BUFFER);
-    
-    // Upload vertices to the GPU
-    uploadData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-    MemoryStack.stackPop();   // TODO: Testen ob es hilft, wenn ich beide inits innerhalb von einem stack frame mach...
-  
-    // Specify how to use the received data
+    stack = MemoryStack.stackPush();
+    vertices = stack.mallocFloat(vertexData.length);
+    vertices.put(vertexData);
+    vertices.flip();
+    glBindBuffer(GL_ARRAY_BUFFER, vboId);
+    glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+    MemoryStack.stackPop();
     specifyVertexAttributes();
-
-    // Set up uniform variables to allow transformations translations etc without re-creating everything from scratch
     //specifyUniformData();
   }
   
@@ -78,20 +66,7 @@ public class VertexBufferObject {
   }
   
   
-  /**
-   * Binds the buffer to the GPU
-   */
-  private void bind(int target) {
-    glBindBuffer(target, vboId);
-  }
-  
-  
-  /**
-   * Adds data to the buffer
-   */
-  private void uploadData(int target, FloatBuffer data, int usage) {
-    glBufferData(target, data, usage);
-  }
+
   
   
   /**

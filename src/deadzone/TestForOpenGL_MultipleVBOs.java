@@ -101,6 +101,8 @@ public class TestForOpenGL_MultipleVBOs {
   
 
     glUseProgram(shaderProgramId);
+    
+    
     // Initialize the VAO for the triangles
     int vao_Triangles = glGenVertexArrays();
     glBindVertexArray(vao_Triangles);
@@ -110,16 +112,16 @@ public class TestForOpenGL_MultipleVBOs {
     while ( !glfwWindowShouldClose(windowId) ) {
       glfwPollEvents();
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      
-
   
   
-      // Initialize the red triangle
+  
+      /* Passiert in TriangleShape Konstruktor (dieser ruft den VBO-Konstruktor auf) */
       float[] redTriangle = {
         0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
         -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
         0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f
       };
+      /* Passiert in VBO-Konstruktor  */
       int vbo_RedTriangle = glGenBuffers();
       glBindBuffer(GL_ARRAY_BUFFER, vbo_RedTriangle);
       FloatBuffer vertices_RedTriangle = MemoryUtil.memAllocFloat(redTriangle.length);
@@ -130,10 +132,12 @@ public class TestForOpenGL_MultipleVBOs {
       glVertexAttribPointer(1, 4, GL_FLOAT, false, 6 * Float.BYTES, 2 * Float.BYTES);
       glEnableVertexAttribArray(1);
   
-      // Draw the red triangle
+      /* Passiert in Renderer */
       glDrawArrays(GL_TRIANGLES, 0, 3);
   
-      // Initialize the green triangle
+      
+      
+
       float[] greenTriangle = {
         0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.5f,
         -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f,
@@ -150,10 +154,10 @@ public class TestForOpenGL_MultipleVBOs {
       glEnableVertexAttribArray(1);
   
   
-
       
-      // Draw the green triangle
       glDrawArrays(GL_TRIANGLES, 0, 3);
+      
+      
       
       
       // Clean up

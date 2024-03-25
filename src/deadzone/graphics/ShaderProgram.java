@@ -58,7 +58,7 @@ public class ShaderProgram {
    * Activates this program for rendering
    * by adding it to the rendering pipeline
    */
-  public void bind() {
+  public void use() {
     glUseProgram(programId);
   }
   
@@ -66,7 +66,7 @@ public class ShaderProgram {
    * Deactivates this program for rendering
    * by removing it from the rendering pipeline
    */
-  public void unbind() {
+  public void stopUse() {
     glUseProgram(0);
   }
   
@@ -75,7 +75,7 @@ public class ShaderProgram {
    * when they are no longer needed
    */
   public void cleanup() {
-    unbind();
+    stopUse();
     if (programId != 0) {
       glDeleteProgram(programId);
     }
