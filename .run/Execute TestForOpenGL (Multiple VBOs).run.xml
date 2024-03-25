@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Execute TestForOpenGL (Multiple VBOs)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="deadzone.TestForOpenGL_MultipleVBOs" />
+    <module name="Deadzone" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

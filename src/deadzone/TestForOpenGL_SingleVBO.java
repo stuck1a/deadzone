@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Temporary Test class - target is to render a red triangle and a green triangle above it with 50% opacity.
  */
-public class TestForOpenGL {
+public class TestForOpenGL_SingleVBO {
   
   public static void main(String[] args) throws InterruptedException {
     // Initialize LWJGL
@@ -98,64 +98,64 @@ public class TestForOpenGL {
     glDetachShader(shaderProgramId, fragmentShaderId);
     glDeleteShader(vertexShaderId);
     glDeleteShader(fragmentShaderId);
-    
-    
-    
+  
+
+    glUseProgram(shaderProgramId);
+  
+  
     // Render loop
-    while ( !glfwWindowShouldClose(windowId) ) {
+    while (!glfwWindowShouldClose(windowId)) {
       glfwPollEvents();
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      
+    
       // Initialize the VAO for the triangles
       int vao_Triangles = glGenVertexArrays();
       glBindVertexArray(vao_Triangles);
+    
+      // Initialize the triangles data
+      float[] trianglesData = {
+        // Red triangle
+        0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
+        -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
+        0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
+      
+        // Green triangle
+        0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.5f,
+        -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f,
+        0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f
+      };
   
-  
-      // Initialize the red triangle
       float[] redTriangle = {
         0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
         -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
         0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.5f
       };
-      int vbo_RedTriangle = glGenBuffers();
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_RedTriangle);
-      FloatBuffer vertices_RedTriangle = MemoryUtil.memAllocFloat(redTriangle.length);
-      vertices_RedTriangle.put(redTriangle).flip();
-      glBufferData(GL_ARRAY_BUFFER, vertices_RedTriangle, GL_STATIC_DRAW);
-      glVertexAttribPointer(0, 2, GL_FLOAT, false, 6 * Float.BYTES, 0);
-      glEnableVertexAttribArray(0);
-      glVertexAttribPointer(1, 4, GL_FLOAT, false, 6 * Float.BYTES, 2 * Float.BYTES);
-      glEnableVertexAttribArray(1);
-  
-      // Draw the red triangle
-      glUseProgram(shaderProgramId);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
-  
-      // Initialize the green triangle
+      
       float[] greenTriangle = {
         0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.5f,
         -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f,
         0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f
       };
-      int vbo_GreenTriangle = glGenBuffers();
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_GreenTriangle);
-      FloatBuffer vertices_GreenTriangle = MemoryUtil.memAllocFloat(greenTriangle.length);
-      vertices_GreenTriangle.put(greenTriangle).flip();
-      glBufferData(GL_ARRAY_BUFFER, vertices_GreenTriangle, GL_STATIC_DRAW);
+      
+      int vbo_Triangles = glGenBuffers();
+      glBindBuffer(GL_ARRAY_BUFFER, vbo_Triangles);
+      FloatBuffer vertices_Triangles = MemoryUtil.memAllocFloat(redTriangle.length + greenTriangle.length);
+      vertices_Triangles.put(redTriangle);
+      vertices_Triangles.put(greenTriangle);
+      vertices_Triangles.flip();
+      glBufferData(GL_ARRAY_BUFFER, vertices_Triangles, GL_STATIC_DRAW);
       glVertexAttribPointer(0, 2, GL_FLOAT, false, 6 * Float.BYTES, 0);
       glEnableVertexAttribArray(0);
       glVertexAttribPointer(1, 4, GL_FLOAT, false, 6 * Float.BYTES, 2 * Float.BYTES);
       glEnableVertexAttribArray(1);
-  
-      // Draw the green triangle
-      glDrawArrays(GL_TRIANGLES, 0, 3);
-      
-      
+    
+      // Draw both triangles
+      glDrawArrays(GL_TRIANGLES, 0, 6);
+    
       // Clean up
-      glDeleteBuffers(vbo_RedTriangle);
-      glDeleteBuffers(vbo_GreenTriangle);
+      glDeleteBuffers(vbo_Triangles);
       glDeleteVertexArrays(vao_Triangles);
-      
+    
       // Clear graphic buffers
       glfwSwapBuffers(windowId);
       sleep(1000L);
