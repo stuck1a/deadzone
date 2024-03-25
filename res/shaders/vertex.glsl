@@ -1,9 +1,9 @@
 #version 150 core
 
 in vec2 position;
-in vec3 color;
+in vec4 color;
 
-out vec3 vertexColor;
+out vec4 vertexColor;
 
 void main() {
   vertexColor = color;

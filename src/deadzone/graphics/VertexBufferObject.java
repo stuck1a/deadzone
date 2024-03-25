@@ -109,21 +109,28 @@ public class VertexBufferObject {
   
   
   /**
-   * Defines exactly what value of the input shall be used for and where it is located in the buffer.
-   * OpenGL will automatically link the attribute information to the currently bound VAO.
+   * Default mappings for the input values of the VBO and the input values of the first shader (vertex shader).
+   * This default setup consists of 6 values:
+   * x position
+   * y position
+   * r color value
+   * g color value
+   * b color value
+   * a color value
    */
   private void specifyVertexAttributes() {
-    int shaderProgram = Deadzone.getApplication().getRenderer().getShaderProgram().getProgramId();
+    final int shaderProgram = Deadzone.getApplication().getRenderer().getShaderProgram().getProgramId();
+    final int bytePerFloat = Float.BYTES;
     
     // Define the position data (float values 1+2)
     int positionAttribute = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 5 * Float.BYTES, 0);
+    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 6 * bytePerFloat, 0);
     
-    // Define the color data (float values 3-5)
+    // Define the color data (float values 3-6)
     int colorAttribute = glGetAttribLocation(shaderProgram, "color");
     glEnableVertexAttribArray(colorAttribute);
-    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, false, 5 * Float.BYTES, 2 * Float.BYTES);
+    glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 6 * bytePerFloat, 2 * bytePerFloat);
   }
   
 }

@@ -53,10 +53,10 @@ public class Renderer {
 
    // Create the VBO
     VertexBufferObject vboTriangle1 = new VertexBufferObject(new float[]{
-     //   x      y     R     G     B
-       0.0f,  0.5f, 1.0f, 0.0f, 0.0f,  // Point A
-      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Point B
-       0.5f, -0.5f, 0.0f, 0.0f, 1.0f,  // Point C
+     //   x      y     R     G     B     A
+       0.0f,  0.5f, 1.0f, 0.0f, 0.0f, 0.5f,  // Point A
+      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.5f,  // Point B
+       0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.5f,  // Point C
     });
     vboTriangle1.initialize();
     
