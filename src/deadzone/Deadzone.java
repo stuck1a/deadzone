@@ -116,7 +116,7 @@ public class Deadzone {
     long windowHandle = window.getHandle();
   
     // Remove all graphic data from GPU
-    renderer.cleanup();
+    renderer.dispose();
     
     // Free up all resources and release callbacks
     // Free the window callbacks and destroy the window

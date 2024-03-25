@@ -47,17 +47,34 @@ public class Renderer {
    */
   public void renderRegisteredObjects() {
     glClear(GL_COLOR_BUFFER_BIT);
-  
+    int totalVerticesInCurrentVAO;
+    int vertexPointer = 0;
+    
     // Create the VAO with all attached VBOs for render type GL_TRIANGLES
-    attachAllTriangles();
+    totalVerticesInCurrentVAO = attachAllTriangles();
     
     // Render loop for VAO of type GL_TRIANGLES
     for ( VertexArrayObject vao : attachedVaoObjects ) {
-      // TODO: Count or calculate the total vertex count. Currently, there are 6 because we have 2 triangle fix for testing
-      glDrawArrays(vao.GL_RENDER_TYPE, 0, 6);
+      glDrawArrays(vao.GL_RENDER_TYPE, vertexPointer, totalVerticesInCurrentVAO);
+      vertexPointer += totalVerticesInCurrentVAO;
     }
   
-    cleanup();
+    // Render loop for VAO of type GL_LINE
+    // ... coming soon ...
+    
+    // TODO: Ist es vielleicht doch einfacher, auch die verschiedenen GL_TYPES alle in ein zentrales VAO zu stecken?
+    //       Denn das mit dem Pointer könnte sonst noch Schwierigkeiten bereiten je nachden...
+    
+    // Remove all graphics data for the next turn
+    for (VertexBufferObject vbo : attachedVboObjects) {
+      vbo.delete();
+    }
+    for (VertexArrayObject vao : attachedVaoObjects) {
+      vao.delete();
+    }
+    attachedVboObjects.clear();
+    attachedVaoObjects.clear();
+    registeredRenderableObjects.clear();
   }
   
   
@@ -66,16 +83,21 @@ public class Renderer {
    *
    * Note, that the render type GL_TRIANGLES is not the same as the shape class TriangleShape. For example the shape
    * class RectangleShape also uses the render type GL_TRIANGLE because it uses two triangles to form a rectangle.
+   *
+   * @return The total count of vertices to render for that VAO.
    */
-  private void attachAllTriangles() {
+  private int attachAllTriangles() {
     // Create the VAO
     VertexArrayObject vaoTriangle = new VertexArrayObject(GL_TRIANGLES);
     vaoTriangle.bind();
 
+    int vertexCount = 0;
+    
     // Create, prepare and bind all VBOs of all renderable objects which use GL_TRIANGLES
     for ( IRenderable obj : registeredRenderableObjects ) {
       if (obj.getGL_TYPE() == GL_TRIANGLES) {
         ArrayList<VertexBufferObject> vboList = obj.prepareVBOs();
+        vertexCount += obj.getVertexCount();
         for ( VertexBufferObject vbo : vboList ) {
           vbo.initialize();
           attachedVboObjects.add(vbo);
@@ -84,8 +106,7 @@ public class Renderer {
     }
     attachedVaoObjects.add(vaoTriangle);
     
-    
-
+    return vertexCount;
   }
   
   
@@ -98,17 +119,7 @@ public class Renderer {
   /**
    * Free up all resources from GPU memory
    */
-  public void cleanup() {
-  
-    // Iterate through all registered objects and remove their graphic data from the GPU
-    for (VertexBufferObject vbo : attachedVboObjects) {
-      vbo.delete();
-    }
-    
-    for (VertexArrayObject vao : attachedVaoObjects) {
-      vao.delete();
-    }
-    
+  public void dispose() {
     // Remove the shaders from the GPU memory
     int vertexShader = shaderProgram.getVertexShaderId();
     int fragmentShader = shaderProgram.getFragmentShaderId();

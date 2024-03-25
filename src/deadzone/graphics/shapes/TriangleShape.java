@@ -12,7 +12,11 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 public class TriangleShape implements IShape {
   
   /** The OpenGL object type, so the renderer knows to which VertexArray this shape must be added */
-  public static final int glRenderType = GL_TRIANGLES;
+  private static final int glRenderType = GL_TRIANGLES;
+  
+  /** The amount of vertices which are added through VBOs for each TriangleShape which is created */
+  private static final int vertexCount = 3;
+  
   
   public float x1;
   public float y1;
@@ -62,6 +66,13 @@ public class TriangleShape implements IShape {
     return vboList;
   }
   
+  /**
+   * Returns the total count of vertices the actual renderable object uses, so that the renderer knows the total count in the render loop
+   */
+  @Override
+  public int getVertexCount() {
+    return vertexCount;
+  }
   
   /**
    * Returns the OpenGL object type the renderable object uses, so the renderer knows to which VertexArray this shape must be attached
@@ -70,5 +81,7 @@ public class TriangleShape implements IShape {
   public int getGL_TYPE() {
     return glRenderType;
   }
+  
+  
   
 }

@@ -16,4 +16,7 @@ public interface IRenderable {
   /** Set up all vertex attributes for all VBOs the actual renderable object requires */
   public ArrayList<VertexBufferObject> prepareVBOs();
   
+  /** Returns the total count of vertices the actual renderable object uses, so that the renderer knows the total count in the render loop */
+  public int getVertexCount();
+  
 }
