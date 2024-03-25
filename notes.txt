@@ -1,0 +1,20 @@
+#####################################################
+###   DEAZONE ROADMAP FÜR DAS PACKAGE "deadzone.graphics"   ###
+#####################################################
+
+- VBA-/VBO-Erzeugung aus der Render-Loop rausholen
+- Objekt erzeugen, mit dem alles ordentlich registriert werden kann
+  -> müssen VBO's wirklich auch registriert werden? Hängen ja eig am VAO...
+
+- WorldObject-Klasse einführen, welches dann jeweils die eigenen VAO/VBO's definiert
+- GeometricObject extends WorldObject einführen
+- TriangleObject extends GeometricObject einführen
+
+- RectangleObject extends GeometricObject einführen
+  => Hier findet quasi der Umbau vom Rendering statt, so dass nicht nur GL_TRIANGLE im draw genutzt werden kann.
+
+- UIObject extends WorldObject einführen
+- ButtonObject extends UIObject einführen
+  => createButton() vorerst noch ohne Fonts etc, aber beinhaltet ein RectanlgeObject
+
+- Uniforms in die Shader einfügen, damit die IsoWorldObjects eingeführt werden können, welche auf Basis normaler Koordinaten isometrisch projiziert dargestellt werden

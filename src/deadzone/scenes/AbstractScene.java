@@ -1,7 +1,7 @@
 package deadzone.scenes;
 
 import deadzone.Deadzone;
-import deadzone.graphics.Renderable;
+import deadzone.graphics.IRenderable;
 import deadzone.graphics.Renderer;
 
 import java.util.EnumMap;
@@ -22,7 +22,7 @@ public abstract class AbstractScene {
   /**
    * All visible objects of the scene are registered here
    */
-  Renderable[] renderObjects;
+  IRenderable[] renderObjects;
   
   
   /**
@@ -52,7 +52,7 @@ public abstract class AbstractScene {
    * @param obj The new object to add
    * @return Succeeded or not
    */
-  public boolean addObject(Renderable obj) {
+  public boolean addObject(IRenderable obj) {
     return true;
   }
   
