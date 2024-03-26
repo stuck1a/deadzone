@@ -199,10 +199,9 @@ public class Deadzone {
     glfwSwapInterval(Settings.vSync ? 1 : 0);
     // Display application window
     glfwShowWindow(windowHandle);
-    // Initialize timer
+    // Prepare initial scene
     AbstractScene.setActiveScene(Scene.LAUNCHER);
-    timer = new GameTimer(Settings.targetFPS);
-    Launcher launcherScene = new Launcher();
+    new Launcher();
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
     // Set the base color of the application window
@@ -210,8 +209,8 @@ public class Deadzone {
     glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
     // Set up the renderer
     renderer = new Renderer();
-  
-
+    // Initialize timer
+    timer = new GameTimer(Settings.targetFPS);
   }
   
   
