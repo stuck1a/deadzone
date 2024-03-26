@@ -16,24 +16,26 @@ public class Launcher extends AbstractScene {
   
   public Launcher() {
     super(name);
+  
+    // Add a green triangle for testing purposes
+    TriangleShape greenTriangle = new TriangleShape(
+      0.0f,  1.0f,
+      -0.5f,  0.0f,
+      0.5f,  0.0f,
+      new Color(0, 255, 0, 255)
+    );
+    addObject(greenTriangle);
     
     // Add a red triangle for testing purposes
     TriangleShape redTriangle = new TriangleShape(
       0.0f,  0.5f,
       -0.5f, -0.5f,
       0.5f, -0.5f,
-      new Color(255, 0, 0, 100)
+      new Color(255, 0, 0, 255)
     );
     addObject(redTriangle);
     
-    // Add a green triangle for testing purposes
-    TriangleShape greenTriangle = new TriangleShape(
-      0.0f,  1.0f,
-      -0.5f,  0.0f,
-      0.5f,  0.0f,
-      new Color(0, 255, 0, 100)
-    );
-    addObject(greenTriangle);
+
   }
   
 }
