@@ -25,9 +25,6 @@ public class Launcher extends AbstractScene {
       0.5f,  0.0f,
       new Color(0, 255, 0, 100)
     ));
-  
-    // Add a blue rectangle for testing purposes (currently x/y/width/height are ignored and constant values are used instead for testing)
-    addObject(new RectangleShape(0.0f, 0.0f, 0.0f, 0.0f, new Color(0, 0, 255, 100)));
     
     // Add a red triangle for testing purposes
     addObject(new TriangleShape(
@@ -36,6 +33,9 @@ public class Launcher extends AbstractScene {
       0.5f, -0.5f,
       new Color(255, 0, 0, 100)
     ));
+  
+    // Add a blue rectangle for testing purposes (currently x/y/width/height are ignored and constant values are used instead for testing)
+    addObject(new RectangleShape(0.0f, -1.1f, 0.3f, 0.2f, new Color(0, 0, 255, 100)));
   }
   
 }

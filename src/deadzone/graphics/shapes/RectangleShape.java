@@ -55,23 +55,22 @@ public class RectangleShape implements IShape {
     vboList = new ArrayList<>();
     
     // Create the two VBOs which represents the given rectangle
-    // TODO: Erstmal absolute Werte zum testen -> Danach berechnen aus x,y,width,height
     final float red = color.getRedNormalized();
     final float green = color.getGreenNormalized();
     final float blue = color.getBlueNormalized();
     final float alpha = color.getAlphaNormalized();
     
     VertexBufferObject vbo1 = new VertexBufferObject(new float[] {
-      0.0f,  0.5f, red, green, blue, alpha,
-      0.0f,  0.0f, red, green, blue, alpha,
-      0.75f, 0.0f, red, green, blue, alpha
+      x, y + height, red, green, blue, alpha,
+      x, y, red, green, blue, alpha,
+      x + width, y + height, red, green, blue, alpha
     });
     vboList.add(vbo1);
   
     VertexBufferObject vbo2 = new VertexBufferObject(new float[] {
-      0.75f, 0.5f, red, green, blue, alpha,
-      0.0f,  0.5f, red, green, blue, alpha,
-      0.75f, 0.0f, red, green, blue, alpha
+      x + width, y, red, green, blue, alpha,
+      x,  y, red, green, blue, alpha,
+      x + width, y + height, red, green, blue, alpha
     });
     vboList.add(vbo2);
     
