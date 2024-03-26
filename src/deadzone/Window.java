@@ -23,7 +23,7 @@ public class Window {
     // Configure the window for the launcher scene
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hide until init is done
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // not resizable
     // Configure OpenGL
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Settings.majorVersionOpenGL);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Settings.minorVersionOpenGL);

@@ -4,10 +4,16 @@
 
 
 
-- RectangleShape
+- Transparenz wird noch nicht gerendert
 
 
 
 - Uniforms in die Shader einfügen damit nicht bei jedem Loop alles komplett neu in die GPU geladen werden muss.
   So wie ich das verstanden habe kann man mit uniforms die bereits im GPU-Speicher liegenden Vertexdaten manipulieren,
   indem man die MVP-Faktoren in die Shader einführt.
+
+
+- Nachlesen, was man in OpenGL für onResize für eine Funktion ausführen muss, damit die Fenstergröße neu berechnet wird
+  und eine entsprechende Logik dafür einführen
+
+
