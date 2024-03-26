@@ -1,6 +1,7 @@
 package deadzone.graphics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -9,8 +10,8 @@ public class Renderer {
   /** Stores the shader program in which is the connector object to all shader programs in the GPU memory */
   protected ShaderProgram shaderProgram;
   
-  /** Stores all handles of VAO objects which are currently stored in the GPU memory for rendering */
-  ArrayList<VertexArrayObject> attachedVaoObjects = new ArrayList<>();    // WIRD EVENTUELL NOCH BENÖTIGT, WENN ANDERE MESH TYPEN DAZUKOMMEN (Z.B. GL_LINE)
+  /** Stores all VAO with the related mesh type as key which are currently stored in the GPU memory for rendering */
+  private final HashMap<Integer,VertexArrayObject> attachedVAOs = new HashMap<>();
   
   ArrayList<IRenderable> registeredRenderableObjects = new ArrayList<>();
   
@@ -35,42 +36,31 @@ public class Renderer {
         System.err.println("Could not initialize shaders.\n" + e.getMessage());
       }
     }
-
+  
+    // Create and bind the VAO for standard meshes
+    VertexArrayObject vaoTriangles = new VertexArrayObject(GL_TRIANGLES);
+    attachedVAOs.put(GL_TRIANGLES, vaoTriangles);
+    vaoTriangles.bind();
   }
   
   /**
-   * The main render loop.
-   * At this point all objects VAOs are ready and have their VBOs attached and all vertex attribute pointer are defined.
-   * So we only render each VAO with the proper render type and the remove all registered objects as preparation for the
-   * next render loop.
+   * Called from the render loop.
+   * Iterates through all VAOs, initializes and binds all related VBOs (related by mesh type) to them,
+   * draws the corresponding meshes and finally unbind those VBOs again.
+   * After that, all registered objects will be cleared to prepare for the upcoming game loop.
    */
   public void renderRegisteredObjects() {
-    // Create and bind the default VAO (for meshes of type GL_TRIANGLES)
-    VertexArrayObject vaoTriangleMeshes = new VertexArrayObject(GL_TRIANGLES);
-    vaoTriangleMeshes.bind();
-    
-    // Iterate through all registered objects
     for ( IRenderable obj : registeredRenderableObjects ) {
-      // Make sure, they use triangle meshes
       if (obj.getGL_TYPE() == GL_TRIANGLES) {
-        
-        // Iterate though all VBOs of the object
         ArrayList<VertexBufferObject> vboList = obj.getVBOs();
-        final int vertexCount = obj.getVertexCount();
         for ( VertexBufferObject vbo : vboList ) {
-          // Load the VBO to the GPU and attach it to the VAO
           vbo.initialize();
-          // Render it
-          glDrawArrays(GL_TRIANGLES, 0, 3);
-          // Unbind it so can render the next one
+          glDrawArrays(GL_TRIANGLES, 0, obj.getVertexCount());
           vbo.delete();
         }
       }
     }
-    // Remove all registered object to prepare the next loop
     registeredRenderableObjects.clear();
-    // Unbind the VAO, because currently we also recreate this one for each loop
-    vaoTriangleMeshes.delete();
   }
   
   
@@ -83,6 +73,10 @@ public class Renderer {
    * Free up all resources from GPU memory
    */
   public void dispose() {
+    // Delete VAOs
+    attachedVAOs.forEach((type, vao) -> { vao.delete(); });
+    attachedVAOs.clear();
+    
     // Remove the shaders from the GPU memory
     int vertexShader = shaderProgram.getVertexShaderId();
     int fragmentShader = shaderProgram.getFragmentShaderId();

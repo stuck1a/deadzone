@@ -3,12 +3,6 @@
 ###############################################################
 
 
-- Fixen, dass nur das letzte Objekt (das letzte VBO) gerendert wird.
-  Dafür liegen zwei funktionierende Varianten (alles in einem VBO und jedes Objekt bzw. jedes Triangle eines Objekts in jeweils einem eigenen VBO) in den Klassen
-  TestForOpenGl_XXX.java die den Ablauf prozedural wiedergeben. Aus Performancesicht sollte unbedingt die Variante mit mehreren VBOs implementiert werden.
-  => Aufjedenfall muss das funktionierende Trivial-Beispiel auf die reale Applikation angewendet werden. Vergleichen, was falsch läuft usw
-
-
 
 - RectangleShape
 
