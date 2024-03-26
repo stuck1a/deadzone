@@ -62,6 +62,7 @@ public class Renderer {
     for ( IRenderable obj : registeredRenderableObjects ) {
       if (obj.getGL_TYPE() == GL_TRIANGLES) {
         ArrayList<VertexBufferObject> vboList = obj.getVBOs();
+        
         for ( VertexBufferObject vbo : vboList ) {
           vbo.initialize();
           glDrawArrays(GL_TRIANGLES, 0, obj.getVertexCount());

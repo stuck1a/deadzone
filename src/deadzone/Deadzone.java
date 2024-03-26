@@ -204,6 +204,9 @@ public class Deadzone {
     new Launcher();
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
+    // Configure OpenGL
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Set the base color of the application window
     float[] baseColor = Settings.baseColorRGBA;
     glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
@@ -211,11 +214,12 @@ public class Deadzone {
     renderer = new Renderer();
     // Initialize timer
     timer = new GameTimer(Settings.targetFPS);
+
   }
   
   
   /**
-   * Set up GLFW to use the desired OpenGL version with core profile for rendering
+   * Creates the initial window und configures OpenGL
    */
   private void createRenderContext() {
     window = new Window(Settings.launcherWidth, Settings.launcherHeight, Settings.windowTitle, NULL, NULL);
