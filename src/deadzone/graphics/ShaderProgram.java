@@ -113,10 +113,10 @@ public class ShaderProgram {
   public void initializeBaseShaders() throws Exception {
     String shadersDir = Util.getShadersDir();
     
-    String vertexShaderCode = Util.readFullFile(shadersDir + "vertex.glsl");
+    String vertexShaderCode = Util.readFullFile(shadersDir + "default.vert");
     vertexShaderId = compileShader(vertexShaderCode, GL_VERTEX_SHADER);
   
-    String fragmentShaderCode = Util.readFullFile(shadersDir + "fragment.glsl");
+    String fragmentShaderCode = Util.readFullFile(shadersDir + "default.frag");
     fragmentShaderId = compileShader(fragmentShaderCode, GL_FRAGMENT_SHADER);
     
     link();
