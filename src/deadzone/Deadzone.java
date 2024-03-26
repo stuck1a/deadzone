@@ -214,7 +214,6 @@ public class Deadzone {
     renderer = new Renderer();
     // Initialize timer
     timer = new GameTimer(Settings.targetFPS);
-
   }
   
   
@@ -235,9 +234,5 @@ public class Deadzone {
       throw new RuntimeException("Failed to create the GLFW window");
     }
   }
-  
-  
-  
-  
   
 }

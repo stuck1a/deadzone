@@ -3,9 +3,6 @@
 ###############################################################
 
 
-
-- Transparenz wird noch nicht gerendert
-
 - Uniforms / MVP-Transformationsmatrix für Shader einfügen
 
 - Texture Shader implementieren
