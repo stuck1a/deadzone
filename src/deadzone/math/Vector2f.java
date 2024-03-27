@@ -1,5 +1,6 @@
 package deadzone.math;
 
+
 /**
  * This class represents a (x,y)-Vector based on float values.
  */
