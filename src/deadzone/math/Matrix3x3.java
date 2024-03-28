@@ -21,11 +21,16 @@ public class Matrix3x3 {
   /**
    * Creates a 3x3 matrix from nine scalars
    */
-  public Matrix3x3(float x00, float x01, float x10, float x11) {
+  public Matrix3x3(float x00, float x01, float x02, float x10, float x11, float x12, float x20, float x21, float x22) {
     this.x00 = x00;
-    this.x10 = x01;
-    this.x01 = x10;
+    this.x01 = x01;
+    this.x02 = x02;
+    this.x10 = x10;
     this.x11 = x11;
+    this.x12 = x12;
+    this.x20 = x20;
+    this.x21 = x21;
+    this.x22 = x22;
   }
   
   /**
