@@ -33,7 +33,7 @@ This project is dedicated to preserving this Flash game so that it's not lost to
 ## License [![GPL v3](https://img.shields.io/badge/GPL%20v3-blue)](http://www.gnu.org/licenses/gpl-3.0)
 ```
 Old The Last Stand: Dead Zone preservation project.
-Copyright (C) 2023  The DigitalChocolate France Team
+Copyright (C) 2024  The DigitalChocolate France Team
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
