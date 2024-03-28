@@ -11,7 +11,7 @@ public class Settings {
   
   public final static int minorVersionOpenGL = 2;
   
-  public static int launcherWidth = 800;
+  public static int launcherWidth = 600;
   
   public static int launcherHeight = 600;
   
