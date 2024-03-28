@@ -1,13 +1,13 @@
 ###############################################################
-###   DEAZONE ROADMAP FÜR DAS PACKAGE "deadzone.graphics"   ###
+###   DEAZONE ROADMAP FOR THE PACKAGE "deadzone.graphics"   ###
 ###############################################################
 
 
-- Uniforms / MVP-Transformationsmatrix für Shader einfügen
+- Implement the MVP transformation matrix into the vertex shader
 
-- Texture Shader implementieren
+- Implement textures/UV coordinates to the fragment shader
 
-- Nachlesen, was man in OpenGL für onResize für eine Funktion ausführen muss, damit die Fenstergröße neu berechnet wird
-  und eine entsprechende Logik dafür einführen
+- Read what function you have to execute in OpenGL for onResize to recalculate the window size
+  and introduce a corresponding logic for this
 
 
