@@ -1,6 +1,7 @@
 package deadzone.graphics.worldobjects;
 
 import deadzone.graphics.IIsoObject;
+import deadzone.graphics.IsoGrid;
 import deadzone.graphics.VertexBufferObject;
 
 import java.util.ArrayList;
@@ -28,23 +29,32 @@ public class Tile implements IIsoObject {
   /** The x coordinate of the tile within the iso grid */
   private final int x;
   
-  /** The y coordinate of the tile within the iso grid */
+  /** The y coordinate of the Tile within the iso grid */
   private final int y;
+  
+  /** The Grid to which this Tile belongs to  */
+  private final IsoGrid grid;
   
   
   /**
    * Creates a new Tile
    */
-  public Tile(int x, int y) {
+  public Tile(IsoGrid grid, int x, int y) {
+    this.grid = grid;
     this.x = x;
     this.y = y;
   }
   
   
   /**
-   * Returns the x coordinate of the object in the orthogonal grid from bottom left
-   *
-   * @return Grid coordinate
+   * Returns the iso grid to which this Tile belongs to
+   */
+  public IsoGrid getGrid() {
+    return this.grid;
+  }
+  
+  /**
+   * Returns the x coordinate of the Tile within the iso grid
    */
   @Override
   public int getXCoordinate() {
@@ -52,38 +62,23 @@ public class Tile implements IIsoObject {
   }
   
   /**
-   * Returns the y coordinate of the object in the orthogonal grid from bottom left
-   *
-   * @return Grid coordinate
+   * Returns the y coordinate of the Tile within the iso grid
    */
   @Override
   public int getYCoordinate() {
     return y;
   }
   
-  /**
-   * Returns the OpenGL object type the renderable object uses, so the renderer knows to which VertexArray this shape must be attached
-   */
   @Override
   public int getGL_TYPE() {
     return glRenderType;
   }
   
-  /**
-   * Returns the pointer to all VBOs which form this object together.
-   * If there are no VBOs yet initialized, they will be initialized and bound on-the-fly
-   */
   @Override
   public ArrayList<VertexBufferObject> getVBOs() {
     return vboList;
   }
   
-  /**
-   * Returns the total count of vertices the object have to form its mesh (some objects might have multiple mesh's
-   * for example a button has two rectangle meshes, one for the shape and one for the font texture. Each mesh is a
-   * rectangle formed by two GL_TRIANGLES).
-   * The total count is used from the renderer to determine the amount of vertices to render to draw the object.
-   */
   @Override
   public int getVertexCount() {
     return vertexCount;
