@@ -32,7 +32,7 @@ public class Matrix2x2 {
   /**
    * Creates a 2x2 matrix from two (x,y)-Vectors as columns
    */
-  public Matrix2x2(Vector2f col1, Vector2f col2) {
+  public Matrix2x2(Vector2 col1, Vector2 col2) {
     this.x00 = col1.x;
     this.x10 = col1.y;
     this.x01 = col2.x;
@@ -96,10 +96,10 @@ public class Matrix2x2 {
   /**
    * Multiplies a (x,y)-Vector to this matrix
    */
-  public Vector2f multiply(Vector2f vector) {
+  public Vector2 multiply(Vector2 vector) {
     float x = this.x00 * vector.x + this.x01 * vector.y;
     float y = this.x10 * vector.x + this.x11 * vector.y;
-    return new Vector2f(x, y);
+    return new Vector2(x, y);
   }
   
   

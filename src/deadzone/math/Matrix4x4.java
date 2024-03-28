@@ -60,7 +60,7 @@ public class Matrix4x4 {
     Matrix4x4 rot = new Matrix4x4();
     float c = (float) Math.cos(Math.toRadians(angle));
     float s = (float) Math.sin(Math.toRadians(angle));
-    Vector3f vec = new Vector3f(x, y, z);
+    Vector3 vec = new Vector3(x, y, z);
     if (vec.length() != 1f) {
       vec = vec.normalize();
       x = vec.x;
@@ -126,7 +126,7 @@ public class Matrix4x4 {
   /**
    * Creates a 4x4 matrix from four (x,y,z,w)-Vectors as columns
    */
-  public Matrix4x4(Vector4f col1, Vector4f col2, Vector4f col3, Vector4f col4) {
+  public Matrix4x4(Vector4 col1, Vector4 col2, Vector4 col3, Vector4 col4) {
     x00 = col1.x;
     x10 = col1.y;
     x20 = col1.z;
@@ -232,12 +232,12 @@ public class Matrix4x4 {
   /**
    * Multiplies a (x,y,z,w)-Vector to this matrix (this * param)
    */
-  public Vector4f multiply(Vector4f vector) {
+  public Vector4 multiply(Vector4 vector) {
     float x = this.x00 * vector.x + this.x01 * vector.y + this.x02 * vector.z + this.x03 * vector.w;
     float y = this.x10 * vector.x + this.x11 * vector.y + this.x12 * vector.z + this.x13 * vector.w;
     float z = this.x20 * vector.x + this.x21 * vector.y + this.x22 * vector.z + this.x23 * vector.w;
     float w = this.x30 * vector.x + this.x31 * vector.y + this.x32 * vector.z + this.x33 * vector.w;
-    return new Vector4f(x, y, z, w);
+    return new Vector4(x, y, z, w);
   }
   
   /**

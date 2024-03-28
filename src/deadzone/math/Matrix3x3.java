@@ -36,7 +36,7 @@ public class Matrix3x3 {
   /**
    * Creates a 3x3 matrix from three (x,y,z)-Vectors as columns
    */
-  public Matrix3x3(Vector3f col1, Vector3f col2, Vector3f col3) {
+  public Matrix3x3(Vector3 col1, Vector3 col2, Vector3 col3) {
     x00 = col1.x;
     x10 = col1.y;
     x20 = col1.z;
@@ -115,11 +115,11 @@ public class Matrix3x3 {
   /**
    * Multiplies a (x,y,z)-Vector to this matrix
    */
-  public Vector3f multiply(Vector3f vector) {
+  public Vector3 multiply(Vector3 vector) {
     float x = this.x00 * vector.x + this.x01 * vector.y + this.x02 * vector.z;
     float y = this.x10 * vector.x + this.x11 * vector.y + this.x12 * vector.z;
     float z = this.x20 * vector.x + this.x21 * vector.y + this.x22 * vector.z;
-    return new Vector3f(x, y, z);
+    return new Vector3(x, y, z);
   }
   
   /**
