@@ -1,5 +1,10 @@
 package deadzone.graphics;
 
+import deadzone.graphics.worldobjects.Tile;
+
+import java.util.ArrayList;
+
+
 /**
  * This class describes the isometric grid and provides functions to convert pixel positions to coordinates and vice versa
  */
@@ -15,6 +20,9 @@ public class IsoGrid {
   
   /** Total count of vertical tiles in this grid */
   private final int tileCountY;
+  
+  /** Stores references to all tiles in this grid */
+  private ArrayList<Tile> tiles;    // TODO: Stattdessen eine 2D ArrayList mit den Koordinaten als Identifier nutzen
   
   
   /**
