@@ -1,5 +1,7 @@
 package deadzone.graphics.worldobjects;
 
+import deadzone.Util;
+import deadzone.graphics.Color;
 import deadzone.graphics.IIsoObject;
 import deadzone.graphics.IsoGrid;
 import deadzone.graphics.VertexBufferObject;
@@ -32,6 +34,9 @@ public class Tile implements IIsoObject {
   /** The y coordinate of the Tile within the iso grid */
   private final int y;
   
+  /** Contains the binary texture data */
+  private final String textureData;
+  
   /** The Grid to which this Tile belongs to  */
   private final IsoGrid grid;
   
@@ -43,6 +48,7 @@ public class Tile implements IIsoObject {
     this.grid = grid;
     this.x = x;
     this.y = y;
+    this.textureData = "";
   }
   
   
@@ -76,6 +82,40 @@ public class Tile implements IIsoObject {
   
   @Override
   public ArrayList<VertexBufferObject> getVBOs() {
+    if (vboList != null) {
+      return vboList;
+    }
+  
+    vboList = new ArrayList<>();
+  
+    // Create the two VBOs which represents the given rectangle
+    // TODO: Replace vertex colors with texture colors (UV)
+    final Color color = new Color(255, 255, 255, 255);
+    final float red = color.getRedNormalized();
+    final float green = color.getGreenNormalized();
+    final float blue = color.getBlueNormalized();
+    final float alpha = color.getAlphaNormalized();
+    
+    float xNormalized = Util.normalizePixelWidth(x * grid.getTileWidth());
+    float yNormalized = Util.normalizePixelHeight(y * grid.getTileHeight());
+    
+    float height = Util.normalizePixelHeight(grid.getTileHeight());
+    float width = Util.normalizePixelWidth(grid.getTileWidth());
+    
+    VertexBufferObject vbo1 = new VertexBufferObject(new float[] {
+      xNormalized, yNormalized + height, red, green, blue, alpha,
+      xNormalized, yNormalized, red, green, blue, alpha,
+      xNormalized + width, yNormalized + height, red, green, blue, alpha
+    });
+    vboList.add(vbo1);
+  
+    VertexBufferObject vbo2 = new VertexBufferObject(new float[] {
+      xNormalized + width, yNormalized, red, green, blue, alpha,
+      xNormalized, yNormalized, red, green, blue, alpha,
+      xNormalized + width, yNormalized + height, red, green, blue, alpha
+    });
+    vboList.add(vbo2);
+  
     return vboList;
   }
   

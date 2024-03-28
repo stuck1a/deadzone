@@ -1,7 +1,6 @@
 package deadzone;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -106,6 +105,26 @@ public class Util {
       throw new RuntimeException(e);
     }
     return new String(encoded, StandardCharsets.UTF_8);
+  }
+  
+  
+  /**
+   * Converts a given width in pixel into a value between 0 and 1, where
+   * 0 means 0% of the current window width and 1 means 100% of the current window width
+   */
+  public static float normalizePixelWidth(int pixelWidth) {
+    int totalWidth = Deadzone.getApplication().getWindow().getPixelWidth();
+    return  (float)(pixelWidth) / (float)(totalWidth);
+  }
+  
+  
+  /**
+   * Converts a given height in pixel into a value between 0 and 1, where
+   * 0 means 0% of the current window height and 1 means 100% of the current window height
+   */
+  public static float normalizePixelHeight(int pixelHeight) {
+    int totalHeight = Deadzone.getApplication().getWindow().getPixelHeight();
+    return (float)(pixelHeight) / (float)(totalHeight);
   }
   
 }

@@ -2,7 +2,7 @@ package deadzone;
 
 import deadzone.graphics.Renderer;
 import deadzone.scenes.AbstractScene;
-import deadzone.scenes.Launcher;
+import deadzone.scenes.Compound;
 import deadzone.scenes.Scene;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -30,7 +30,7 @@ public class Deadzone {
   private boolean debugMode = false;
   
   
-  public Window getWindowHandle() {
+  public Window getWindow() {
     return window;
   }
   
@@ -200,8 +200,14 @@ public class Deadzone {
     // Display application window
     glfwShowWindow(windowHandle);
     // Prepare initial scene
-    AbstractScene.setActiveScene(Scene.LAUNCHER);
-    new Launcher();
+    
+    // FOR TESTING: Set Compound as initial scene for iso testing
+    //AbstractScene.setActiveScene(Scene.LAUNCHER);
+    //new Launcher();
+    AbstractScene.setActiveScene(Scene.COMPOUND);
+    new Compound();
+    // TEST BLOCK END
+    
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
     // Configure OpenGL

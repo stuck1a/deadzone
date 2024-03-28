@@ -1,6 +1,7 @@
 package deadzone.scenes;
 
 import deadzone.graphics.IsoGrid;
+import deadzone.graphics.worldobjects.Tile;
 
 
 /**
@@ -18,6 +19,12 @@ public class Compound extends AbstractScene {
   
   public Compound() {
     super(name);
+  
+  
+    // Add a Tile for testing
+    Tile testTile = new Tile(grid, 1, 1);
+    addObject(testTile);
+    
   }
   
   /**

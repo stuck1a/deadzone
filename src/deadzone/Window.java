@@ -37,11 +37,11 @@ public class Window {
     return handle;
   }
   
-  public int getHeight() {
+  public int getPixelHeight() {
     return height;
   }
   
-  public int getWidth() {
+  public int getPixelWidth() {
     return width;
   }
   
@@ -52,5 +52,8 @@ public class Window {
   public long getMonitorHandle() {
     return monitor;
   }
+  
+  
+
   
 }
