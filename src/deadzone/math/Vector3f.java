@@ -9,6 +9,7 @@ public class Vector3f {
   public float y;
   public float z;
   
+  
   /**
    * Creates a new vector with 0 for all values
    */
@@ -28,14 +29,12 @@ public class Vector3f {
   }
   
   
-  
   /**
    * Calculates the squared scalar length of this vector
    */
   public float lengthSquared() {
     return x * x + y * y + z * z;
   }
-  
   
   /**
    * Calculates the scalar length of this vector
@@ -44,9 +43,8 @@ public class Vector3f {
     return (float) Math.sqrt(lengthSquared());
   }
   
-  
   /**
-   * Adds this vector to another (x,y,z)-Vector
+   * Adds a (x,y,z)-Vector to this vector (this + param)
    */
   public Vector3f add(Vector3f vector) {
     float x = this.x + vector.x;
@@ -55,25 +53,22 @@ public class Vector3f {
     return new Vector3f(x, y, z);
   }
   
-  
   /**
-   * Subtracts this vector from another (x,y,z)-Vector
+   * Subtracts a (x,y,z)-Vector from this vector (this - param)
    */
   public Vector3f subtract(Vector3f vector) {
     return this.add(vector.negate());
   }
   
-  
   /**
-   * Calculates the dot product of this vector with another (x,y,z)-Vector
+   * Calculates the dot product of this vector with another (x,y,z)-Vector (this * param)
    */
   public float dot(Vector3f vector) {
     return this.x * vector.x + this.y * vector.y + this.z * vector.z;
   }
   
-  
   /**
-   * Calculates the cross product of this vector with another (x,y,z)-Vector
+   * Calculates the cross product of this vector with another (x,y,z)-Vector (this X param)
    */
   public Vector3f cross(Vector3f vector) {
     float x = this.y * vector.z - this.z * vector.y;
@@ -82,7 +77,6 @@ public class Vector3f {
     return new Vector3f(x, y, z);
   }
   
-  
   /**
    * Negates this vector
    */
@@ -90,9 +84,8 @@ public class Vector3f {
     return multiply(-1f);
   }
   
-  
   /**
-   * Multiplies ("scales") this vector with a scalar
+   * Multiplies ("scales") a scalar to this vector (this * param)
    */
   public Vector3f multiply(float scalar) {
     float x = this.x * scalar;
@@ -101,14 +94,12 @@ public class Vector3f {
     return new Vector3f(x, y, z);
   }
   
-  
   /**
-   * Divides this vector with a scalar value
+   * Divides a scalar value from this vector (this / param)
    */
   public Vector3f divide(float scalar) {
     return multiply(1f / scalar);
   }
-  
   
   /**
    * Normalizes this vector (same direction with length of 1)

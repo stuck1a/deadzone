@@ -26,13 +26,13 @@ public class Vector2f {
     this.y = y;
   }
   
+  
   /**
    * Calculates the squared scalar length of this vector
    */
   public float lengthSquared() {
     return x * x + y * y;
   }
-  
   
   /**
    * Calculates the scalar length of this vector
@@ -41,9 +41,8 @@ public class Vector2f {
     return (float) Math.sqrt(lengthSquared());
   }
   
-  
   /**
-   * Adds this vector to another (x,y)-Vector
+   * Adds a (x,y)-Vector to this vector (this + param)
    */
   public Vector2f add(Vector2f vector) {
     float x = this.x + vector.x;
@@ -51,22 +50,19 @@ public class Vector2f {
     return new Vector2f(x, y);
   }
   
-  
   /**
-   * Subtracts this vector from another (x,y)-Vector
+   * Subtracts a (x,y)-Vector from this vector (this - param)
    */
   public Vector2f subtract(Vector2f vector) {
     return this.add(vector.negate());
   }
   
-  
   /**
-   * Calculates the dot product of this vector with another (x,y)-Vector
+   * Calculates the dot product of this vector with another (x,y)-Vector (this * param)
    */
   public float dot(Vector2f vector) {
     return this.x * vector.x + this.y * vector.y;
   }
-  
   
   /**
    * Negates this vector
@@ -75,9 +71,8 @@ public class Vector2f {
     return multiply(-1f);
   }
   
-  
   /**
-   * Multiplies ("scales") this vector with a scalar
+   * Multiplies ("scales") a scalar to this vector (this * param)
    */
   public Vector2f multiply(float scalar) {
     float x = this.x * scalar;
@@ -85,14 +80,12 @@ public class Vector2f {
     return new Vector2f(x, y);
   }
   
-  
   /**
-   * Divides this vector with a scalar value
+   * Divides a scalar value from this vector (this / param)
    */
   public Vector2f divide(float scalar) {
     return multiply(1f / scalar);
   }
-  
   
   /**
    * Normalizes this vector (same direction with length of 1)

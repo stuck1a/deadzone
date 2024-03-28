@@ -11,6 +11,7 @@ public class Vector4f {
   public float z;
   public float w;
   
+  
   /**
    * Creates a new vector with 0 for all values
    */
@@ -32,14 +33,12 @@ public class Vector4f {
   }
   
   
-  
   /**
    * Calculates the squared scalar length of this vector
    */
   public float lengthSquared() {
     return x * x + y * y + z * z + w * w;
   }
-  
   
   /**
    * Calculates the scalar length of this vector
@@ -48,9 +47,8 @@ public class Vector4f {
     return (float) Math.sqrt(lengthSquared());
   }
   
-  
   /**
-   * Adds this vector to another (x,y,z,w)-Vector
+   * Adds a (x,y,z,w)-Vector to this vector (this + param)
    */
   public Vector4f add(Vector4f vector) {
     float x = this.x + vector.x;
@@ -60,22 +58,19 @@ public class Vector4f {
     return new Vector4f(x, y, z, w);
   }
   
-  
   /**
-   * Subtracts this vector from another (x,y,z,w)-Vector
+   * Subtracts a (x,y,z,w)-Vector from this vector (this - param)
    */
   public Vector4f subtract(Vector4f vector) {
     return this.add(vector.negate());
   }
   
-  
   /**
-   * Calculates the dot product of this vector with another (x,y,z,w)-Vector
+   * Calculates the dot product of this vector with another (x,y,z,w)-Vector (this * param)
    */
   public float dot(Vector4f vector) {
     return this.x * vector.x + this.y * vector.y + this.z * vector.z + this.w * vector.w;
   }
-  
   
   /**
    * Negates this vector
@@ -84,9 +79,8 @@ public class Vector4f {
     return multiply(-1f);
   }
   
-  
   /**
-   * Multiplies ("scales") this vector with a scalar
+   * Multiplies ("scales") a scalar to this vector (this * param)
    */
   public Vector4f multiply(float scalar) {
     float x = this.x * scalar;
@@ -96,14 +90,12 @@ public class Vector4f {
     return new Vector4f(x, y, z, w);
   }
   
-  
   /**
-   * Divides this vector with a scalar value
+   * Divides a scalar value from this vector (this / param)
    */
   public Vector4f divide(float scalar) {
     return multiply(1f / scalar);
   }
-  
   
   /**
    * Normalizes this vector (same direction with length of 1)
