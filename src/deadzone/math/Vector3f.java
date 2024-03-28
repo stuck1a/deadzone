@@ -33,7 +33,7 @@ public class Vector3f {
    * Calculates the squared scalar length of this vector
    */
   public float lengthSquared() {
-    return x * x + y * y;
+    return x * x + y * y + z * z;
   }
   
   
