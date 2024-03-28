@@ -26,12 +26,19 @@ public class Vector2f {
     this.y = y;
   }
   
+  /**
+   * Calculates the squared scalar length of this vector
+   */
+  public float lengthSquared() {
+    return x * x + y * y;
+  }
+  
   
   /**
    * Calculates the scalar length of this vector
    */
   public float length() {
-    return (float) Math.sqrt(x*x + y*y);
+    return (float) Math.sqrt(lengthSquared());
   }
   
   
@@ -59,6 +66,7 @@ public class Vector2f {
   public float dot(Vector2f vector) {
     return this.x * vector.x + this.y * vector.y;
   }
+  
   
   /**
    * Negates this vector
