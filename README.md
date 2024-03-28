@@ -1,6 +1,7 @@
-> The Last Stand: Dead Zone officially closed December 31, 2020.
+> The Last Stand: Dead Zone officially closed december 31, 2020.
 
 The Last Stand: Dead Zone preservation project by the digitalchocolate team.
+
 This project is dedicated to preserving this Flash game so that it's not lost to time.
 
 ---
