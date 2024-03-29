@@ -5,9 +5,12 @@ in vec4 color;
 
 out vec4 vertexColor;
 
-uniform mat4 MVP;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main() {
   vertexColor = color;
-  gl_Position = MVP * vec4(position, 0.0, 1.0);
+  mat4 mvp = projection * view * model;
+  gl_Position = mvp * vec4(position, 0.0, 1.0);
 }

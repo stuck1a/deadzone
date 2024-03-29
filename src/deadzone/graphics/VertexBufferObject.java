@@ -106,31 +106,42 @@ public class VertexBufferObject {
    */
   private void specifyUniformData() {
     final int shaderProgram = Deadzone.getApplication().getRenderer().getShaderProgram().getProgramId();
-    Matrix4x4 mvp;
     
-    // Apply an isometric projection through the mvp uniform variable
+    // Send model matrix (identity) to the vertex shader
+    Matrix4x4 model = new Matrix4x4();
+    int modelPos = glGetUniformLocation(shaderProgram, "model");
+    MemoryStack modelStack = MemoryStack.stackPush();
+    FloatBuffer modelBuffer = modelStack.mallocFloat(16);
+    model.toBuffer(modelBuffer);
+    MemoryStack.stackPop();
+    glUniformMatrix4fv(modelPos, false, modelBuffer);
+    
+    // Send view matrix (identity) to the vertex shader
+    Matrix4x4 view = new Matrix4x4();
+    int viewPos = glGetUniformLocation(shaderProgram, "view");
+    MemoryStack viewStack = MemoryStack.stackPush();
+    FloatBuffer viewBuffer = viewStack.mallocFloat(16);
+    view.toBuffer(viewBuffer);
+    MemoryStack.stackPop();
+    glUniformMatrix4fv(viewPos, false, viewBuffer);
+    
+    // Send projection matrix to the vertex shader
+    Matrix4x4 projection;
     if (isIso) {
+      // Apply an isometric projection through the projection matrix
       final Window window = Deadzone.getApplication().getWindow();
       final float ratio = (float) window.getPixelWidth() / (float) window.getPixelHeight();
-      
-      mvp = Matrix4x4.createOrthoProjectionMatrix(-ratio, ratio, -1f, 1f, -1f, 1f);
-      //mvp = Matrix4x4.createOrthoProjectionMatrix(-1f, 1f, -1f, 1f, -1f, 1f);
+      projection = Matrix4x4.createOrthoProjectionMatrix(-ratio, ratio, -1f, 1f, -1f, 1f);
     } else {
-      // Otherwise use the "neutral" identity matrix for mvp (its like multiply with 1 - nothing will change)
-      mvp = new Matrix4x4();
+      // Otherwise use "neutral" identity matrix for projection matrix
+      projection = new Matrix4x4();
     }
-    
-    // Send mvp matrix to the vertex shader
-    int mvpPos = glGetUniformLocation(shaderProgram, "MVP");
-    
-    // Create a buffer containing the mvp matrix
-    MemoryStack stack = MemoryStack.stackPush();
-    FloatBuffer mvpBuffer = stack.mallocFloat(16);
-    mvp.toBuffer(mvpBuffer);
+    int projectionPos = glGetUniformLocation(shaderProgram, "projection");
+    MemoryStack projectionStack = MemoryStack.stackPush();
+    FloatBuffer projectionBuffer = projectionStack.mallocFloat(16);
+    projection.toBuffer(projectionBuffer);
     MemoryStack.stackPop();
-    
-    // Attach the buffered matrix
-    glUniformMatrix4fv(mvpPos, false, mvpBuffer);
+    glUniformMatrix4fv(projectionPos, false, projectionBuffer);
   }
   
 }

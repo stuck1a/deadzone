@@ -31,10 +31,10 @@ public class Matrix4x4 {
     ortho.x00 = 2f / (right - left);
     ortho.x11 = 2f / (top - bottom);
     ortho.x22 = -2f / (far - near);
+    //ortho.x33 = 1.0f;
     ortho.x03 = tx;
     ortho.x13 = ty;
     ortho.x23 = tz;
-    ortho.x33 = 1.0f; // Set the last component of the homogeneous coordinate to 1
     return ortho;
   }
   
