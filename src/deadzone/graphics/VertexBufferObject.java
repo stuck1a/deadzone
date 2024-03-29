@@ -66,6 +66,15 @@ public class VertexBufferObject {
     loadTexture();
     specifyVertexAttributes();
     specifyUniformData();
+  
+    // TEXTURE COORDINATES OLD
+    //    MemoryStack textureStack = MemoryStack.stackPush();
+    //    IntBuffer textureCoords = textureStack.mallocInt(2 * 3);
+    //    textureCoords.put(0).put(1).put(2);
+    //    textureCoords.put(2).put(3).put(0);
+    //    textureCoords.flip();
+    //    glBufferData(GL_ELEMENT_ARRAY_BUFFER, textureCoords, GL_STATIC_DRAW);
+    //    MemoryStack.stackPop();
   }
   
   
@@ -89,26 +98,27 @@ public class VertexBufferObject {
    * g color value
    * b color value
    * a color value
+   * U texture coordinate
+   * V texture coordinate
    */
   private void specifyVertexAttributes() {
     final int shaderProgram = Deadzone.getApplication().getRenderer().getShaderProgram().getProgramId();
     final int bytePerFloat = Float.BYTES;
     
-    // Define the position data (float values 1+2)
+    // Define the position data input (float values 1+2)
     int positionAttribute = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 6 * bytePerFloat, 0);
+    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 8 * bytePerFloat, 0);
     
-    // Define the color data (float values 3-6)
+    // Define the color data input (float values 3-6)
     int colorAttribute = glGetAttribLocation(shaderProgram, "color");
     glEnableVertexAttribArray(colorAttribute);
-    glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 6 * bytePerFloat, 2 * bytePerFloat);
+    glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 8 * bytePerFloat, 2 * bytePerFloat);
     
-    // Define the texture data (float values 7-10)
-//    int texcoordPos = glGetAttribLocation(shaderProgram, "texcoord");
-//    glEnableVertexAttribArray(texcoordPos);
-//    glVertexAttribPointer(texcoordPos, 4, GL_FLOAT, false, 8 * bytePerFloat, 6 * bytePerFloat);
-  
+    // Define the texture coordinates input (float values 7+8)
+    int texcoordAttribute = glGetAttribLocation(shaderProgram, "texcoord");
+    glEnableVertexAttribArray(texcoordAttribute);
+    glVertexAttribPointer(texcoordAttribute, 2, GL_FLOAT, false, 8 * bytePerFloat, 6 * bytePerFloat);
     
     
     // ALTER CODE
@@ -179,11 +189,10 @@ public class VertexBufferObject {
     projection.toBuffer(projectionBuffer);
     glUniformMatrix4fv(projectionPos, false, projectionBuffer);
     MemoryStack.stackPop();
-  
-  
-    // Map texture data to the uniform variable (optional, because we only have one texture, so its automatically mapped correctly to it)
-    // final int texImagePos = glGetUniformLocation(shaderProgram, "texImage");
-    // glUniform
+    
+    // Map texture data to the uniform variable (optional, because we only have one uniform variable in fragment shader, so its automatically mapped to location 0)
+    final int texturePos = glGetUniformLocation(shaderProgram, "textureData");
+    glUniform1i(texturePos, 0);
   }
   
   
@@ -194,7 +203,7 @@ public class VertexBufferObject {
     /* Load the texture */
     
     // For now, we hard code everything here to use the provided sample texture ("1.png")
-    final String tilePath = Util.getTilesDir() + "1.png";
+    final String tilePath = Util.getTilesDir() + "2.jpg";
     
     // Generate and bind a buffer for the texture
     int textureHandle = glGenTextures();
@@ -231,14 +240,6 @@ public class VertexBufferObject {
     
     // Move the texture to the GPU
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-  
-    MemoryStack textureStack = MemoryStack.stackPush();
-    IntBuffer textureCoords = textureStack.mallocInt(2 * 3);
-    textureCoords.put(0).put(1).put(2);
-    textureCoords.put(2).put(3).put(0);
-    textureCoords.flip();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, textureCoords, GL_STATIC_DRAW);
-    MemoryStack.stackPop();
   }
   
 }

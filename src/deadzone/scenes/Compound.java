@@ -39,7 +39,7 @@ public class Compound extends AbstractScene {
       0.0f,  1.0f,
       -0.5f,  0.0f,
       0.5f,  0.0f,
-      new Color(0, 255, 0, 100)
+      new Color(255, 255, 255, 255)
     ));
     
   }

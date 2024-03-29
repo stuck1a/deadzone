@@ -68,9 +68,9 @@ public class TriangleShape implements IShape {
     VertexBufferObject vbo1 = new VertexBufferObject(
       false,
       new float[] {
-        x1, y1, red, green, blue, alpha,
-        x2, y2, red, green, blue, alpha,
-        x3, y3, red, green, blue, alpha
+        x1, y1, red, green, blue, alpha, 0.5f, 1.0f,
+        x2, y2, red, green, blue, alpha, 0.0f, 0.0f,
+        x3, y3, red, green, blue, alpha, 1.0f, 1.0f
       }
     );
     vboList.add(vbo1);
