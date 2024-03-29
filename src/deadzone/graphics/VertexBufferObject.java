@@ -116,19 +116,14 @@ public class VertexBufferObject {
     
     if (isIso) {
       // View (Camera) for isometric rendering
+      // TODO: Sobald Texturen oder besser noch Fonts implementiert sind, müssen die Werte hier justiert werden für eine ordentliche ISO-Projektion
           view = new Matrix4x4(
-            new Vector4(4f, 3f, 3f, 0f),         // move to 4,3,3
-            new Vector4(0f, 1f, 0f, 0f),         // look at the origin
-            new Vector4(0f, 1f, 0f, 0f),         // head is up (upside-down would be 0, -1, 0)
-            new Vector4(0f, 0f, 0f, 1f)          // neutral element
+            new Vector4(5, -2, 8, 0),         // move camera to (5|-2|8)
+            new Vector4(0, 1, 0, 0),                 // look at the origin
+            new Vector4(0, 1, 0, 0),                 // head is up (upside-down would be 0, -1, 0) Im Grunde rotiert man damit die Kamera seitlich
+            new Vector4(0, 0, 0, 1)                  // neutral element
           );
-//      view = new Matrix4x4(
-//        4f, 0f, 0f, 0f,
-//        3f, 1f, 0f, 0f,
-//        3f, 0f, 0f, 0f,
-//        0f, 0f, 0f, 1f
-//      );
-      
+
       // Projection (Mesh) for isometric rendering
       final Window window = Deadzone.getApplication().getWindow();
       final float ratio = (float) window.getPixelWidth() / (float) window.getPixelHeight();
