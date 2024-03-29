@@ -106,26 +106,26 @@ public class VertexBufferObject {
    */
   private void specifyUniformData() {
     final int shaderProgram = Deadzone.getApplication().getRenderer().getShaderProgram().getProgramId();
-    
-    // Send model matrix (identity) to the vertex shader
+  
+    // For model, we just use an identity matrix (no translation, so the mesh stays at its origin)
     Matrix4x4 model = new Matrix4x4();
-    final int modelPos = glGetUniformLocation(shaderProgram, "model");
-    MemoryStack modelStack = MemoryStack.stackPush();
-    FloatBuffer modelBuffer = modelStack.mallocFloat(16);
-    model.toBuffer(modelBuffer);
-    MemoryStack.stackPop();
-    glUniformMatrix4fv(modelPos, false, modelBuffer);
     
-    // Send view matrix (identity) to the vertex shader
-    Matrix4x4 view = new Matrix4x4();
-    final int viewPos = glGetUniformLocation(shaderProgram, "view");
-    MemoryStack viewStack = MemoryStack.stackPush();
-    FloatBuffer viewBuffer = viewStack.mallocFloat(16);
-    view.toBuffer(viewBuffer);
-    MemoryStack.stackPop();
-    glUniformMatrix4fv(viewPos, false, viewBuffer);
+    // For view, we move the camera to (4,3,3) in world space and look at the origin
+//    Matrix4x4 view = new Matrix4x4(
+//      new Vector4(4f, 3f, 3f, 0f),         // move to 4,3,3
+//      new Vector4(0f, 1f, 0f, 0f),         // look at the origin
+//      new Vector4(0f, 1f, 0f, 0f),         // head is up (upside-down would be 0, -1, 0)
+//      new Vector4(0f, 0f, 0f, 1f)          // neutral element
+//    );
+    Matrix4x4 view = new Matrix4x4(
+      4f, 0f, 0f, 0f,
+      3f, 1f, 0f, 0f,
+      3f, 0f, 0f, 0f,
+      0f, 0f, 0f, 1f
+    );
     
-    // Send projection matrix to the vertex shader
+    
+    // For projection, we use an orthographic projection
     Matrix4x4 projection;
     if (isIso) {
       // Apply an isometric projection through the projection matrix
@@ -136,12 +136,30 @@ public class VertexBufferObject {
       // Otherwise use "neutral" identity matrix for projection matrix
       projection = new Matrix4x4();
     }
+    
+    
+    // now attach the matrices to the vertex shader
+    final int modelPos = glGetUniformLocation(shaderProgram, "model");
+    MemoryStack modelStack = MemoryStack.stackPush();
+    FloatBuffer modelBuffer = modelStack.mallocFloat(16);
+    model.toBuffer(modelBuffer);
+    MemoryStack.stackPop();
+    glUniformMatrix4fv(modelPos, false, modelBuffer);
+  
+    final int viewPos = glGetUniformLocation(shaderProgram, "view");
+    MemoryStack viewStack = MemoryStack.stackPush();
+    FloatBuffer viewBuffer = viewStack.mallocFloat(16);
+    view.toBuffer(viewBuffer);
+    MemoryStack.stackPop();
+    glUniformMatrix4fv(viewPos, true, viewBuffer);
+  
     final int projectionPos = glGetUniformLocation(shaderProgram, "projection");
     MemoryStack projectionStack = MemoryStack.stackPush();
     FloatBuffer projectionBuffer = projectionStack.mallocFloat(16);
     projection.toBuffer(projectionBuffer);
     MemoryStack.stackPop();
     glUniformMatrix4fv(projectionPos, false, projectionBuffer);
+    
   }
   
 }
