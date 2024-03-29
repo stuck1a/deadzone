@@ -109,7 +109,7 @@ public class VertexBufferObject {
     
     // Send model matrix (identity) to the vertex shader
     Matrix4x4 model = new Matrix4x4();
-    int modelPos = glGetUniformLocation(shaderProgram, "model");
+    final int modelPos = glGetUniformLocation(shaderProgram, "model");
     MemoryStack modelStack = MemoryStack.stackPush();
     FloatBuffer modelBuffer = modelStack.mallocFloat(16);
     model.toBuffer(modelBuffer);
@@ -118,7 +118,7 @@ public class VertexBufferObject {
     
     // Send view matrix (identity) to the vertex shader
     Matrix4x4 view = new Matrix4x4();
-    int viewPos = glGetUniformLocation(shaderProgram, "view");
+    final int viewPos = glGetUniformLocation(shaderProgram, "view");
     MemoryStack viewStack = MemoryStack.stackPush();
     FloatBuffer viewBuffer = viewStack.mallocFloat(16);
     view.toBuffer(viewBuffer);
@@ -136,7 +136,7 @@ public class VertexBufferObject {
       // Otherwise use "neutral" identity matrix for projection matrix
       projection = new Matrix4x4();
     }
-    int projectionPos = glGetUniformLocation(shaderProgram, "projection");
+    final int projectionPos = glGetUniformLocation(shaderProgram, "projection");
     MemoryStack projectionStack = MemoryStack.stackPush();
     FloatBuffer projectionBuffer = projectionStack.mallocFloat(16);
     projection.toBuffer(projectionBuffer);

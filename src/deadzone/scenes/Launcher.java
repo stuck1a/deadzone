@@ -34,9 +34,8 @@ public class Launcher extends AbstractScene {
       new Color(255, 0, 0, 100)
     ));
   
-    // Add a blue rectangle for testing purposes (currently x/y/width/height are ignored and constant values are used instead for testing)
+    // Add a blue rectangle for testing purposes
     addObject(new RectangleShape(0.0f, -0.1f, 0.3f, 0.2f, new Color(0, 0, 255, 100)));
-    
     addObject(new RectangleShape(-0.48f, 0.32f, 0.4f, 0.4f, new Color(20, 125, 255, 200)));
   }
   
