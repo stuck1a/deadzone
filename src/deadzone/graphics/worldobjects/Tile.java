@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
  * An isometric tile.
  * It's basically a textured rectangle which represents the floor in the game.
  * It's a non-blocking world object which means other world objects can be placed on it.
- * Since Tiles are the world object with the lowest z index per type, they are always rendered before any other type of world objects.
+ * Since Tiles are the world object with the lowest z index by type, they are always rendered before any other type of world objects.
  */
 public class Tile implements IIsoObject {
   
@@ -25,7 +25,7 @@ public class Tile implements IIsoObject {
   /** The sum of vertices of all VBOs of the object */
   private static final int vertexCount = 6;
   
-  /** List of all VBOs which will form this object in the GPU */
+  /** List of all VBOs which will form the objects mesh in the GPU */
   private ArrayList<VertexBufferObject> vboList;
   
   /** The x coordinate of the tile within the iso grid */
@@ -88,8 +88,8 @@ public class Tile implements IIsoObject {
   
     vboList = new ArrayList<>();
   
-    // Create the two VBOs which represents the given rectangle
-    // TODO: Replace vertex colors with texture colors (UV)
+    // Create the two VBOs which represents the given tile (rectangle + isometric projection)
+    // TODO: Replace vertex colors with texture colors (use UV coordinates for tiles? Does this even makes sense?)
     final Color color = new Color(255, 255, 255, 255);
     final float red = color.getRedNormalized();
     final float green = color.getGreenNormalized();
@@ -102,18 +102,24 @@ public class Tile implements IIsoObject {
     float height = Util.normalizePixelHeight(grid.getTileHeight());
     float width = Util.normalizePixelWidth(grid.getTileWidth());
     
-    VertexBufferObject vbo1 = new VertexBufferObject(new float[] {
-      xNormalized, yNormalized + height, red, green, blue, alpha,
-      xNormalized, yNormalized, red, green, blue, alpha,
-      xNormalized + width, yNormalized + height, red, green, blue, alpha
-    });
+    VertexBufferObject vbo1 = new VertexBufferObject(
+      true,
+      new float[] {
+        xNormalized, yNormalized + height, red, green, blue, alpha,
+        xNormalized, yNormalized, red, green, blue, alpha,
+        xNormalized + width, yNormalized + height, red, green, blue, alpha
+      }
+    );
     vboList.add(vbo1);
   
-    VertexBufferObject vbo2 = new VertexBufferObject(new float[] {
-      xNormalized + width, yNormalized, red, green, blue, alpha,
-      xNormalized, yNormalized, red, green, blue, alpha,
-      xNormalized + width, yNormalized + height, red, green, blue, alpha
-    });
+    VertexBufferObject vbo2 = new VertexBufferObject(
+      true,
+      new float[] {
+        xNormalized + width, yNormalized, red, green, blue, alpha,
+        xNormalized, yNormalized, red, green, blue, alpha,
+        xNormalized + width, yNormalized + height, red, green, blue, alpha
+      }
+    );
     vboList.add(vbo2);
   
     return vboList;

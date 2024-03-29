@@ -1,5 +1,7 @@
 package deadzone.math;
 
+import java.nio.FloatBuffer;
+
 
 /**
  * This class represents a 4x4 Matrix based on float values.
@@ -286,6 +288,19 @@ public class Matrix4x4 {
     result.x32 = this.x23;
     result.x33 = this.x33;
     return result;
+  }
+  
+  /**
+   * Writes this matrix into a given FloatBuffer.
+   * Since this is a buffer especially for OpenGL, it is inserted column-wise,
+   * because OpenGL except column-wise matrices.
+   */
+  public void toBuffer(FloatBuffer buffer) {
+    buffer.put(x00).put(x10).put(x20).put(x30);
+    buffer.put(x01).put(x11).put(x21).put(x31);
+    buffer.put(x02).put(x12).put(x22).put(x32);
+    buffer.put(x03).put(x13).put(x23).put(x33);
+    buffer.flip();
   }
   
 }

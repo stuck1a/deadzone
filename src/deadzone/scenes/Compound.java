@@ -1,6 +1,8 @@
 package deadzone.scenes;
 
+import deadzone.graphics.Color;
 import deadzone.graphics.IsoGrid;
+import deadzone.graphics.shapes.TriangleShape;
 import deadzone.graphics.worldobjects.Tile;
 
 
@@ -14,16 +16,31 @@ public class Compound extends AbstractScene {
   protected static final Scene name = Scene.COMPOUND;
   
   /** Stores the compound tile grid */
-  private final IsoGrid grid = new IsoGrid(50, 50, 10, 10);
+  private final IsoGrid grid = new IsoGrid(100, 100, 10, 10);
   
   
   public Compound() {
     super(name);
   
   
-    // Add a Tile for testing
-    Tile testTile = new Tile(grid, 1, 1);
-    addObject(testTile);
+    // Add some Tiles to test the MVP projection
+    addObject(new Tile(grid, 0, 0));
+    addObject(new Tile(grid, 2, 0));
+    addObject(new Tile(grid, 4, 0));
+    
+    addObject(new Tile(grid, 1, 1));
+    addObject(new Tile(grid, 3, 1));
+    
+    addObject(new Tile(grid, 0, 2));
+    addObject(new Tile(grid, 2, 2));
+    addObject(new Tile(grid, 4, 2));
+  
+    addObject(new TriangleShape(
+      0.0f,  1.0f,
+      -0.5f,  0.0f,
+      0.5f,  0.0f,
+      new Color(0, 255, 0, 100)
+    ));
     
   }
   

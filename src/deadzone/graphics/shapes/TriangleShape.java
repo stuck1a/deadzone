@@ -65,11 +65,14 @@ public class TriangleShape implements IShape {
     final float green = color.getGreenNormalized();
     final float blue = color.getBlueNormalized();
     final float alpha = color.getAlphaNormalized();
-    VertexBufferObject vbo1 = new VertexBufferObject(new float[] {
-      x1, y1, red, green, blue, alpha,
-      x2, y2, red, green, blue, alpha,
-      x3, y3, red, green, blue, alpha
-    });
+    VertexBufferObject vbo1 = new VertexBufferObject(
+      false,
+      new float[] {
+        x1, y1, red, green, blue, alpha,
+        x2, y2, red, green, blue, alpha,
+        x3, y3, red, green, blue, alpha
+      }
+    );
     vboList.add(vbo1);
     
     return vboList;

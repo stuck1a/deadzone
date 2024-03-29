@@ -5,10 +5,9 @@ in vec4 color;
 
 out vec4 vertexColor;
 
-//uniform mat4 MVP;
+uniform mat4 MVP;
 
 void main() {
   vertexColor = color;
-  //gl_Position = MVP * vec4(position, 0.0, 1.0);
-  gl_Position = vec4(position, 0.0, 1.0);
+  gl_Position = MVP * vec4(position, 0.0, 1.0);
 }

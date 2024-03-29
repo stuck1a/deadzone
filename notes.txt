@@ -3,7 +3,7 @@
 ###############################################################
 
 
-- Implement the MVP transformation matrix into the vertex shader
+- Debug ortho projection: The matrix is applied, but the projection still does not work -> check createOrthoProjectionMatrix()
 
 - Implement textures/UV coordinates to the fragment shader
 

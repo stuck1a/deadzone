@@ -60,18 +60,24 @@ public class RectangleShape implements IShape {
     final float blue = color.getBlueNormalized();
     final float alpha = color.getAlphaNormalized();
     
-    VertexBufferObject vbo1 = new VertexBufferObject(new float[] {
-      x, y + height, red, green, blue, alpha,
-      x, y, red, green, blue, alpha,
-      x + width, y + height, red, green, blue, alpha
-    });
+    VertexBufferObject vbo1 = new VertexBufferObject(
+      false,
+      new float[] {
+        x, y + height, red, green, blue, alpha,
+        x, y, red, green, blue, alpha,
+        x + width, y + height, red, green, blue, alpha
+      }
+    );
     vboList.add(vbo1);
   
-    VertexBufferObject vbo2 = new VertexBufferObject(new float[] {
-      x + width, y, red, green, blue, alpha,
-      x,  y, red, green, blue, alpha,
-      x + width, y + height, red, green, blue, alpha
-    });
+    VertexBufferObject vbo2 = new VertexBufferObject(
+      false,
+      new float[] {
+        x + width, y, red, green, blue, alpha,
+        x,  y, red, green, blue, alpha,
+        x + width, y + height, red, green, blue, alpha
+      }
+    );
     vboList.add(vbo2);
     
     return vboList;
