@@ -1,15 +1,19 @@
 package deadzone.graphics;
 
 import deadzone.Deadzone;
+import deadzone.Util;
 import deadzone.Window;
 import deadzone.math.Matrix4x4;
 import deadzone.math.Vector4;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.stb.STBImage.*;
 
 
 /**
@@ -59,6 +63,7 @@ public class VertexBufferObject {
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
     MemoryStack.stackPop();
+    loadTexture();
     specifyVertexAttributes();
     specifyUniformData();
   }
@@ -98,6 +103,26 @@ public class VertexBufferObject {
     int colorAttribute = glGetAttribLocation(shaderProgram, "color");
     glEnableVertexAttribArray(colorAttribute);
     glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 6 * bytePerFloat, 2 * bytePerFloat);
+    
+    // Define the texture data (float values 7-10)
+//    int texcoordPos = glGetAttribLocation(shaderProgram, "texcoord");
+//    glEnableVertexAttribArray(texcoordPos);
+//    glVertexAttribPointer(texcoordPos, 4, GL_FLOAT, false, 8 * bytePerFloat, 6 * bytePerFloat);
+  
+    
+    
+    // ALTER CODE
+    /*
+    // Define the position data (float values 1+2)
+    int positionAttribute = glGetAttribLocation(shaderProgram, "position");
+    glEnableVertexAttribArray(positionAttribute);
+    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 6 * bytePerFloat, 0);
+  
+    // Define the color data (float values 3-6)
+    int colorAttribute = glGetAttribLocation(shaderProgram, "color");
+    glEnableVertexAttribArray(colorAttribute);
+    glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 6 * bytePerFloat, 2 * bytePerFloat);
+    */
   }
   
   
@@ -112,7 +137,6 @@ public class VertexBufferObject {
     Matrix4x4 model = new Matrix4x4();
     Matrix4x4 view;
     Matrix4x4 projection;
-    
     
     if (isIso) {
       // View (Camera) for isometric rendering
@@ -139,23 +163,82 @@ public class VertexBufferObject {
     MemoryStack modelStack = MemoryStack.stackPush();
     FloatBuffer modelBuffer = modelStack.mallocFloat(16);
     model.toBuffer(modelBuffer);
-    MemoryStack.stackPop();
     glUniformMatrix4fv(modelPos, false, modelBuffer);
+    MemoryStack.stackPop();
   
     final int viewPos = glGetUniformLocation(shaderProgram, "view");
     MemoryStack viewStack = MemoryStack.stackPush();
     FloatBuffer viewBuffer = viewStack.mallocFloat(16);
     view.toBuffer(viewBuffer);
-    MemoryStack.stackPop();
     glUniformMatrix4fv(viewPos, true, viewBuffer);
+    MemoryStack.stackPop();
   
     final int projectionPos = glGetUniformLocation(shaderProgram, "projection");
     MemoryStack projectionStack = MemoryStack.stackPush();
     FloatBuffer projectionBuffer = projectionStack.mallocFloat(16);
     projection.toBuffer(projectionBuffer);
-    MemoryStack.stackPop();
     glUniformMatrix4fv(projectionPos, false, projectionBuffer);
+    MemoryStack.stackPop();
+  
+  
+    // Map texture data to the uniform variable (optional, because we only have one texture, so its automatically mapped correctly to it)
+    // final int texImagePos = glGetUniformLocation(shaderProgram, "texImage");
+    // glUniform
+  }
+  
+  
+  /**
+   * Maps the texture data to the fragment shader
+   */
+  private void loadTexture() {
+    /* Load the texture */
     
+    // For now, we hard code everything here to use the provided sample texture ("1.png")
+    final String tilePath = Util.getTilesDir() + "1.png";
+    
+    // Generate and bind a buffer for the texture
+    int textureHandle = glGenTextures();
+    glBindTexture(GL_TEXTURE_2D, textureHandle);
+  
+    // Specify texture wrapping mode
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    
+    // Specify texture filtering mode
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    
+    // Generate mipmap for different levels of detail (optional)
+    // ~ skipped for now ~
+    
+    
+    /* Upload the picture data */
+    // Prepare some buffers to store width, height and the texture components
+    IntBuffer w = stack.mallocInt(1);
+    IntBuffer h = stack.mallocInt(1);
+    IntBuffer comp = stack.mallocInt(1);
+  
+    // Set the texture origin to bottom left instead of top left
+    stbi_set_flip_vertically_on_load(true);
+    
+    // Load the image
+    ByteBuffer image = stbi_load(tilePath, w, h, comp, 4);
+    if (image == null) {
+      throw new RuntimeException("Failed to load texture \"" + tilePath + "\"" + System.lineSeparator() + stbi_failure_reason());
+    }
+    int width = w.get();
+    int height = h.get();
+    
+    // Move the texture to the GPU
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  
+    MemoryStack textureStack = MemoryStack.stackPush();
+    IntBuffer textureCoords = textureStack.mallocInt(2 * 3);
+    textureCoords.put(0).put(1).put(2);
+    textureCoords.put(2).put(3).put(0);
+    textureCoords.flip();
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, textureCoords, GL_STATIC_DRAW);
+    MemoryStack.stackPop();
   }
   
 }

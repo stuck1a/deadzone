@@ -127,4 +127,12 @@ public class Util {
     return (float)(pixelHeight) / (float)(totalHeight);
   }
   
+  
+  /**
+   * Loads a given PNG image and returns its binary data
+   */
+  public static String loadPngImage(String path) {
+    return "";
+  }
+  
 }
