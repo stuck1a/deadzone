@@ -3,6 +3,7 @@ package deadzone.graphics;
 import deadzone.Deadzone;
 import deadzone.Window;
 import deadzone.math.Matrix4x4;
+import deadzone.math.Vector4;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -109,36 +110,36 @@ public class VertexBufferObject {
   
     // For model, we just use an identity matrix (no translation, so the mesh stays at its origin)
     Matrix4x4 model = new Matrix4x4();
-    
-    // For view, we move the camera to (4,3,3) in world space and look at the origin
-//    Matrix4x4 view = new Matrix4x4(
-//      new Vector4(4f, 3f, 3f, 0f),         // move to 4,3,3
-//      new Vector4(0f, 1f, 0f, 0f),         // look at the origin
-//      new Vector4(0f, 1f, 0f, 0f),         // head is up (upside-down would be 0, -1, 0)
-//      new Vector4(0f, 0f, 0f, 1f)          // neutral element
-//    );
-    Matrix4x4 view = new Matrix4x4(
-      4f, 0f, 0f, 0f,
-      3f, 1f, 0f, 0f,
-      3f, 0f, 0f, 0f,
-      0f, 0f, 0f, 1f
-    );
-    
-    
-    // For projection, we use an orthographic projection
+    Matrix4x4 view;
     Matrix4x4 projection;
+    
+    
     if (isIso) {
-      // Apply an isometric projection through the projection matrix
+      // View (Camera) for isometric rendering
+          view = new Matrix4x4(
+            new Vector4(4f, 3f, 3f, 0f),         // move to 4,3,3
+            new Vector4(0f, 1f, 0f, 0f),         // look at the origin
+            new Vector4(0f, 1f, 0f, 0f),         // head is up (upside-down would be 0, -1, 0)
+            new Vector4(0f, 0f, 0f, 1f)          // neutral element
+          );
+//      view = new Matrix4x4(
+//        4f, 0f, 0f, 0f,
+//        3f, 1f, 0f, 0f,
+//        3f, 0f, 0f, 0f,
+//        0f, 0f, 0f, 1f
+//      );
+      
+      // Projection (Mesh) for isometric rendering
       final Window window = Deadzone.getApplication().getWindow();
       final float ratio = (float) window.getPixelWidth() / (float) window.getPixelHeight();
       projection = Matrix4x4.createOrthoProjectionMatrix(-ratio, ratio, -1f, 1f, -1f, 1f);
     } else {
-      // Otherwise use "neutral" identity matrix for projection matrix
+      // Otherwise use "neutral" identity matrix for view and projection matrix
+      view = new Matrix4x4();
       projection = new Matrix4x4();
     }
     
-    
-    // now attach the matrices to the vertex shader
+    // attach the matrices to the vertex shader
     final int modelPos = glGetUniformLocation(shaderProgram, "model");
     MemoryStack modelStack = MemoryStack.stackPush();
     FloatBuffer modelBuffer = modelStack.mallocFloat(16);
