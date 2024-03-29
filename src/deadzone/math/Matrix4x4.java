@@ -34,6 +34,7 @@ public class Matrix4x4 {
     ortho.x03 = tx;
     ortho.x13 = ty;
     ortho.x23 = tz;
+    ortho.x33 = 1.0f; // Set the last component of the homogeneous coordinate to 1
     return ortho;
   }
   
@@ -88,11 +89,11 @@ public class Matrix4x4 {
    * @param z Scale factor along the z coordinate
    */
   public static Matrix4x4 createScalingMatrix(float x, float y, float z) {
-    Matrix4x4 scaler = new Matrix4x4();
-    scaler.x00 = x;
-    scaler.x11 = y;
-    scaler.x22 = z;
-    return scaler;
+    Matrix4x4 scalar = new Matrix4x4();
+    scalar.x00 = x;
+    scalar.x11 = y;
+    scalar.x22 = z;
+    return scalar;
   }
   
   
