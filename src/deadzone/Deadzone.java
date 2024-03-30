@@ -210,9 +210,11 @@ public class Deadzone {
     
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
+    
     // Configure OpenGL
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     // Set the base color of the application window
     float[] baseColor = Settings.baseColorRGBA;
     glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);

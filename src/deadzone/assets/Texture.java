@@ -1,11 +1,27 @@
 package deadzone.assets;
 
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import static org.lwjgl.stb.STBImage.*;
+
+
 public class Texture implements IAsset {
   
   final AssetTypes assetType = AssetTypes.TEXTURE;
   final String filepath;
   
-  CharSequence data;
+  private ByteBuffer data;
+  
+  public IntBuffer w;
+  public IntBuffer h;
+  public IntBuffer comp;
+  
+  public int width;
+  public int height;
+  
   
   /** Unique object identifier */
   String identifier;
@@ -30,18 +46,34 @@ public class Texture implements IAsset {
   
   
   /**
-   * Loads the texture file from the hard drive.
+   * Reads the texture file from the hard drive and uploads it into GPU memory
    */
   @Override
   public void load() {
-    data = "";
+    // Prepare the buffers to store width, height and the texture component count (RGBA = 4)
+    try (MemoryStack stack = MemoryStack.stackPush()) {
+      IntBuffer w = stack.mallocInt(1);
+      IntBuffer h = stack.mallocInt(1);
+      IntBuffer comp = stack.mallocInt(1);
+    
+      // Set the texture origin to bottom left instead of top left
+      stbi_set_flip_vertically_on_load(true);
+    
+      // Load the image data from the stored texture object
+      data = stbi_load(filepath, w, h, comp, 4);
+      if (data == null) {
+        throw new RuntimeException("Failed to load texture \"" + filepath + "\"" + System.lineSeparator() + stbi_failure_reason());
+      }
+      width = w.get();
+      height = h.get();
+    }
   }
   
   
   /**
    * Returns the binary data of the texture
    */
-  public CharSequence getData() {
+  public ByteBuffer getData() {
     if (data == null) {
       load();
     }

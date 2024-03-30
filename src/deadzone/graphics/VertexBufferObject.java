@@ -1,19 +1,17 @@
 package deadzone.graphics;
 
 import deadzone.Deadzone;
-import deadzone.Util;
 import deadzone.Window;
+import deadzone.assets.Texture;
 import deadzone.math.Matrix4x4;
 import deadzone.math.Vector4;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.stb.STBImage.*;
 
 
 /**
@@ -39,6 +37,7 @@ public class VertexBufferObject {
   
   /** If true, an isometric projection matrix will be used for this VBO */
   private boolean isIso;
+  
   
   
   /**
@@ -195,48 +194,29 @@ public class VertexBufferObject {
    * Maps the texture data to the fragment shader
    */
   private void loadTexture() {
-    /* Load the texture */
-    
-    // For now, we hard code everything here to use the provided sample texture ("1.png")
-    final String tilePath = Util.getTilesDir() + "1_marked.png";
+
     
     // Generate and bind a buffer for the texture
     textureHandle = glGenTextures();
     glBindTexture(GL_TEXTURE_2D, textureHandle);
-  
+    
     // Specify texture wrapping mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
+  
     // Specify texture filtering mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     
     // Generate mipmap for different levels of detail (optional)
     // ~ skipped for now ~
+  
+    Texture texture = new Texture("1_marked.png");
+    ByteBuffer imageData = texture.getData();
     
-    
-    /* Upload the picture data */
-    // Prepare some buffers to store width, height and the texture components
-    try (MemoryStack stack = MemoryStack.stackPush()) {
-      IntBuffer w = stack.mallocInt(1);
-      IntBuffer h = stack.mallocInt(1);
-      IntBuffer comp = stack.mallocInt(1);
-      
-      // Set the texture origin to bottom left instead of top left
-      stbi_set_flip_vertically_on_load(true);
-      
-      // Load the image
-      ByteBuffer image = stbi_load(tilePath, w, h, comp, 4);
-      if (image == null) {
-        throw new RuntimeException("Failed to load texture \"" + tilePath + "\"" + System.lineSeparator() + stbi_failure_reason());
-      }
-      int width = w.get();
-      int height = h.get();
-      
-      // Move the texture to the GPU
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-    }
+    // Send the texture to the shader pipeline
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+
 
   }
   
