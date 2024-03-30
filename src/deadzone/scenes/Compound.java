@@ -1,8 +1,6 @@
 package deadzone.scenes;
 
-import deadzone.graphics.Color;
 import deadzone.graphics.IsoGrid;
-import deadzone.graphics.shapes.TriangleShape;
 import deadzone.graphics.worldobjects.Tile;
 
 
@@ -35,12 +33,12 @@ public class Compound extends AbstractScene {
     addObject(new Tile(grid, 2, 2));
     addObject(new Tile(grid, 4, 2));
   
-    addObject(new TriangleShape(
-      0.0f,  1.0f,
-      -0.5f,  0.0f,
-      0.5f,  0.0f,
-      new Color(255, 255, 255, 255)
-    ));
+//    addObject(new TriangleShape(
+//      0.0f,  1.0f,
+//      -0.5f,  0.0f,
+//      0.5f,  0.0f,
+//      new Color(255, 255, 255, 255)
+//    ));
     
   }
   

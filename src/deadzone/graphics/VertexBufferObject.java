@@ -203,15 +203,15 @@ public class VertexBufferObject {
     /* Load the texture */
     
     // For now, we hard code everything here to use the provided sample texture ("1.png")
-    final String tilePath = Util.getTilesDir() + "2.jpg";
+    final String tilePath = Util.getTilesDir() + "1_marked.png";
     
     // Generate and bind a buffer for the texture
     int textureHandle = glGenTextures();
     glBindTexture(GL_TEXTURE_2D, textureHandle);
   
     // Specify texture wrapping mode
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     // Specify texture filtering mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

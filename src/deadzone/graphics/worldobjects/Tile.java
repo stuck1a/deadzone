@@ -34,9 +34,6 @@ public class Tile implements IIsoObject {
   /** The y coordinate of the Tile within the iso grid */
   private final int y;
   
-  /** Contains the binary texture data */
-  private final String textureData;
-  
   /** The Grid to which this Tile belongs to  */
   private final IsoGrid grid;
   
@@ -48,7 +45,6 @@ public class Tile implements IIsoObject {
     this.grid = grid;
     this.x = x;
     this.y = y;
-    this.textureData = "";
   }
   
   
@@ -105,9 +101,9 @@ public class Tile implements IIsoObject {
     VertexBufferObject vbo1 = new VertexBufferObject(
       true,
       new float[] {
-        xNormalized, yNormalized + height, red, green, blue, alpha,
-        xNormalized, yNormalized, red, green, blue, alpha,
-        xNormalized + width, yNormalized + height, red, green, blue, alpha
+        xNormalized, yNormalized + height, red, green, blue, alpha,          0.5f, 1.0f,
+        xNormalized, yNormalized, red, green, blue, alpha,                   0.0f, 0.0f,
+        xNormalized + width, yNormalized + height, red, green, blue, alpha,  1.0f, 1.0f
       }
     );
     vboList.add(vbo1);
@@ -115,9 +111,9 @@ public class Tile implements IIsoObject {
     VertexBufferObject vbo2 = new VertexBufferObject(
       true,
       new float[] {
-        xNormalized + width, yNormalized, red, green, blue, alpha,
-        xNormalized, yNormalized, red, green, blue, alpha,
-        xNormalized + width, yNormalized + height, red, green, blue, alpha
+        xNormalized + width, yNormalized, red, green, blue, alpha,           0.5f, 1.0f,
+        xNormalized, yNormalized, red, green, blue, alpha,                   0.0f, 0.0f,
+        xNormalized + width, yNormalized + height, red, green, blue, alpha,  1.0f, 1.0f
       }
     );
     vboList.add(vbo2);

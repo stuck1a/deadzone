@@ -10,4 +10,8 @@
 - Read what function you have to execute in OpenGL for onResize to recalculate the window size
   and introduce a corresponding logic for this
 
+- Stack memory deallocation through Garbage Collector doesn't seem to work as excepted.
+  After ~340 Frames, we run out of stack space.
+  => Do the de-allocation manually OR do the allocation optimization now
+     (probably the strong references which are recreated again in each loop prevents them from getting garbage collected)
 
