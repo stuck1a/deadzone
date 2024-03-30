@@ -15,7 +15,7 @@ public class RectangleShape implements IShape {
   private static final int glRenderType = GL_TRIANGLES;
   
   /** The sum of vertices of all VBOs of the object */
-  private static final int vertexCount = 6;    // TODO: Set to 4 after implementing vertex index buffer logic
+  private static final int vertexCount = 6;    // TODO: Set to 4 after implementing vertex index buffer (EBO)
   
   /** List of all VBOs which will form this object in the GPU */
   private ArrayList<VertexBufferObject> vboList;

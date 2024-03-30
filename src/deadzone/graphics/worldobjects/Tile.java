@@ -101,9 +101,9 @@ public class Tile implements IIsoObject {
     VertexBufferObject vbo1 = new VertexBufferObject(
       true,
       new float[] {
-        xNormalized, yNormalized + height, red, green, blue, alpha,          0.5f, 1.0f,
-        xNormalized, yNormalized, red, green, blue, alpha,                   0.0f, 0.0f,
-        xNormalized + width, yNormalized + height, red, green, blue, alpha,  1.0f, 1.0f
+        xNormalized, yNormalized + height, red, green, blue, alpha, 0, 1,
+        xNormalized, yNormalized, red, green, blue, alpha, 0, 0,
+        xNormalized + width, yNormalized + height, red, green, blue, alpha, 1, 1
       }
     );
     vboList.add(vbo1);
@@ -111,9 +111,9 @@ public class Tile implements IIsoObject {
     VertexBufferObject vbo2 = new VertexBufferObject(
       true,
       new float[] {
-        xNormalized + width, yNormalized, red, green, blue, alpha,           0.5f, 1.0f,
-        xNormalized, yNormalized, red, green, blue, alpha,                   0.0f, 0.0f,
-        xNormalized + width, yNormalized + height, red, green, blue, alpha,  1.0f, 1.0f
+        xNormalized + width, yNormalized, red, green, blue, alpha, 1, 0,
+        xNormalized, yNormalized, red, green, blue, alpha, 0, 0,
+        xNormalized + width, yNormalized + height, red, green, blue, alpha, 1, 1
       }
     );
     vboList.add(vbo2);
