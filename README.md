@@ -1,10 +1,1 @@
-
-## Releases
-
-| Version | Update | Release date |  Source  | Download |
-| ------ | ------ | ------------ | ------ | -------- |
-
-
-
-## Contacting
-:speech_balloon: Check the related [Discord group](https://discord.gg/rdpFXhja5Q)
+Java based MMO game **inspired** by "The Last Stand - Dead Zone" which uses OpenGL 3.2 through LWJGL's GLFW 
