@@ -17,6 +17,7 @@ public class AssetManager {
    * TODO: For later maybe use script files which define all concrete assets to load or something like this
    */
   public void loadAllAssets() {
+    textures.put("blank", new Texture("blank.png"));
     textures.put("1", new Texture("1.png"));
     textures.put("1_marked", new Texture("1_marked.png"));
     textures.put("2", new Texture("2.jpg"));

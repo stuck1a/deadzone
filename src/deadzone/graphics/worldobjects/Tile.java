@@ -1,7 +1,7 @@
 package deadzone.graphics.worldobjects;
 
 import deadzone.Util;
-import deadzone.graphics.Color;
+import deadzone.assets.Texture;
 import deadzone.graphics.IIsoObject;
 import deadzone.graphics.IsoGrid;
 import deadzone.graphics.VertexBufferObject;
@@ -37,16 +37,27 @@ public class Tile implements IIsoObject {
   /** The Grid to which this Tile belongs to  */
   private final IsoGrid grid;
   
+  private Texture texture;
+  
   
   /**
    * Creates a new Tile
    */
-  public Tile(IsoGrid grid, int x, int y) {
+  public Tile(IsoGrid grid, int x, int y, Texture texture) {
     this.grid = grid;
     this.x = x;
     this.y = y;
+    this.texture = texture;
   }
   
+  
+  public void setTexture(Texture texture) {
+    this.texture = texture;
+  }
+  
+  public Texture getTexture() {
+    return this.texture;
+  }
   
   /**
    * Returns the iso grid to which this Tile belongs to
@@ -81,39 +92,31 @@ public class Tile implements IIsoObject {
     if (vboList != null) {
       return vboList;
     }
-  
-    vboList = new ArrayList<>();
-  
-    // Create the two VBOs which represents the given tile (rectangle + isometric projection)
-    // TODO: Replace vertex colors with texture colors (use UV coordinates for tiles? Does this even makes sense?)
-    final Color color = new Color(255, 255, 255, 255);
-    final float red = color.getRedNormalized();
-    final float green = color.getGreenNormalized();
-    final float blue = color.getBlueNormalized();
-    final float alpha = color.getAlphaNormalized();
     
+    // Create the two VBOs which represents the given tile (two triangles)
+    vboList = new ArrayList<>();
     float xNormalized = Util.normalizePixelWidth(x * grid.getTileWidth());
     float yNormalized = Util.normalizePixelHeight(y * grid.getTileHeight());
-    
     float height = Util.normalizePixelHeight(grid.getTileHeight());
     float width = Util.normalizePixelWidth(grid.getTileWidth());
     
-    VertexBufferObject vbo1 = new VertexBufferObject(
+    vboList.add(
+      new VertexBufferObject(
       true,
+      texture,
       new float[] {
-        xNormalized, yNormalized + height, red, green, blue, alpha, 0, 1,
-        xNormalized, yNormalized, red, green, blue, alpha, 0, 0,
-        xNormalized + width, yNormalized + height, red, green, blue, alpha, 1, 1
-      }
+        xNormalized, yNormalized + height, 1, 1, 1, 1, 0, 1,
+        xNormalized, yNormalized, 1, 1, 1, 1, 0, 0,
+        xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1
+      })
     );
-    vboList.add(vbo1);
-  
     VertexBufferObject vbo2 = new VertexBufferObject(
       true,
+      texture,
       new float[] {
-        xNormalized + width, yNormalized, red, green, blue, alpha, 1, 0,
-        xNormalized, yNormalized, red, green, blue, alpha, 0, 0,
-        xNormalized + width, yNormalized + height, red, green, blue, alpha, 1, 1
+        xNormalized + width, yNormalized, 1, 1, 1, 1, 1, 0,
+        xNormalized, yNormalized, 1, 1, 1, 1, 0, 0,
+        xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1
       }
     );
     vboList.add(vbo2);

@@ -3,8 +3,6 @@ package deadzone;
 import deadzone.assets.AssetManager;
 import deadzone.graphics.Renderer;
 import deadzone.scenes.AbstractScene;
-import deadzone.scenes.Compound;
-import deadzone.scenes.Scene;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -206,13 +204,15 @@ public class Deadzone {
     glfwSwapInterval(Settings.vSync ? 1 : 0);
     // Display application window
     glfwShowWindow(windowHandle);
+    // Load all available assets into GPU memory
+    loadAssets();
     // Prepare initial scene
     
     // FOR TESTING: Set Compound as initial scene for iso testing
-    //AbstractScene.setActiveScene(Scene.LAUNCHER);
-    //new Launcher();
-    AbstractScene.setActiveScene(Scene.COMPOUND);
-    new Compound();
+//    deadzone.scenes.AbstractScene.setActiveScene(deadzone.scenes.Scene.LAUNCHER);
+//    new deadzone.scenes.Launcher();
+    deadzone.scenes.AbstractScene.setActiveScene(deadzone.scenes.Scene.COMPOUND);
+    new deadzone.scenes.Compound();
     // TEST BLOCK END
     
     // Detect OpenGL thread and make bindings available for use
@@ -220,8 +220,7 @@ public class Deadzone {
     // Configure OpenGL
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Load all available assets into GPU memory
-    loadAssets();
+
     // Set the base color of the application window
     float[] baseColor = Settings.baseColorRGBA;
     glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);

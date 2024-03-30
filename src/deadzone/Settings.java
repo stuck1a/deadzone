@@ -19,6 +19,6 @@ public class Settings {
   
   public static float[] baseColorRGBA = { 0.0f, 0.0f, 0.0f, 0.0f };
   
-  public static int targetFPS = 5;
+  public static int targetFPS = 10;
   
 }

@@ -32,6 +32,9 @@ public class VertexBufferObject {
   /** If the VBO uses a texture, its handle to the location in the GPU memory is stored here */
   private int textureHandle = 0;
   
+  /** Stores the texture object, if any TODO: Nicht die ganze Texture mitgeben sondern nur die Textur Data, aber erstmal so testen  */
+  private Texture texture;
+  
   /** Stores the raw data received from the constructor for later use when initialized */
   private float[] vertexData;
   
@@ -44,8 +47,9 @@ public class VertexBufferObject {
    * Creates a new VBO by allocating the required amount of GPU memory and adding the vertex data in it
    * @param vertexData Each vertex consists of 6 float values: x, y, r, g, b, a
    */
-  public VertexBufferObject(boolean isIso, float[] vertexData) {
+  public VertexBufferObject(boolean isIso, Texture texture, float[] vertexData) {
     this.vertexData = vertexData;
+    this.texture = texture;
     this.isIso = isIso;
   }
   
@@ -62,7 +66,6 @@ public class VertexBufferObject {
       glBindBuffer(GL_ARRAY_BUFFER, vboId);
       glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
     }
-    
     loadTexture();
     specifyVertexAttributes();
     specifyUniformData();
@@ -82,6 +85,11 @@ public class VertexBufferObject {
   }
   
   
+  public void setTexture(Texture texture) {
+    this.texture = texture;
+  }
+  
+  
   
   /**
    * Default mappings for the input values of the VBO and the input values of the first shader (vertex shader).
@@ -98,7 +106,7 @@ public class VertexBufferObject {
   private void specifyVertexAttributes() {
     final int shaderProgram = Deadzone.getApplication().getRenderer().getShaderProgram().getProgramId();
     final int bytePerFloat = Float.BYTES;
-    
+
     // Define the position data input (float values 1+2)
     int positionAttribute = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(positionAttribute);
@@ -113,20 +121,7 @@ public class VertexBufferObject {
     int texcoordAttribute = glGetAttribLocation(shaderProgram, "texcoord");
     glEnableVertexAttribArray(texcoordAttribute);
     glVertexAttribPointer(texcoordAttribute, 2, GL_FLOAT, false, 8 * bytePerFloat, 6 * bytePerFloat);
-    
-    
-    // ALTER CODE
-    /*
-    // Define the position data (float values 1+2)
-    int positionAttribute = glGetAttribLocation(shaderProgram, "position");
-    glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, false, 6 * bytePerFloat, 0);
-  
-    // Define the color data (float values 3-6)
-    int colorAttribute = glGetAttribLocation(shaderProgram, "color");
-    glEnableVertexAttribArray(colorAttribute);
-    glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 6 * bytePerFloat, 2 * bytePerFloat);
-    */
+
   }
   
   
@@ -144,7 +139,7 @@ public class VertexBufferObject {
     
     if (isIso) {
       // View (Camera) for isometric rendering
-      // TODO: Sobald Texturen oder besser noch Fonts implementiert sind, müssen die Werte hier justiert werden für eine ordentliche ISO-Projektion
+      // TODO: Adjust the move matrix values to create a proper isometric projection
           view = new Matrix4x4(
             new Vector4(5, -2, 8, 0),         // move camera to (5|-2|8)
             new Vector4(0, 1, 0, 0),                 // look at the origin
@@ -208,14 +203,11 @@ public class VertexBufferObject {
     
     // Generate mipmap for different levels of detail (optional)
     // ~ skipped for now ~
-  
-    Texture texture = Deadzone.getApplication().getAssetManager().getTexture("1_marked");
+    
     ByteBuffer imageData = texture.getData();
     
     // Send the texture to the shader pipeline
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-
-
   }
   
 }

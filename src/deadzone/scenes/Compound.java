@@ -1,5 +1,8 @@
 package deadzone.scenes;
 
+import deadzone.Deadzone;
+import deadzone.assets.AssetManager;
+import deadzone.assets.Texture;
 import deadzone.graphics.IsoGrid;
 import deadzone.graphics.worldobjects.Tile;
 
@@ -19,45 +22,48 @@ public class Compound extends AbstractScene {
   
   public Compound() {
     super(name);
-  
-  
+    
+    final AssetManager assets = Deadzone.getApplication().getAssetManager();
+    final Texture texture_1_marked = assets.getTexture("1_marked");
+    
     // Add some Tiles to test the MVP projection
-    addObject(new Tile(grid, -2, -2));
-    addObject(new Tile(grid, -1, -2));
-    addObject(new Tile(grid, 0, -2));
-    addObject(new Tile(grid, 1, -2));
-    addObject(new Tile(grid, 2, -2));
+    addObject(new Tile(grid, -2, -2, texture_1_marked));
+    addObject(new Tile(grid, -1, -2, texture_1_marked));
+    addObject(new Tile(grid, 0, -2, texture_1_marked));
+    addObject(new Tile(grid, 1, -2, texture_1_marked));
+    addObject(new Tile(grid, 2, -2, texture_1_marked));
     
-    addObject(new Tile(grid, -2, -1));
-    addObject(new Tile(grid, -1, -1));
-    addObject(new Tile(grid, 0, -1));
-    addObject(new Tile(grid, 1, -1));
-    addObject(new Tile(grid, 2, -1));
+    addObject(new Tile(grid, -2, -1, texture_1_marked));
+    addObject(new Tile(grid, -1, -1, texture_1_marked));
+    addObject(new Tile(grid, 0, -1, texture_1_marked));
+    addObject(new Tile(grid, 1, -1, texture_1_marked));
+    addObject(new Tile(grid, 2, -1, texture_1_marked));
     
-    addObject(new Tile(grid, -2, 0));
-    addObject(new Tile(grid, -1, 0));
-    addObject(new Tile(grid, 0, 0));
-    addObject(new Tile(grid, 1, 0));
-    addObject(new Tile(grid, 2, 0));
+    addObject(new Tile(grid, -2, 0, texture_1_marked));
+    addObject(new Tile(grid, -1, 0, texture_1_marked));
+    addObject(new Tile(grid, 0, 0, texture_1_marked));
+    addObject(new Tile(grid, 1, 0, texture_1_marked));
+    addObject(new Tile(grid, 2, 0, texture_1_marked));
     
-    addObject(new Tile(grid, -2, 1));
-    addObject(new Tile(grid, -1, 1));
-    addObject(new Tile(grid, 0, 1));
-    addObject(new Tile(grid, 1, 1));
-    addObject(new Tile(grid, 2, 1));
+    addObject(new Tile(grid, -2, 1, texture_1_marked));
+    addObject(new Tile(grid, -1, 1, texture_1_marked));
+    addObject(new Tile(grid, 0, 1, texture_1_marked));
+    addObject(new Tile(grid, 1, 1, texture_1_marked));
+    addObject(new Tile(grid, 2, 1, texture_1_marked));
     
-    addObject(new Tile(grid, -2, 2));
-    addObject(new Tile(grid, -1, 2));
-    addObject(new Tile(grid, 0, 2));
-    addObject(new Tile(grid, 1, 2));
-    addObject(new Tile(grid, 2, 2));
+    addObject(new Tile(grid, -2, 2, texture_1_marked));
+    addObject(new Tile(grid, -1, 2, texture_1_marked));
+    addObject(new Tile(grid, 0, 2, texture_1_marked));
+    addObject(new Tile(grid, 1, 2, texture_1_marked));
+    addObject(new Tile(grid, 2, 2, texture_1_marked));
 
   
     addObject(new deadzone.graphics.shapes.TriangleShape(
       0.0f,  1.0f,
       -0.5f,  0.0f,
       0.5f,  0.0f,
-      new deadzone.graphics.Color(255, 255, 255, 255)
+      new deadzone.graphics.Color(255, 0, 0, 255),
+      assets.getTexture("2")
     ));
     
   }
