@@ -194,8 +194,6 @@ public class VertexBufferObject {
    * Maps the texture data to the fragment shader
    */
   private void loadTexture() {
-
-    
     // Generate and bind a buffer for the texture
     textureHandle = glGenTextures();
     glBindTexture(GL_TEXTURE_2D, textureHandle);
@@ -211,7 +209,7 @@ public class VertexBufferObject {
     // Generate mipmap for different levels of detail (optional)
     // ~ skipped for now ~
   
-    Texture texture = new Texture("1_marked.png");
+    Texture texture = Deadzone.getApplication().getAssetManager().getTexture("1_marked");
     ByteBuffer imageData = texture.getData();
     
     // Send the texture to the shader pipeline

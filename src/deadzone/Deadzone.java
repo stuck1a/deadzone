@@ -1,5 +1,6 @@
 package deadzone;
 
+import deadzone.assets.AssetManager;
 import deadzone.graphics.Renderer;
 import deadzone.scenes.AbstractScene;
 import deadzone.scenes.Compound;
@@ -17,6 +18,7 @@ import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -27,6 +29,7 @@ public class Deadzone {
   private GameTimer timer;
   private Renderer renderer;
   private static Deadzone app;
+  private AssetManager assets;
   private boolean debugMode = false;
   
   
@@ -40,6 +43,10 @@ public class Deadzone {
   
   public static Deadzone getApplication() {
     return app;
+  }
+  
+  public AssetManager getAssetManager() {
+    return assets;
   }
   
   public Renderer getRenderer() {
@@ -210,11 +217,11 @@ public class Deadzone {
     
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
-    
     // Configure OpenGL
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+    // Load all available assets into GPU memory
+    loadAssets();
     // Set the base color of the application window
     float[] baseColor = Settings.baseColorRGBA;
     glClearColor(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
@@ -241,6 +248,15 @@ public class Deadzone {
       glfwTerminate();
       throw new RuntimeException("Failed to create the GLFW window");
     }
+  }
+  
+  
+  private void loadAssets() {
+    // Tell STB to flip textures vertically, so that their origin is at bottom left instead of top left
+    stbi_set_flip_vertically_on_load(true);
+    
+    assets = new AssetManager();
+    assets.loadAllAssets();
   }
   
 }
