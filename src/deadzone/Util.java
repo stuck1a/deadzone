@@ -25,12 +25,6 @@ public class Util {
   /** Stores the absolute path of the assets folder */
   private static final String absAssetsDir;
   
-  /** Stores the absolute path to the fonts folder */
-  private static final String absFontsDir;
-  
-  /** Stores the absolute path to the tiles folder */
-  private static final String absTilesDir;
-  
   
   static {
     // Initialize fixed paths
@@ -42,8 +36,6 @@ public class Util {
     absShadersDir = absResourcesDir + "shaders" + separator;
     
     absAssetsDir = absRootDir + "assets" + separator;
-    absFontsDir = absAssetsDir + "fonts" + separator;
-    absTilesDir = absAssetsDir + "tiles" + separator;
   }
   
   
@@ -80,20 +72,6 @@ public class Util {
    */
   public static String getAssetsDir()  {
     return absAssetsDir;
-  }
-  
-  /**
-   * @return Fonts folder path
-   */
-  public static String getFontsDir()  {
-    return absFontsDir;
-  }
-  
-  /**
-   * @return Tiles folder path
-   */
-  public static String getTilesDir()  {
-    return absTilesDir;
   }
   
   
