@@ -9,6 +9,18 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 
+/**
+ * This class represents a triangle.<br>
+ * The edge points are defined as follows:<br>
+ * ##############<br>
+ * ###### A #####<br>
+ * ##### /\ #####<br>
+ * #### /**\ ####<br>
+ * ### /****\ ###<br>
+ * ## /______\ ##<br>
+ * # B ###### C #<br>
+ * ##############
+ */
 public class TriangleShape implements IShape {
   
   /** The mesh type so the renderer knows to which VAO the objects VBOs must be attached */
@@ -70,7 +82,7 @@ public class TriangleShape implements IShape {
       new float[] {
         x1, y1, red, green, blue, alpha, 0.5f, 1.0f,
         x2, y2, red, green, blue, alpha, 0.0f, 0.0f,
-        x3, y3, red, green, blue, alpha, 1.0f, 1.0f
+        x3, y3, red, green, blue, alpha, 1.0f, 0.0f
       }
     );
     vboList.add(vbo1);

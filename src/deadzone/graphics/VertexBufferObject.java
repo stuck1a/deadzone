@@ -28,11 +28,11 @@ public class VertexBufferObject {
   /** The handler to access the native VBO variant OpenGL uses */
   private int vboId;
   
-  /** The memory stack with support of garbage collector which automatically free up the memory when necessary */
-  MemoryStack stack;
-  
   /** Buffer which stores the vertices to handover it to the GPU */
   FloatBuffer vertices;
+  
+  /** If the VBO uses a texture, its handle to the location in the GPU memory is stored here */
+  private int textureHandle = 0;
   
   /** Stores the raw data received from the constructor for later use when initialized */
   private float[] vertexData;
@@ -56,30 +56,25 @@ public class VertexBufferObject {
    */
   public void initialize() {
     vboId = glGenBuffers();
-    stack = MemoryStack.stackPush();
-    vertices = stack.mallocFloat(vertexData.length);
-    vertices.put(vertexData);
-    vertices.flip();
-    glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-    MemoryStack.stackPop();
+    try (MemoryStack stack = MemoryStack.stackPush()) {
+      vertices = stack.mallocFloat(vertexData.length);
+      vertices.put(vertexData);
+      vertices.flip();
+      glBindBuffer(GL_ARRAY_BUFFER, vboId);
+      glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+    }
+    
     loadTexture();
     specifyVertexAttributes();
     specifyUniformData();
-  
-    // TEXTURE COORDINATES OLD
-    //    MemoryStack textureStack = MemoryStack.stackPush();
-    //    IntBuffer textureCoords = textureStack.mallocInt(2 * 3);
-    //    textureCoords.put(0).put(1).put(2);
-    //    textureCoords.put(2).put(3).put(0);
-    //    textureCoords.flip();
-    //    glBufferData(GL_ELEMENT_ARRAY_BUFFER, textureCoords, GL_STATIC_DRAW);
-    //    MemoryStack.stackPop();
   }
   
   
   public void delete() {
     glDeleteBuffers(vboId);
+    if (textureHandle != 0) {
+      glDeleteTextures(textureHandle);
+    }
   }
   
   
@@ -169,26 +164,26 @@ public class VertexBufferObject {
     }
     
     // attach the matrices to the vertex shader
-    final int modelPos = glGetUniformLocation(shaderProgram, "model");
-    MemoryStack modelStack = MemoryStack.stackPush();
-    FloatBuffer modelBuffer = modelStack.mallocFloat(16);
-    model.toBuffer(modelBuffer);
-    glUniformMatrix4fv(modelPos, false, modelBuffer);
-    MemoryStack.stackPop();
-  
-    final int viewPos = glGetUniformLocation(shaderProgram, "view");
-    MemoryStack viewStack = MemoryStack.stackPush();
-    FloatBuffer viewBuffer = viewStack.mallocFloat(16);
-    view.toBuffer(viewBuffer);
-    glUniformMatrix4fv(viewPos, true, viewBuffer);
-    MemoryStack.stackPop();
-  
-    final int projectionPos = glGetUniformLocation(shaderProgram, "projection");
-    MemoryStack projectionStack = MemoryStack.stackPush();
-    FloatBuffer projectionBuffer = projectionStack.mallocFloat(16);
-    projection.toBuffer(projectionBuffer);
-    glUniformMatrix4fv(projectionPos, false, projectionBuffer);
-    MemoryStack.stackPop();
+    try (MemoryStack modelStack = MemoryStack.stackPush()) {
+      final int modelPos = glGetUniformLocation(shaderProgram, "model");
+      FloatBuffer modelBuffer = modelStack.mallocFloat(16);
+      model.toBuffer(modelBuffer);
+      glUniformMatrix4fv(modelPos, false, modelBuffer);
+    }
+    
+    try (MemoryStack viewStack = MemoryStack.stackPush()) {
+      final int viewPos = glGetUniformLocation(shaderProgram, "view");
+      FloatBuffer viewBuffer = viewStack.mallocFloat(16);
+      view.toBuffer(viewBuffer);
+      glUniformMatrix4fv(viewPos, true, viewBuffer);
+    }
+    
+    try (MemoryStack projectionStack = MemoryStack.stackPush()) {
+      final int projectionPos = glGetUniformLocation(shaderProgram, "projection");
+      FloatBuffer projectionBuffer = projectionStack.mallocFloat(16);
+      projection.toBuffer(projectionBuffer);
+      glUniformMatrix4fv(projectionPos, false, projectionBuffer);
+    }
     
     // Map texture data to the uniform variable (optional, because we only have one uniform variable in fragment shader, so its automatically mapped to location 0)
     final int texturePos = glGetUniformLocation(shaderProgram, "textureData");
@@ -206,7 +201,7 @@ public class VertexBufferObject {
     final String tilePath = Util.getTilesDir() + "1_marked.png";
     
     // Generate and bind a buffer for the texture
-    int textureHandle = glGenTextures();
+    textureHandle = glGenTextures();
     glBindTexture(GL_TEXTURE_2D, textureHandle);
   
     // Specify texture wrapping mode
@@ -223,23 +218,26 @@ public class VertexBufferObject {
     
     /* Upload the picture data */
     // Prepare some buffers to store width, height and the texture components
-    IntBuffer w = stack.mallocInt(1);
-    IntBuffer h = stack.mallocInt(1);
-    IntBuffer comp = stack.mallocInt(1);
-  
-    // Set the texture origin to bottom left instead of top left
-    stbi_set_flip_vertically_on_load(true);
-    
-    // Load the image
-    ByteBuffer image = stbi_load(tilePath, w, h, comp, 4);
-    if (image == null) {
-      throw new RuntimeException("Failed to load texture \"" + tilePath + "\"" + System.lineSeparator() + stbi_failure_reason());
+    try (MemoryStack stack = MemoryStack.stackPush()) {
+      IntBuffer w = stack.mallocInt(1);
+      IntBuffer h = stack.mallocInt(1);
+      IntBuffer comp = stack.mallocInt(1);
+      
+      // Set the texture origin to bottom left instead of top left
+      stbi_set_flip_vertically_on_load(true);
+      
+      // Load the image
+      ByteBuffer image = stbi_load(tilePath, w, h, comp, 4);
+      if (image == null) {
+        throw new RuntimeException("Failed to load texture \"" + tilePath + "\"" + System.lineSeparator() + stbi_failure_reason());
+      }
+      int width = w.get();
+      int height = h.get();
+      
+      // Move the texture to the GPU
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
     }
-    int width = w.get();
-    int height = h.get();
-    
-    // Move the texture to the GPU
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
   }
   
 }

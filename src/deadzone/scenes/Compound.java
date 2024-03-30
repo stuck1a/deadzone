@@ -22,23 +22,43 @@ public class Compound extends AbstractScene {
   
   
     // Add some Tiles to test the MVP projection
+    addObject(new Tile(grid, -2, -2));
+    addObject(new Tile(grid, -1, -2));
+    addObject(new Tile(grid, 0, -2));
+    addObject(new Tile(grid, 1, -2));
+    addObject(new Tile(grid, 2, -2));
+    
+    addObject(new Tile(grid, -2, -1));
+    addObject(new Tile(grid, -1, -1));
+    addObject(new Tile(grid, 0, -1));
+    addObject(new Tile(grid, 1, -1));
+    addObject(new Tile(grid, 2, -1));
+    
+    addObject(new Tile(grid, -2, 0));
+    addObject(new Tile(grid, -1, 0));
     addObject(new Tile(grid, 0, 0));
+    addObject(new Tile(grid, 1, 0));
     addObject(new Tile(grid, 2, 0));
-    addObject(new Tile(grid, 4, 0));
     
+    addObject(new Tile(grid, -2, 1));
+    addObject(new Tile(grid, -1, 1));
+    addObject(new Tile(grid, 0, 1));
     addObject(new Tile(grid, 1, 1));
-    addObject(new Tile(grid, 3, 1));
+    addObject(new Tile(grid, 2, 1));
     
+    addObject(new Tile(grid, -2, 2));
+    addObject(new Tile(grid, -1, 2));
     addObject(new Tile(grid, 0, 2));
+    addObject(new Tile(grid, 1, 2));
     addObject(new Tile(grid, 2, 2));
-    addObject(new Tile(grid, 4, 2));
+
   
-//    addObject(new TriangleShape(
-//      0.0f,  1.0f,
-//      -0.5f,  0.0f,
-//      0.5f,  0.0f,
-//      new Color(255, 255, 255, 255)
-//    ));
+    addObject(new deadzone.graphics.shapes.TriangleShape(
+      0.0f,  1.0f,
+      -0.5f,  0.0f,
+      0.5f,  0.0f,
+      new deadzone.graphics.Color(255, 255, 255, 255)
+    ));
     
   }
   
