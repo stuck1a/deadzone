@@ -63,9 +63,9 @@ public class RectangleShape implements IShape {
     VertexBufferObject vbo1 = new VertexBufferObject(
       false,
       new float[] {
-        x, y + height, red, green, blue, alpha, 0.5f, 1.0f,
-        x, y, red, green, blue, alpha, 0.0f, 0.0f,
-        x + width, y + height, red, green, blue, alpha, 1.0f, 1.0f
+        x, y + height, red, green, blue, alpha, 0, 1,
+        x, y, red, green, blue, alpha, 0, 0,
+        x + width, y + height, red, green, blue, alpha, 1, 1
       }
     );
     vboList.add(vbo1);
@@ -73,9 +73,9 @@ public class RectangleShape implements IShape {
     VertexBufferObject vbo2 = new VertexBufferObject(
       false,
       new float[] {
-        x + width, y, red, green, blue, alpha, 0.5f, 1.0f,
-        x,  y, red, green, blue, alpha, 0.0f, 0.0f,
-        x + width, y + height, red, green, blue, alpha, 1.0f, 1.0f
+        x + width, y, red, green, blue, alpha, 0, 1,
+        x,  y, red, green, blue, alpha, 0, 0,
+        x + width, y + height, red, green, blue, alpha, 1, 1
       }
     );
     vboList.add(vbo2);
