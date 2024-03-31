@@ -12,6 +12,7 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 
 /**
@@ -159,29 +160,25 @@ public class VertexBufferObject {
     
     // attach the matrices to the vertex shader
     try (MemoryStack modelStack = MemoryStack.stackPush()) {
-      final int modelPos = glGetUniformLocation(shaderProgram, "model");
       FloatBuffer modelBuffer = modelStack.mallocFloat(16);
       model.toBuffer(modelBuffer);
-      glUniformMatrix4fv(modelPos, false, modelBuffer);
+      glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), false, modelBuffer);
     }
     
     try (MemoryStack viewStack = MemoryStack.stackPush()) {
-      final int viewPos = glGetUniformLocation(shaderProgram, "view");
       FloatBuffer viewBuffer = viewStack.mallocFloat(16);
       view.toBuffer(viewBuffer);
-      glUniformMatrix4fv(viewPos, true, viewBuffer);
+      glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), true, viewBuffer);
     }
     
     try (MemoryStack projectionStack = MemoryStack.stackPush()) {
-      final int projectionPos = glGetUniformLocation(shaderProgram, "projection");
       FloatBuffer projectionBuffer = projectionStack.mallocFloat(16);
       projection.toBuffer(projectionBuffer);
-      glUniformMatrix4fv(projectionPos, false, projectionBuffer);
+      glUniformMatrix4fv( glGetUniformLocation(shaderProgram, "projection"), false, projectionBuffer);
     }
     
     // Map texture data to the uniform variable (optional, because we only have one uniform variable in fragment shader, so its automatically mapped to location 0)
-    final int texturePos = glGetUniformLocation(shaderProgram, "textureData");
-    glUniform1i(texturePos, 0);
+    glUniform1i(glGetUniformLocation(shaderProgram, "textureData"), 0);
   }
   
   
@@ -191,7 +188,11 @@ public class VertexBufferObject {
   private void loadTexture() {
     // Generate and bind a buffer for the texture
     textureHandle = glGenTextures();
+    
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureHandle);
+  
+    ByteBuffer imageData = texture.getData();
     
     // Specify texture wrapping mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -200,14 +201,14 @@ public class VertexBufferObject {
     // Specify texture filtering mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    
-    // Generate mipmap for different levels of detail (optional)
-    // ~ skipped for now ~
-    
-    ByteBuffer imageData = texture.getData();
-    
+  
     // Send the texture to the shader pipeline
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+  
+    // Generate mipmaps for different levels of detail (optional)
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   }
   
 }

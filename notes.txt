@@ -2,23 +2,15 @@
 ###   DEAZONE ROADMAP FOR THE PACKAGE "deadzone.graphics"   ###
 ###############################################################
 
+- Implement font atlas creation, font texture creation and font drawing
+
+- Implement vertex attributes for normal maps
+
+- Implement mip maps
+
+- Implement loading and drawing of 3D objects (.obj files with vertex data, UV coordinates and normal map)
 
 - ortho projection: Camera view is not yet 45° diagonal - fix as soon as textures/fonts are implemented, so that its easier to fix
 
-- Implement logic for proper UV mapping of geometric objects
-  => How to handle UV's?
-      => Possibility 1: Make them fix for each geometric mesh
-                        Maybe with several predefined setups like "Stretch", "Keep ratio" and so on.
-                        At least for things like Tiles this would absolutely make sense. But everything else would become pretty limited by doing so
-                        BUT are there even such general use cases where that would matter? Do i really need a lot of different texture forms for UI Elements and such?
-      => Possibility 2: Specify them manually on each object creation as arguments
-      => Possibility 3: Create predefined mappings for each texture (or texture type?) on each geometric mesh -> AssetManager?
-
 - Read what function you have to execute in OpenGL for onResize to recalculate the window size
   and introduce a corresponding logic for this
-
-- Stack memory deloc through Garbage Collector doesn't seem to work as excepted.
-  After ~340 Frames, app runs out of stack space.
-  => Do the de-allocation manually OR do the allocation optimization now
-     (probably the strong references which are recreated again in each loop prevents them from being garbage collected)
-

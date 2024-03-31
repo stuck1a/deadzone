@@ -62,8 +62,7 @@ public class Compound extends AbstractScene {
       0.0f,  1.0f,
       -0.5f,  0.0f,
       0.5f,  0.0f,
-      new deadzone.graphics.Color(255, 0, 0, 255),
-      assets.getTexture("2")
+      new deadzone.graphics.Color(60, 20, 210, 255)
     ));
     
   }
