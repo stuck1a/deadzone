@@ -6,8 +6,6 @@
 
 - Implement vertex attributes for normal maps
 
-- Implement mip maps
-
 - Implement loading and drawing of 3D objects (.obj files with vertex data, UV coordinates and normal map)
 
 - ortho projection: Camera view is not yet 45° diagonal - fix as soon as textures/fonts are implemented, so that its easier to fix
