@@ -1,7 +1,10 @@
 package deadzone;
 
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.opengl.GL11.glViewport;
+
 
 /**
  * This class is responsible for creating and managing the game window with help of LWJGL
@@ -31,6 +34,16 @@ public class Window {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);  // deactivate deprecated features
     // Create application window
     handle = glfwCreateWindow(width, height, title, monitor, share);
+    
+    // Register the callback function which is called when the window gets resized
+    GLFWWindowSizeCallback windowSizeCallback;
+    
+    glfwSetWindowSizeCallback(handle, windowSizeCallback = new GLFWWindowSizeCallback(){
+      @Override
+      public void invoke(long window, int width, int height) {
+        Deadzone.getApplication().getWindow().onResize(width, height);
+      }
+    });
   }
   
   public long getHandle() {
@@ -53,7 +66,15 @@ public class Window {
     return monitor;
   }
   
-  
+  /**
+   * Callback handler
+   * Called when the user resizes or maximizes the current window
+   */
+  private void onResize(int newWidth, int newHeight) {
+    this.width = newWidth;
+    this.height = newHeight;
+    glViewport(0, 0, newWidth, newHeight);
+  }
 
   
 }
