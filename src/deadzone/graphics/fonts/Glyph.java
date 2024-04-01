@@ -5,6 +5,8 @@ import deadzone.math.Vector2;
 
 /**
  * This class represents a single glyph of a font.
+ * It holds all information to find the glyph in the corresponding font atlas image
+ * and print it properly on a font texture.
  */
 public class Glyph {
 
@@ -22,7 +24,7 @@ public class Glyph {
   /**
    * Creates a new glyph
    */
-  public Glyph() {
+  public Glyph(int x, int y, int width, int height) {
   
   }
   

@@ -13,5 +13,6 @@
     <orderEntry type="library" name="lwjgl-stb" level="project" />
     <orderEntry type="library" name="json-simple" level="project" />
     <orderEntry type="library" name="lwjgl-fmod" level="project" />
+    <orderEntry type="library" name="lwjgl-freetype" level="project" />
   </component>
 </module>

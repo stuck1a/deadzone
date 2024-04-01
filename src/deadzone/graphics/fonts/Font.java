@@ -30,6 +30,7 @@ public class Font implements IAsset {
   private String name;
   private boolean isItalic;
   private boolean isBold;
+  private int fontSize;
   
   
   /**
@@ -63,10 +64,10 @@ public class Font implements IAsset {
     this.isItalic = (boolean) styleData.get("italic");
     this.isBold = (boolean) styleData.get("bold");
 
-    int startChar = (int) cellData.get("startChar");
-    int cellWidth = (int) cellData.get("width");
-    int cellHeight = (int) cellData.get("height");
-    int fontSize = (int) styleData.get("height");
+    int startChar = Integer.parseInt((String) cellData.get("startChar"));
+    int cellWidth = Integer.parseInt((String) cellData.get("width"));
+    int cellHeight = Integer.parseInt((String) cellData.get("height"));
+    fontSize = Integer.parseInt((String) styleData.get("height"));
     
     // Load the atlas image
     final int atlasWidth, atlasHeight;
@@ -87,13 +88,13 @@ public class Font implements IAsset {
     for (Object item : glyphArray) {
       // get the data of the current glyph definition
       JSONObject currentGlyphData = (JSONObject) item;
-      final int id = (int) currentGlyphData.get("id");
-      final int glyphWidth = (int) currentGlyphData.get("width");
-      final int widthOffset = (int) currentGlyphData.get("widthOffset");
-      final int xOffset = (int) currentGlyphData.get("xOffset");
-      final int yOffset = (int) currentGlyphData.get("yOffset");
+      final int id = Integer.parseInt((String) currentGlyphData.get("id"));
+      final int glyphWidth = Integer.parseInt((String) currentGlyphData.get("width"));
+      final int widthOffset = Integer.parseInt((String) currentGlyphData.get("widthOffset"));
+      final int xOffset = Integer.parseInt((String) currentGlyphData.get("xOffset"));
+      final int yOffset = Integer.parseInt((String) currentGlyphData.get("yOffset"));
       // create the glyph object
-      Glyph glyph = new Glyph();
+      Glyph glyph = new Glyph(cellWidth * (id + 1), cellHeight * (id + 1), cellWidth, cellHeight);  // TODO: Calculate column and row
       // add glyph to the glyph map of this font
       this.glyphs.put((char) (startChar + id), glyph);
     }
