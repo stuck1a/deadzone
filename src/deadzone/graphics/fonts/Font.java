@@ -26,7 +26,7 @@ public class Font implements IAsset {
   private HashMap<Character, Glyph> glyphs = new HashMap<>();
   
   /** Path to the glyph definition for this Font */
-  private String jsonFilePath;
+  private final String jsonFilePath;
   
   private String name;
   private boolean isItalic;
@@ -37,17 +37,10 @@ public class Font implements IAsset {
   /**
    * Prepares a new Font for use.
    */
-  public Font(String xmlFile) {
-    this.jsonFilePath = assetsDir + "fonts" + fileSeparator +  xmlFile;
+  public Font(String fontDefJsonPath) {
+    this.jsonFilePath = assetsDir + "fonts" + fileSeparator +  fontDefJsonPath;
   }
   
-  /**
-   * Returns the absolute path to the file, the asset object represents
-   */
-  @Override
-  public String getFilePath() {
-    return null;
-  }
   
   /**
    * Generates glyph definitions and loads the atlas image
@@ -103,6 +96,14 @@ public class Font implements IAsset {
       counter++;
     }
     
+  }
+  
+  /**
+   * Returns the absolute path to the font definition
+   */
+  @Override
+  public String getFilePath() {
+    return null;
   }
   
   public String getName() {
