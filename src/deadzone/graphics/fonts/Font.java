@@ -22,12 +22,9 @@ public class Font implements IAsset {
   
   /** Stored the generated atlas texture on which als character are printed on initialization */
   private ByteBuffer atlasImage;
-  
   private HashMap<Character, Glyph> glyphs = new HashMap<>();
-  
   /** Path to the glyph definition for this Font */
   private final String jsonFilePath;
-  
   private String name;
   private boolean isItalic;
   private boolean isBold;
