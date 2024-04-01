@@ -40,4 +40,12 @@ public class AssetManager {
     return result;
   }
   
+  public Font getFont(String identifier) {
+    Font result = fonts.get(identifier);
+    if (result == null) {
+      throw new RuntimeException("Could not find requested font \""+ identifier +"\"!");
+    }
+    return result;
+  }
+  
 }
