@@ -26,7 +26,7 @@ public class AssetManager {
     textures.put("2", new Texture("2.jpg"));
     
     // Load Font: Arial, 10, Bold
-    Font arial = new Font("arial" + IAsset.fileSeparator + "Arial-10b.json");
+    Font arial = new Font("Arial-10b.json");
     arial.load();
     fonts.put(arial.getName(), arial);
   }
