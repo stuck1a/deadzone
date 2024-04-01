@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
  * It also moves these objects to the GPU memory and stores the handles to access them.
  *
  * While the VBOs represents a single attribute list (like position attribute, color attribute, ...).
- * All VBOs which in total describe a single renderable object will be grouped together in a VAO.
+ * All VBOs in total describe a single renderable object, grouped together and bound in the shared VAO by meshes.
  */
 public class VertexBufferObject {
   
