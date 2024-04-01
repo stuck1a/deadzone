@@ -55,10 +55,6 @@ public class Texture implements IAsset {
       IntBuffer w = stack.mallocInt(1);
       IntBuffer h = stack.mallocInt(1);
       IntBuffer comp = stack.mallocInt(1);
-    
-      // Set the texture origin to bottom left instead of top left
-
-    
       // Load the image data from the stored texture object
       data = stbi_load(filepath, w, h, comp, 4);
       if (data == null) {

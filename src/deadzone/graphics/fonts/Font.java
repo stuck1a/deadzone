@@ -2,12 +2,16 @@ package deadzone.graphics.fonts;
 
 import deadzone.Util;
 import deadzone.assets.IAsset;
-import deadzone.assets.Texture;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.lwjgl.system.MemoryStack;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
+
+import static org.lwjgl.stb.STBImage.stbi_failure_reason;
+import static org.lwjgl.stb.STBImage.stbi_load;
 
 
 /**
@@ -16,21 +20,23 @@ import java.util.HashMap;
 public class Font implements IAsset {
   
   /** Stored the generated atlas texture on which als character are printed on initialization */
-  private Texture atlasImage;
+  private ByteBuffer atlasImage;
   
   private HashMap<Character, Glyph> glyphs;
   
   /** Path to the glyph definition for this Font */
-  private String xmlFilePath;
+  private String jsonFilePath;
   
   private String name;
+  private boolean isItalic;
+  private boolean isBold;
   
   
   /**
    * Prepares a new Font for use.
    */
   public Font(String xmlFile) {
-    this.xmlFilePath = assetsDir + "fonts" + fileSeparator +  xmlFile;
+    this.jsonFilePath = assetsDir + "fonts" + fileSeparator +  xmlFile;
   }
   
   /**
@@ -46,19 +52,52 @@ public class Font implements IAsset {
    */
   @Override
   public void load() {
-    // Parse the given xml file, create the glyphs from it and load the atlas image
-    Document xml = Util.parseXML(xmlFilePath);
-    if (xml == null) {
-      System.err.println("Failed to load font definition!");
-      return;
-    }
+    JSONObject json = Util.parseJSON(jsonFilePath);
+    assert json != null;
+    this.name = (String) json.get("name");
   
-    // get the "font" node
-    Node fontNode = xml.getElementsByTagName("font").item(0);
-    NodeList fontNodeContent = xml.getElementsByTagName("font").item(0).getChildNodes();
+    final JSONObject styleData = (JSONObject) json.get("style");
+    final JSONObject cellData = (JSONObject) json.get("cells");
+    final JSONArray glyphArray = (JSONArray) json.get("glyphs");
     
+    this.isItalic = (boolean) styleData.get("italic");
+    this.isBold = (boolean) styleData.get("bold");
+
+    int startChar = (int) cellData.get("startChar");
+    int cellWidth = (int) cellData.get("width");
+    int cellHeight = (int) cellData.get("height");
+    int fontSize = (int) styleData.get("height");
     
-    this.name = xml.getElementsByTagName("font").item(2).getTextContent();
+    // Load the atlas image
+    final int atlasWidth, atlasHeight;
+    try (MemoryStack stack = MemoryStack.stackPush()) {
+      IntBuffer w = stack.mallocInt(1);
+      IntBuffer h = stack.mallocInt(1);
+      IntBuffer comp = stack.mallocInt(1);
+      final String atlasImagePath = assetsDir + "fonts" + fileSeparator + json.get("atlas");
+      atlasImage = stbi_load(atlasImagePath, w, h, comp, 4);
+      if (atlasImage == null) {
+        throw new RuntimeException("Failed to load texture \"" + atlasImagePath + "\"" + fileSeparator + stbi_failure_reason());
+      }
+      atlasWidth = w.get();
+      atlasHeight = h.get();
+    }
+    
+    // Parse the glyph data, create glyph objects from it and add them to the fonts glyph map
+    for (Object item : glyphArray) {
+      // get the data of the current glyph definition
+      JSONObject currentGlyphData = (JSONObject) item;
+      final int id = (int) currentGlyphData.get("id");
+      final int glyphWidth = (int) currentGlyphData.get("width");
+      final int widthOffset = (int) currentGlyphData.get("widthOffset");
+      final int xOffset = (int) currentGlyphData.get("xOffset");
+      final int yOffset = (int) currentGlyphData.get("yOffset");
+      // create the glyph object
+      Glyph glyph = new Glyph();
+      // add glyph to the glyph map of this font
+      this.glyphs.put((char) (startChar + id), glyph);
+    }
+    
   }
   
   

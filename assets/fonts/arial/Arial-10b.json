@@ -9,9 +9,8 @@
   "style": {
     "width": "24",
     "height": "10",
-    "antiAlias": "4",
-    "italic": "0",
-    "bold": "400"
+    "italic": false,
+    "bold": true
   },
   "glyphs": [
     {

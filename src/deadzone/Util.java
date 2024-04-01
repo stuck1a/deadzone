@@ -1,5 +1,8 @@
 package deadzone;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -7,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -134,6 +138,21 @@ public class Util {
       return null;
     }
     return document;
+  }
+ 
+  
+  public static JSONObject parseJSON(String path) {
+    JSONObject obj;
+    try {
+      obj = (JSONObject) (new JSONParser().parse(new FileReader(path)));
+    } catch (IOException e) {
+      System.err.println("Failed to open JSON file \"" + path + "\"");
+      return null;
+    } catch (ParseException e) {
+      System.err.println("Failed to parse JSON file \"" + path + "\"");
+      return null;
+    }
+    return obj;
   }
   
 }
