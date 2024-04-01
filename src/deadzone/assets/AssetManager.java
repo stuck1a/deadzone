@@ -1,5 +1,7 @@
 package deadzone.assets;
 
+import deadzone.graphics.fonts.Font;
+
 import java.util.HashMap;
 
 
@@ -11,6 +13,7 @@ import java.util.HashMap;
 public class AssetManager {
   
   HashMap<String, Texture> textures = new HashMap<>();
+  HashMap<String, Font> fonts = new HashMap<>();
   
   /**
    * For now, we hardcode all available assets here.
@@ -21,6 +24,11 @@ public class AssetManager {
     textures.put("1", new Texture("1.png"));
     textures.put("1_marked", new Texture("1_marked.png"));
     textures.put("2", new Texture("2.jpg"));
+    
+    // Load Font: Arial, 10, Bold
+    Font arial = new Font("arial" + IAsset.fileSeparator + "Arial-10b.xml");
+    arial.load();
+    fonts.put(arial.getName(), arial);
   }
   
   
