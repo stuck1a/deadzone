@@ -105,9 +105,28 @@ public class Font implements IAsset {
     
   }
   
-  
   public String getName() {
     return name;
+  }
+  
+  public ByteBuffer getAtlasImage() {
+    return atlasImage;
+  }
+  
+  public HashMap<Character, Glyph> getGlyphs() {
+    return glyphs;
+  }
+  
+  public boolean isItalic() {
+    return isItalic;
+  }
+  
+  public boolean isBold() {
+    return isBold;
+  }
+  
+  public int getSize() {
+    return size;
   }
   
 }
