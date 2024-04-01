@@ -2,6 +2,7 @@ package deadzone.graphics.fonts;
 
 import deadzone.Util;
 import deadzone.assets.IAsset;
+import deadzone.math.Vector2;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.lwjgl.system.MemoryStack;
@@ -22,7 +23,7 @@ public class Font implements IAsset {
   /** Stored the generated atlas texture on which als character are printed on initialization */
   private ByteBuffer atlasImage;
   
-  private HashMap<Character, Glyph> glyphs;
+  private HashMap<Character, Glyph> glyphs = new HashMap<>();
   
   /** Path to the glyph definition for this Font */
   private String jsonFilePath;
@@ -30,7 +31,7 @@ public class Font implements IAsset {
   private String name;
   private boolean isItalic;
   private boolean isBold;
-  private int fontSize;
+  private int size;
   
   
   /**
@@ -56,21 +57,20 @@ public class Font implements IAsset {
     JSONObject json = Util.parseJSON(jsonFilePath);
     assert json != null;
     this.name = (String) json.get("name");
-  
+    
     final JSONObject styleData = (JSONObject) json.get("style");
     final JSONObject cellData = (JSONObject) json.get("cells");
     final JSONArray glyphArray = (JSONArray) json.get("glyphs");
     
     this.isItalic = (boolean) styleData.get("italic");
     this.isBold = (boolean) styleData.get("bold");
-
-    int startChar = Integer.parseInt((String) cellData.get("startChar"));
-    int cellWidth = Integer.parseInt((String) cellData.get("width"));
-    int cellHeight = Integer.parseInt((String) cellData.get("height"));
-    fontSize = Integer.parseInt((String) styleData.get("height"));
+    this.size = Integer.parseInt((String)styleData.get("height"));
+    
+    final int cellHeight = Integer.parseInt((String)(cellData.get("height")));
+    final int cellWidth = Integer.parseInt((String)(cellData.get("width")));
+    final int cols = Integer.parseInt((String)(cellData.get("cols")));
     
     // Load the atlas image
-    final int atlasWidth, atlasHeight;
     try (MemoryStack stack = MemoryStack.stackPush()) {
       IntBuffer w = stack.mallocInt(1);
       IntBuffer h = stack.mallocInt(1);
@@ -80,23 +80,27 @@ public class Font implements IAsset {
       if (atlasImage == null) {
         throw new RuntimeException("Failed to load texture \"" + atlasImagePath + "\"" + fileSeparator + stbi_failure_reason());
       }
-      atlasWidth = w.get();
-      atlasHeight = h.get();
     }
     
     // Parse the glyph data, create glyph objects from it and add them to the fonts glyph map
+    int counter = 0;
     for (Object item : glyphArray) {
       // get the data of the current glyph definition
       JSONObject currentGlyphData = (JSONObject) item;
-      final int id = Integer.parseInt((String) currentGlyphData.get("id"));
-      final int glyphWidth = Integer.parseInt((String) currentGlyphData.get("width"));
-      final int widthOffset = Integer.parseInt((String) currentGlyphData.get("widthOffset"));
-      final int xOffset = Integer.parseInt((String) currentGlyphData.get("xOffset"));
-      final int yOffset = Integer.parseInt((String) currentGlyphData.get("yOffset"));
+      final int id = Integer.parseInt((String)currentGlyphData.get("id"));
+      final int glyphWidth = Integer.parseInt((String)currentGlyphData.get("width"));
+      // Calculate row and col of the glyph
+      final int glyphsRow = (counter / cols) + 1;
+      final int glyphsCol = (counter + 1) % cols;
       // create the glyph object
-      Glyph glyph = new Glyph(cellWidth * (id + 1), cellHeight * (id + 1), cellWidth, cellHeight);  // TODO: Calculate column and row
+      Glyph glyph = new Glyph(
+        new Vector2(glyphsRow * cellWidth, glyphsCol * cellHeight),
+        new Vector2(cellWidth, cellHeight),
+        glyphWidth
+      );
       // add glyph to the glyph map of this font
-      this.glyphs.put((char) (startChar + id), glyph);
+      this.glyphs.put((char) id, glyph);
+      counter++;
     }
     
   }

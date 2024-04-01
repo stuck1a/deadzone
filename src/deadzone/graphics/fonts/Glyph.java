@@ -5,28 +5,51 @@ import deadzone.math.Vector2;
 
 /**
  * This class represents a single glyph of a font.
- * It holds all information to find the glyph in the corresponding font atlas image
- * and print it properly on a font texture.
  */
 public class Glyph {
-
+  
   /** ID handle of the font texture */
   private int id;
   /** The position of the glyph in the corresponding font atlas image */
   private Vector2 position;
   /** Width and Height of the glyph in the corresponding font atlas image */
   private Vector2 size;
-  /** The bearing values (offset from baseline to left/top of glyph) */
-  private Vector2 bearing;
-  /** The horizontal advance (offset from origin to the origin of the next glyph) */
-  private float advance;
+  
+  /** The real glyph width */
+  private float glyphWidth;
+  
   
   /**
    * Creates a new glyph
+   * @param cellPos Location of the glyph in the font atlas image
+   * @param cellSize Size of the glyph in the font atlas image
+   * @param glyphWidth Actual glyph width
    */
-  public Glyph(int x, int y, int width, int height) {
-  
+  public Glyph(Vector2 cellPos, Vector2 cellSize, int glyphWidth) {
+    this.position = cellPos;
+    this.size = cellSize;
+    this.glyphWidth = glyphWidth + 2;
   }
   
+  
+  public void setId(int id) {
+    this.id = id;
+  }
+  
+  public int getId() {
+    return id;
+  }
+  
+  public Vector2 getPosition() {
+    return position;
+  }
+  
+  public Vector2 getSize() {
+    return size;
+  }
+  
+  public float getGlyphWidth() {
+    return glyphWidth;
+  }
   
 }
