@@ -50,7 +50,7 @@ public class Font implements IAsset {
   }
   
   /**
-   *
+   * Generates glyph definitions and loads the atlas image
    */
   @Override
   public void load() {
