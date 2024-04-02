@@ -37,6 +37,17 @@ public class Texture implements IAsset {
   
   
   /**
+   * Creates a new texture object.
+   * Uses another than the default directory
+   * @param path Relative to the assets/textures directory
+   */
+  public Texture(String path, String dir) {
+    filepath = dir + fileSeparator + path;
+    load();
+  }
+  
+  
+  /**
    * Returns the absolute path to the texture file
    */
   @Override

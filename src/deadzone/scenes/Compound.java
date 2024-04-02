@@ -3,7 +3,10 @@ package deadzone.scenes;
 import deadzone.Deadzone;
 import deadzone.assets.AssetManager;
 import deadzone.assets.Texture;
+import deadzone.graphics.Color;
 import deadzone.graphics.IsoGrid;
+import deadzone.graphics.fonts.Font;
+import deadzone.graphics.ui.Text;
 import deadzone.graphics.worldobjects.Tile;
 
 
@@ -57,13 +60,20 @@ public class Compound extends AbstractScene {
     addObject(new Tile(grid, 1, 2, texture_1_marked));
     addObject(new Tile(grid, 2, 2, texture_1_marked));
 
-  
+    // Render a triangle to test rendering of no-iso objects like UI Elements
     addObject(new deadzone.graphics.shapes.TriangleShape(
       0.0f,  1.0f,
       -0.5f,  0.0f,
       0.5f,  0.0f,
       new deadzone.graphics.Color(60, 20, 210, 255)
     ));
+   
+    
+    // Render some text (use Arial, size 10, bold)
+    final Font font = assets.getFont("Arial10b");
+    font.setColor(new Color(128, 64, 64, 255));
+    addObject(new Text(0.0f, 0.0f, font, "Hello World"));
+    
     
   }
   

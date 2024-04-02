@@ -40,6 +40,10 @@ public class Glyph {
     return id;
   }
   
+  /**
+   * Returns the position of the correponding character in the atlas, basically the UV coordinates.
+   * @return
+   */
   public Vector2 getPosition() {
     return position;
   }

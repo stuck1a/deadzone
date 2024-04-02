@@ -2,26 +2,25 @@ package deadzone.graphics.fonts;
 
 import deadzone.Util;
 import deadzone.assets.IAsset;
+import deadzone.assets.Texture;
+import deadzone.graphics.Color;
 import deadzone.math.Vector2;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.lwjgl.system.MemoryStack;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.HashMap;
-
-import static org.lwjgl.stb.STBImage.stbi_failure_reason;
-import static org.lwjgl.stb.STBImage.stbi_load;
 
 
 /**
  * This class represents a single font with all its glyphs.
+ *
+ * TODO: Add pre-created textures for to each glyph
+ *
  */
 public class Font implements IAsset {
   
   /** Stored the generated atlas texture on which als character are printed on initialization */
-  private ByteBuffer atlasImage;
+  private Texture atlasTexture;
   private HashMap<Character, Glyph> glyphs = new HashMap<>();
   /** Path to the glyph definition for this Font */
   private final String jsonFilePath;
@@ -29,6 +28,7 @@ public class Font implements IAsset {
   private boolean isItalic;
   private boolean isBold;
   private int size;
+  private Color color;
   
   
   /**
@@ -36,6 +36,16 @@ public class Font implements IAsset {
    */
   public Font(String fontDefJsonPath) {
     this.jsonFilePath = assetsDir + "fonts" + fileSeparator +  fontDefJsonPath;
+  }
+  
+  
+  /**
+   * Prepares a new Font for use.
+   * Presets the given color
+   */
+  public Font(String fontDefJsonPath, Color color) {
+    this.jsonFilePath = assetsDir + "fonts" + fileSeparator +  fontDefJsonPath;
+    this.color = color;
   }
   
   
@@ -61,16 +71,8 @@ public class Font implements IAsset {
     final int cols = Integer.parseInt((String)(cellData.get("cols")));
     
     // Load the atlas image
-    try (MemoryStack stack = MemoryStack.stackPush()) {
-      IntBuffer w = stack.mallocInt(1);
-      IntBuffer h = stack.mallocInt(1);
-      IntBuffer comp = stack.mallocInt(1);
-      final String atlasImagePath = assetsDir + "fonts" + fileSeparator + json.get("atlas");
-      atlasImage = stbi_load(atlasImagePath, w, h, comp, 4);
-      if (atlasImage == null) {
-        throw new RuntimeException("Failed to load texture \"" + atlasImagePath + "\"" + fileSeparator + stbi_failure_reason());
-      }
-    }
+    atlasTexture = new Texture((String)json.get("atlas"), assetsDir + "fonts" + fileSeparator);
+
     
     // Parse the glyph data, create glyph objects from it and add them to the fonts glyph map
     int counter = 0;
@@ -92,7 +94,15 @@ public class Font implements IAsset {
       this.glyphs.put((char) id, glyph);
       counter++;
     }
-    
+  }
+  
+  
+  public Color getColor() {
+    return this.color;
+  }
+  
+  public void setColor(Color color) {
+    this.color = color;
   }
   
   /**
@@ -107,12 +117,20 @@ public class Font implements IAsset {
     return name;
   }
   
-  public ByteBuffer getAtlasImage() {
-    return atlasImage;
+  public Texture getAtlasTexture() {
+    return atlasTexture;
   }
   
-  public HashMap<Character, Glyph> getGlyphs() {
+  public HashMap<Character, Glyph> getGlyphMap() {
     return glyphs;
+  }
+  
+  public Glyph getGlyph(char character) {
+    Glyph result = glyphs.get(character);
+    if (result == null) {
+      System.err.println("Tried to draw a character for which no glyph data exist!"); // TODO: Substitute undefined characters with a zero-length-space or something like that?
+    }
+    return result;
   }
   
   public boolean isItalic() {
