@@ -165,7 +165,7 @@ public class Text implements IRenderable {
       totalHeight = size.y;
       totalWidth += size.x;
       
-      // Create and register VBOs for this character  // TODO: Either rewrite class Texture so we can use them for the atlas image too or create a FontTexture class
+      // Create and register VBOs for this character
       vboList = new ArrayList<>();
       // We calculate the UV coordinates from the known glyph position within the atlas image and the position from their size
       // For now, we just use single row text, but later we will add a max width (and maybe max height) for the drawn text
