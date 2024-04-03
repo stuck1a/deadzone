@@ -2,6 +2,7 @@ package deadzone.graphics.ui;
 
 import deadzone.Deadzone;
 import deadzone.Window;
+import deadzone.assets.Texture;
 import deadzone.graphics.Color;
 import deadzone.graphics.IRenderable;
 import deadzone.graphics.VertexBufferObject;
@@ -29,10 +30,24 @@ public class Text implements IRenderable {
   public final float yPos;
   private final float scale;
   
+  private Window window;
+  
+  /**
+   * Total width of a rectangle around all textures of this text in display coordinates (0..1)
+   */
+  private float totalWidth = 0;
+  
+  /**
+   * Total height of a rectangle around all textures of this text in display coordinates (0..1)
+   */
+  private float totalHeight = 0;
+  
+  
   
   
   
   public Text(float x, float y, Font font, String text) {
+    window = Deadzone.getApplication().getWindow();
     this.xPos = x;
     this.yPos = y;
     this.font = font;
@@ -43,6 +58,7 @@ public class Text implements IRenderable {
   }
   
   public Text(float x, float y, Font font, String text, float scale) {
+    window = Deadzone.getApplication().getWindow();
     this.xPos = x;
     this.yPos = y;
     this.font = font;
@@ -79,24 +95,51 @@ public class Text implements IRenderable {
     return vertexCount;
   }
   
+  public float getTotalWidth() {
+    return totalWidth;
+  }
+  
+  public float getTotalHeight() {
+    return totalHeight;
+  }
+  
+  public int getTotalPixelWidth() {
+    return (int)(totalWidth * window.getPixelWidth());
+  }
+  
+  public int getTotalPixelHeight() {
+    return (int)(totalHeight * window.getPixelHeight());
+  }
   
   /**
    * Registers all required VBOs at the renderer which are needed to render the given text.
    * For now, we use normalized OpenGL coordinates for x and y to ensure resolution-independent placement
    */
   private void addTextToDraw(float x, float y) {
-    final Window window = Deadzone.getApplication().getWindow();
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
     
+    // Load the texture
+    final Texture fontAtlas = font.getAtlasTexture();
+    
     // Normalize the color data
     final Color color = font.getColor();
-    final float red = color.getRedNormalized();
-    final float green = color.getGreenNormalized();
-    final float blue = color.getBlueNormalized();
-    final float alpha = color.getAlphaNormalized();
+    float red = color.getRedNormalized();
+    float green = color.getGreenNormalized();
+    float blue = color.getBlueNormalized();
+    float alpha = color.getAlphaNormalized();
+    
+    // Set color to white for testing
+    red = 1.0f;
+    green = 1.0f;
+    blue = 1.0f;
+    alpha = 1.0f;
+    
+    
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
+    Vector2 currentPenPos = null;
+    
     for (int i = 0; i < renderedText.length(); i++){
       // Get the glyph data
       final char c = renderedText.charAt(i);
@@ -107,32 +150,50 @@ public class Text implements IRenderable {
       // Normalize pixel values to use them in OpenGL
       pos.x /= windowWidth;
       pos.y /= windowHeight;
+      
+      if (currentPenPos == null) {
+        currentPenPos = new Vector2(x, y);
+      } else {
+        currentPenPos.x += size.x / windowWidth;
+      }
+      
       size.x /= windowWidth;
       size.y /= windowHeight;
       width /= windowWidth;
+  
+      // Update pen position and total size of the font
+      totalHeight = size.y;
+      totalWidth += size.x;
       
       // Create and register VBOs for this character  // TODO: Either rewrite class Texture so we can use them for the atlas image too or create a FontTexture class
       vboList = new ArrayList<>();
       // We calculate the UV coordinates from the known glyph position within the atlas image and the position from their size
       // For now, we just use single row text, but later we will add a max width (and maybe max height) for the drawn text
-//      VertexBufferObject vbo1 = new VertexBufferObject(
-//        false,
-//        font.getAtlasTexture(),
-//        new float[] {
-           // x y z  - R G B A - U V
-           // TODO
-//        }
-//      );
-//      vboList.add(vbo1);
-//
-//      VertexBufferObject vbo2 = new VertexBufferObject(
-//        false,
-//        font.getAtlasTexture(),
-//        new float[] {
-//
-//        }
-//      );
-//      vboList.add(vbo2);
+      VertexBufferObject vbo1 = new VertexBufferObject(
+        false,
+        fontAtlas,
+        new float[] {
+        //   x                            y                      z    R      G     B     A       U                V
+           currentPenPos.x,          currentPenPos.y + size.y, 0.0f, red, green, blue, alpha, pos.x,          pos.y + size.y,
+           currentPenPos.x,          currentPenPos.y,          0.0f, red, green, blue, alpha, pos.x,          pos.y,
+           currentPenPos.x + size.x, currentPenPos.y + size.y, 0.0f, red, green, blue, alpha, pos.x + size.x, pos.y + size.y
+        }
+      );
+      vboList.add(vbo1);
+
+      VertexBufferObject vbo2 = new VertexBufferObject(
+        false,
+        fontAtlas,
+        new float[] {
+          currentPenPos.x + size.x, currentPenPos.y,          0.0f, red, green, blue, alpha, pos.x,          pos.y + size.y,
+          currentPenPos.x,          currentPenPos.y,          0.0f, red, green, blue, alpha, pos.x,          pos.y,
+          currentPenPos.x + size.x, currentPenPos.y + size.y, 0.0f, red, green, blue, alpha, pos.x + size.x, pos.y + size.y
+        }
+      );
+      vboList.add(vbo2);
+      
+      // TODO Vor dem rendern muss die Textur Render-Art von Stretch umgestellt werden auf clamp
+      //      Notfalls müssen die vbos von texten in ein eigenes vao gebunden werden
     }
     
   }

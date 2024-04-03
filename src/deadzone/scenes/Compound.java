@@ -72,8 +72,9 @@ public class Compound extends AbstractScene {
     // Render some text (use Arial, size 10, bold)
     final Font font = assets.getFont("Arial10b");
     font.setColor(new Color(128, 64, 64, 255));
-    addObject(new Text(0.0f, 0.0f, font, "Hello World"));
-    
+    Text testText = new Text(0.0f, 0.0f, font, "!");
+    addObject(testText);
+    System.out.println("Initialized testText:\nTotal width: " + testText.getTotalPixelWidth() + "px\nTotal Height: " + testText.getTotalPixelHeight() + "px");
     
   }
   
