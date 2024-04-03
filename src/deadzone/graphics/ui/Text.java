@@ -134,8 +134,8 @@ public class Text implements IRenderable {
     green = 1.0f;
     blue = 1.0f;
     alpha = 1.0f;
-    
-    
+  
+    vboList = new ArrayList<>();
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     Vector2 currentPenPos = null;
@@ -148,49 +148,61 @@ public class Text implements IRenderable {
       Vector2 size = glyph.getSize();
       float width = glyph.getGlyphWidth();
       // Normalize pixel values to use them in OpenGL
-      pos.x /= windowWidth;
-      pos.y /= windowHeight;
+      final float posX_Norm = pos.x / windowWidth;
+      final float posY_Norm = pos.y / windowHeight;
+      final float sizeX_Norm = size.x / windowWidth;
+      final float sizeY_Norm = size.y / windowHeight;
+      final float width_Norm = width / windowWidth;
       
+      // Initialize / update current pen position
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
-        currentPenPos.x += size.x / windowWidth;
+        currentPenPos.x += sizeX_Norm;
       }
       
-      size.x /= windowWidth;
-      size.y /= windowHeight;
-      width /= windowWidth;
-  
-      // Update pen position and total size of the font
-      totalHeight = size.y;
-      totalWidth += size.x;
+      // Update total size of the text
+      totalHeight = sizeY_Norm;
+      totalWidth += sizeX_Norm;
       
       // Create and register VBOs for this character
-      vboList = new ArrayList<>();
+
       // We calculate the UV coordinates from the known glyph position within the atlas image and the position from their size
       // For now, we just use single row text, but later we will add a max width (and maybe max height) for the drawn text
       VertexBufferObject vbo1 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
-        //   x                            y                      z    R      G     B     A       U                V
-           currentPenPos.x,          currentPenPos.y + size.y, 0.0f, red, green, blue, alpha, pos.x,          pos.y + size.y,
-           currentPenPos.x,          currentPenPos.y,          0.0f, red, green, blue, alpha, pos.x,          pos.y,
-           currentPenPos.x + size.x, currentPenPos.y + size.y, 0.0f, red, green, blue, alpha, pos.x + size.x, pos.y + size.y
+        // x                         y                         R    G      B     A      U               V
+           currentPenPos.x,          currentPenPos.y + sizeY_Norm, red, green, blue, alpha, posX_Norm,          posY_Norm + sizeY_Norm,
+           currentPenPos.x,          currentPenPos.y,          red, green, blue, alpha, posX_Norm,          posY_Norm,
+           currentPenPos.x + sizeX_Norm, currentPenPos.y + sizeY_Norm, red, green, blue, alpha, posX_Norm + sizeX_Norm, posY_Norm + sizeY_Norm
         }
       );
       vboList.add(vbo1);
-
+      
       VertexBufferObject vbo2 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
-          currentPenPos.x + size.x, currentPenPos.y,          0.0f, red, green, blue, alpha, pos.x,          pos.y + size.y,
-          currentPenPos.x,          currentPenPos.y,          0.0f, red, green, blue, alpha, pos.x,          pos.y,
-          currentPenPos.x + size.x, currentPenPos.y + size.y, 0.0f, red, green, blue, alpha, pos.x + size.x, pos.y + size.y
+          currentPenPos.x + sizeX_Norm, currentPenPos.y,          red, green, blue, alpha, posX_Norm + sizeX_Norm, posY_Norm,
+          currentPenPos.x,          currentPenPos.y,          red, green, blue, alpha, posX_Norm,          posY_Norm,
+          currentPenPos.x + sizeX_Norm, currentPenPos.y + sizeY_Norm, red, green, blue, alpha, posX_Norm + sizeX_Norm, posY_Norm + sizeY_Norm
         }
       );
       vboList.add(vbo2);
+      
+      
+      String debugMsg =
+        "\"" + c + "\"\n" +
+        "(A)\t" + "(" + (currentPenPos.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x) + "|" + (pos.y + size.y) + ")\n" +
+        "(B)\t" + "(" + (currentPenPos.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x) + "|" + (pos.y) + ")\n" +
+        "(C)\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y + size.y) + ")\n" +
+        "(A')\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y) + ")\n" +
+        "(B')\t" + "(" + (currentPenPos.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x) + "|" + (pos.y) + ")\n" +
+        "(C')\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y + size.y) + ")\n\n";
+  
+      System.out.println(debugMsg);
       
       // TODO Vor dem rendern muss die Textur Render-Art von Stretch umgestellt werden auf clamp
       //      Notfalls müssen die vbos von texten in ein eigenes vao gebunden werden
