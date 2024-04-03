@@ -28,7 +28,7 @@ public class Glyph {
   public Glyph(Vector2 cellPos, Vector2 cellSize, int glyphWidth) {
     this.position = cellPos;
     this.size = cellSize;
-    this.glyphWidth = glyphWidth + 2;
+    this.glyphWidth = glyphWidth;
   }
   
   

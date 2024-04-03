@@ -128,12 +128,7 @@ public class Text implements IRenderable {
     float green = color.getGreenNormalized();
     float blue = color.getBlueNormalized();
     float alpha = color.getAlphaNormalized();
-    
-    // Set color to white for testing
-    red = 1.0f;
-    green = 1.0f;
-    blue = 1.0f;
-    alpha = 1.0f;
+
   
     vboList = new ArrayList<>();
     
@@ -147,37 +142,64 @@ public class Text implements IRenderable {
       Vector2 pos = glyph.getPosition();
       Vector2 size = glyph.getSize();
       float width = glyph.getGlyphWidth();
-      // Normalize pixel values to use them in OpenGL
+      
+      // Normalize position and size for XYZ data (percent of window size)
       final float posX_Norm = pos.x / windowWidth;
       final float posY_Norm = pos.y / windowHeight;
-      final float sizeX_Norm = size.x / windowWidth;
-      final float sizeY_Norm = size.y / windowHeight;
+      final float sizeX_Norm = size.x * scale / windowWidth;
+      final float sizeY_Norm = size.y * scale / windowHeight;
       final float width_Norm = width / windowWidth;
+  
+      // Normalize position and size for UV data (percent of texture atlas size)
+      final float posX_NormOnTexture = pos.x / fontAtlas.width;
+      final float posY_NormOnTexture = pos.y / fontAtlas.height;
+      final float sizeX_NormOnTexture =  size.x / fontAtlas.width;
+      final float sizeY_NormOnTexture = size.y / fontAtlas.height;
       
       // Initialize / update current pen position
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
-        currentPenPos.x += sizeX_Norm;
+        currentPenPos.x = currentPenPos.x + sizeX_Norm;
       }
       
       // Update total size of the text
       totalHeight = sizeY_Norm;
       totalWidth += sizeX_Norm;
       
+      
+      /*
+       * TESTDATEN FÜR "H"
+       * Korrekte normalisierte UV-Werte wären:
+       *
+       * Größe Atlas Image (BxH):   240x486
+       *
+       * A  = 24 | 108 px = 0,1        | 0,2222222
+       * B  = 24 | 134 px = 0,1        | 0,2757201
+       * C  = 47 | 108 px = 0,1958333  | 0,2222222
+       *
+       * A' = 47 | 134 px = 0,1958333  | 0,2757201
+       * B' = 24 | 134 px = 0,1        | 0,2757201
+       * C' = 47 | 108 px = 0,1958333  | 0,18
+       *
+       */
+      
       // Create and register VBOs for this character
-
-      // We calculate the UV coordinates from the known glyph position within the atlas image and the position from their size
-      // For now, we just use single row text, but later we will add a max width (and maybe max height) for the drawn text
       VertexBufferObject vbo1 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
-        // x                         y                         R    G      B     A      U               V
-           currentPenPos.x,          currentPenPos.y + sizeY_Norm, red, green, blue, alpha, posX_Norm,          posY_Norm + sizeY_Norm,
-           currentPenPos.x,          currentPenPos.y,          red, green, blue, alpha, posX_Norm,          posY_Norm,
-           currentPenPos.x + sizeX_Norm, currentPenPos.y + sizeY_Norm, red, green, blue, alpha, posX_Norm + sizeX_Norm, posY_Norm + sizeY_Norm
+          // x                              y                              R    G      B     A       U                        V
+          currentPenPos.x,               currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,  posX_NormOnTexture,               posY_NormOnTexture,
+          currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  posX_NormOnTexture,               posY_NormOnTexture + sizeY_NormOnTexture,
+          currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,  posX_NormOnTexture + sizeX_NormOnTexture,  posY_NormOnTexture,
         }
+//      new float[] {
+//        // x                              y                              R    G      B     A       U                        V
+//        currentPenPos.x,               currentPenPos.y + sizeY_Norm,  red, green, blue, alpha, 0.1f,  0.2222222f,
+//        currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  0.1f, 0.2757201f,
+//        currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,   0.1958333f, 0.2222222f,
+//      }
       );
       vboList.add(vbo1);
       
@@ -185,10 +207,17 @@ public class Text implements IRenderable {
         false,
         fontAtlas,
         new float[] {
-          currentPenPos.x + sizeX_Norm, currentPenPos.y,          red, green, blue, alpha, posX_Norm + sizeX_Norm, posY_Norm,
-          currentPenPos.x,          currentPenPos.y,          red, green, blue, alpha, posX_Norm,          posY_Norm,
-          currentPenPos.x + sizeX_Norm, currentPenPos.y + sizeY_Norm, red, green, blue, alpha, posX_Norm + sizeX_Norm, posY_Norm + sizeY_Norm
+          // x                              y                              R    G      B     A       U                        V
+          currentPenPos.x + sizeX_Norm,  currentPenPos.y,               red, green, blue, alpha,  posX_NormOnTexture + sizeX_NormOnTexture,  posY_NormOnTexture,
+          currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  posX_NormOnTexture,               posY_NormOnTexture + sizeY_NormOnTexture,
+          currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,  posX_NormOnTexture + sizeX_NormOnTexture,  posY_NormOnTexture,
         }
+//      new float[] {
+//        // x                              y                              R    G      B     A       U                        V
+//        currentPenPos.x + sizeX_Norm,  currentPenPos.y,               red, green, blue, alpha,   0.1958333f, 0.2757201f,
+//        currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  0.1f, 0.2757201f,
+//        currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,    0.1958333f, 0.2222222f,
+//      }
       );
       vboList.add(vbo2);
       
@@ -200,9 +229,12 @@ public class Text implements IRenderable {
         "(C)\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y + size.y) + ")\n" +
         "(A')\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y) + ")\n" +
         "(B')\t" + "(" + (currentPenPos.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x) + "|" + (pos.y) + ")\n" +
-        "(C')\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y + size.y) + ")\n\n";
+        "(C')\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y + size.y) + ")";
   
       System.out.println(debugMsg);
+      System.out.println("Glyph UV in Pixel: " + glyph.getPosition().x + " | " + glyph.getPosition().y + "\n");
+      
+      
       
       // TODO Vor dem rendern muss die Textur Render-Art von Stretch umgestellt werden auf clamp
       //      Notfalls müssen die vbos von texten in ein eigenes vao gebunden werden

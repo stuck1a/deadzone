@@ -74,6 +74,36 @@ public class Font implements IAsset {
     atlasTexture = new Texture((String)json.get("atlas"), assetsDir + "fonts" + fileSeparator);
 
     
+    /*
+    * Zellgröße (BxH): 24*27
+    *
+    * TESTDATEN FÜR DEN CHARACTER "H"
+    * Korrekte Werte wären:
+    * id = 72
+    * Row = 5
+    * Col = 2
+    * xPos (Pixel) = 24
+    * yPos (Pixel) = 108
+    * xPos (Norm.) = 24/800 = 0,03
+    * yPos (Norm.) = 24/600 = 0,18
+    *
+    *
+    * TESTDATEN FÜR DEN CHARACTER "!"
+    * Korrekte Werte wären:
+    * id = 33
+    * Row = 1
+    * Col = 3
+    * xPos (Pixel) = 48
+    * yPos (Pixel) = 0
+    * xPos (Norm.) = 48/800 = 0,06
+    * yPos (Norm.) = 0/600 = 0
+    *
+    *
+    *
+    *
+    *
+    * */
+    
     // Parse the glyph data, create glyph objects from it and add them to the fonts glyph map
     int counter = 0;
     for (Object item : glyphArray) {
@@ -86,7 +116,7 @@ public class Font implements IAsset {
       final int glyphsCol = (counter + 1) % cols;
       // create the glyph object
       Glyph glyph = new Glyph(
-        new Vector2(glyphsRow * cellWidth, glyphsCol * cellHeight),
+        new Vector2((glyphsCol - 1) * cellWidth, (glyphsRow - 1)  * cellHeight),
         new Vector2(cellWidth, cellHeight),
         glyphWidth
       );
