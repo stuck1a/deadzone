@@ -1,5 +1,5 @@
 {
-  "atlas": "Arial-10b.bmp",
+  "atlas": "Arial-10b.png",
   "name": "Arial10b",
   "cells": {
     "width": "24",
@@ -15,123 +15,123 @@
   "glyphs": [
     {
       "id": "31",
-      "width": "17"
+      "width": "0"
     },
     {
       "id": "32",
-      "width": "17"
+      "width": "0"
     },
     {
       "id": "33",
-      "width": "17"
+      "width": "6"
     },
     {
       "id": "34",
-      "width": "17"
+      "width": "8"
     },
     {
       "id": "35",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "36",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "37",
-      "width": "17"
+      "width": "20"
     },
     {
       "id": "38",
-      "width": "17"
+      "width": "15"
     },
     {
       "id": "39",
-      "width": "17"
+      "width": "4"
     },
     {
       "id": "40",
-      "width": "17"
+      "width": "7"
     },
     {
       "id": "41",
-      "width": "17"
+      "width": "7"
     },
     {
       "id": "42",
-      "width": "17"
+      "width": "10"
     },
     {
       "id": "43",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "44",
-      "width": "17"
+      "width": "6"
     },
     {
       "id": "45",
-      "width": "17"
+      "width": "6"
     },
     {
       "id": "46",
-      "width": "17"
+      "width": "6"
     },
     {
       "id": "47",
-      "width": "17"
+      "width": "7"
     },
     {
       "id": "48",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "49",
-      "width": "17"
+      "width": "10"
     },
     {
       "id": "50",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "51",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "52",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "53",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "54",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "55",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "56",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "57",
-      "width": "17"
+      "width": "12"
     },
     {
       "id": "58",
-      "width": "17"
+      "width": ""
     },
     {
       "id": "59",
-      "width": "17"
+      "width": ""
     },
     {
       "id": "60",
-      "width": "17"
+      "width": ""
     },
     {
       "id": "61",

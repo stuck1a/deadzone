@@ -160,7 +160,8 @@ public class Text implements IRenderable {
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
-        currentPenPos.x = currentPenPos.x + sizeX_NormWin;
+        final float letterOffset = 2f / windowWidth; // 2px offset between each letter
+        currentPenPos.x = currentPenPos.x + scale * (width_NormWin + letterOffset);
       }
       
       // Update total size of the text
@@ -222,19 +223,21 @@ public class Text implements IRenderable {
       u_A = posX_NormTex + sizeX_NormTex;
       v_A = posY_NormTex + sizeY_NormTex;
   
-      u_B = posX_NormTex;
-      v_B = posY_NormTex + sizeY_NormTex;
+      u_B = posX_NormTex + sizeX_NormTex;
+      v_B = posY_NormTex;
+      
+      u_C = posX_NormTex;
+      v_C = posY_NormTex + sizeY_NormTex;
   
-      u_C = posX_NormTex + sizeX_NormTex;
-      v_C = posY_NormTex;
+
       
       VertexBufferObject vbo2 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
           x_A, y_A, red, green, blue, alpha, u_A, v_A,
-          x_B, y_B, red, green, blue, alpha, u_C, v_C,
-          x_C, y_C, red, green, blue, alpha, u_B, v_B,
+          x_B, y_B, red, green, blue, alpha, u_B, v_B,
+          x_C, y_C, red, green, blue, alpha, u_C, v_C,
         }
       );
       vboList.add(vbo2);
