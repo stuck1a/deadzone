@@ -2,7 +2,20 @@
 ###   DEAZONE ROADMAP FOR THE PACKAGE "deadzone.graphics"   ###
 ###############################################################
 
-- Implement font atlas creation, font texture creation and font drawing
+- Refactor font rendering (also fix all other shapes UV coords because we switched to stbi_set_flip_vertically_on_load = false)
+  => Most important optimization: Pre-Calculate the normalized UV coordinates on font creation
+  => They can be precalculated also for normalization within the global window space.
+     But when doing so, then a logic is needed, which re-calculates these values of all existing IRenderables, whenever
+     the window is resized.
+
+  => Font Classes will be wrapped from FontFamily. FontFamily is used afterwards to set up a font for drawing and contains all
+     variants like italic, bold and three base sizes of each font: small, medium, large
+     Maybe use a separate Pen class to draw the text.
+     Font drawing should then something like: drawText(FontFamily, x, y, text, italic, bold, size)
+     Depending on the given size, the Pen or FontFamily class decides themself which base size variant it should use, to keep the scale
+     value as small as possible (=better quality). It also need to calculate to proper scale value so that the rendered font is rendered
+     in the given size (height) at the end.
+
 
 - Implement vertex attributes for normal maps
 
