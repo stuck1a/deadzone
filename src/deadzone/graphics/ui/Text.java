@@ -52,7 +52,7 @@ public class Text implements IRenderable {
     this.yPos = y;
     this.font = font;
     renderedText = text;
-    this.scale = 1;
+    this.scale = 2;  // TODO: by default we need a scale of 2 the get the original cell size - why?
     this.vertexCount = renderedText.length() * 6;
     addTextToDraw(x, y);
   }
@@ -63,7 +63,7 @@ public class Text implements IRenderable {
     this.yPos = y;
     this.font = font;
     renderedText = text;
-    this.scale = scale;
+    this.scale = scale + 1;
     this.vertexCount = renderedText.length() * 6;
     addTextToDraw(x, y);
   }
@@ -144,100 +144,110 @@ public class Text implements IRenderable {
       float width = glyph.getGlyphWidth();
       
       // Normalize position and size for XYZ data (percent of window size)
-      final float posX_Norm = pos.x / windowWidth;
-      final float posY_Norm = pos.y / windowHeight;
-      final float sizeX_Norm = size.x * scale / windowWidth;
-      final float sizeY_Norm = size.y * scale / windowHeight;
-      final float width_Norm = width / windowWidth;
+      final float posX_NormWin = pos.x / windowWidth;
+      final float posY_NormWin = pos.y / windowHeight;
+      final float sizeX_NormWin = size.x * scale / windowWidth;
+      final float sizeY_NormWin = size.y * scale / windowHeight;
+      final float width_NormWin = width / windowWidth;
   
       // Normalize position and size for UV data (percent of texture atlas size)
-      final float posX_NormOnTexture = pos.x / fontAtlas.width;
-      final float posY_NormOnTexture = pos.y / fontAtlas.height;
-      final float sizeX_NormOnTexture =  size.x / fontAtlas.width;
-      final float sizeY_NormOnTexture = size.y / fontAtlas.height;
+      final float posX_NormTex = pos.x / fontAtlas.width;
+      final float posY_NormTex = pos.y / fontAtlas.height;
+      final float sizeX_NormTex =  size.x / fontAtlas.width;
+      final float sizeY_NormTex = size.y / fontAtlas.height;
       
       // Initialize / update current pen position
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
-        currentPenPos.x = currentPenPos.x + sizeX_Norm;
+        currentPenPos.x = currentPenPos.x + sizeX_NormWin;
       }
       
       // Update total size of the text
-      totalHeight = sizeY_Norm;
-      totalWidth += sizeX_Norm;
-      
-      
-      /*
-       * TESTDATEN FÜR "H"
-       * Korrekte normalisierte UV-Werte wären:
-       *
-       * Größe Atlas Image (BxH):   240x486
-       *
-       * A  = 24 | 108 px = 0,1        | 0,2222222
-       * B  = 24 | 134 px = 0,1        | 0,2757201
-       * C  = 47 | 108 px = 0,1958333  | 0,2222222
-       *
-       * A' = 47 | 134 px = 0,1958333  | 0,2757201
-       * B' = 24 | 134 px = 0,1        | 0,2757201
-       * C' = 47 | 108 px = 0,1958333  | 0,18
-       *
-       */
+      totalHeight = sizeY_NormWin;
+      totalWidth += sizeX_NormWin;
       
       // Create and register VBOs for this character
+      float x_A, y_A, x_B, y_B, x_C, y_C, u_A, v_A, u_B, v_B, u_C, v_C;
+      
+      x_A = currentPenPos.x;
+      y_A = currentPenPos.y + sizeY_NormWin;
+      
+      x_B = currentPenPos.x;
+      y_B = currentPenPos.y;
+      
+      x_C = currentPenPos.x + sizeX_NormWin;
+      y_C = currentPenPos.y + sizeY_NormWin;
+      
+      u_A = posX_NormTex;
+      v_A = posY_NormTex;
+      
+      u_B = posX_NormTex;
+      v_B = posY_NormTex + sizeY_NormTex;
+      
+      u_C = posX_NormTex + sizeX_NormTex;
+      v_C = posY_NormTex;
+      
       VertexBufferObject vbo1 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
-          // x                              y                              R    G      B     A       U                        V
-          currentPenPos.x,               currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,  posX_NormOnTexture,               posY_NormOnTexture,
-          currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  posX_NormOnTexture,               posY_NormOnTexture + sizeY_NormOnTexture,
-          currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,  posX_NormOnTexture + sizeX_NormOnTexture,  posY_NormOnTexture,
+          x_A, y_A, red, green, blue, alpha, u_A, v_A,
+          x_B, y_B, red, green, blue, alpha, u_B, v_B,
+          x_C, y_C, red, green, blue, alpha, u_C, v_C,
         }
-//      new float[] {
-//        // x                              y                              R    G      B     A       U                        V
-//        currentPenPos.x,               currentPenPos.y + sizeY_Norm,  red, green, blue, alpha, 0.1f,  0.2222222f,
-//        currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  0.1f, 0.2757201f,
-//        currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,   0.1958333f, 0.2222222f,
-//      }
       );
       vboList.add(vbo1);
+      
+      System.out.println(
+        "\"" + c + "\"\n" +
+          "(A)\t" + "(" + x_A + "|" + y_A + ")\t(" + u_A + "|" + v_A + ")\n" +
+          "(B)\t" + "(" + x_B + "|" + y_B + ")\t(" + u_B + "|" + v_B + ")\n" +
+          "(C)\t" + "(" + x_C + "|" + y_C + ")\t(" + u_C + "|" + v_C + ")\n"
+      );
+      
+      
+      
+  
+  
+      x_A = currentPenPos.x + sizeX_NormWin;
+      y_A = currentPenPos.y;
+  
+      x_B = currentPenPos.x + sizeX_NormWin;
+      y_B = currentPenPos.y + sizeY_NormWin;
+  
+      x_C = currentPenPos.x;
+      y_C = currentPenPos.y;
+  
+      u_A = posX_NormTex + sizeX_NormTex;
+      v_A = posY_NormTex + sizeY_NormTex;
+  
+      u_B = posX_NormTex;
+      v_B = posY_NormTex + sizeY_NormTex;
+  
+      u_C = posX_NormTex + sizeX_NormTex;
+      v_C = posY_NormTex;
       
       VertexBufferObject vbo2 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
-          // x                              y                              R    G      B     A       U                        V
-          currentPenPos.x + sizeX_Norm,  currentPenPos.y,               red, green, blue, alpha,  posX_NormOnTexture + sizeX_NormOnTexture,  posY_NormOnTexture,
-          currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  posX_NormOnTexture,               posY_NormOnTexture + sizeY_NormOnTexture,
-          currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,  posX_NormOnTexture + sizeX_NormOnTexture,  posY_NormOnTexture,
+          x_A, y_A, red, green, blue, alpha, u_A, v_A,
+          x_B, y_B, red, green, blue, alpha, u_C, v_C,
+          x_C, y_C, red, green, blue, alpha, u_B, v_B,
         }
-//      new float[] {
-//        // x                              y                              R    G      B     A       U                        V
-//        currentPenPos.x + sizeX_Norm,  currentPenPos.y,               red, green, blue, alpha,   0.1958333f, 0.2757201f,
-//        currentPenPos.x,               currentPenPos.y,               red, green, blue, alpha,  0.1f, 0.2757201f,
-//        currentPenPos.x + sizeX_Norm,  currentPenPos.y + sizeY_Norm,  red, green, blue, alpha,    0.1958333f, 0.2222222f,
-//      }
       );
       vboList.add(vbo2);
-      
-      
-      String debugMsg =
-        "\"" + c + "\"\n" +
-        "(A)\t" + "(" + (currentPenPos.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x) + "|" + (pos.y + size.y) + ")\n" +
-        "(B)\t" + "(" + (currentPenPos.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x) + "|" + (pos.y) + ")\n" +
-        "(C)\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y + size.y) + ")\n" +
-        "(A')\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y) + ")\n" +
-        "(B')\t" + "(" + (currentPenPos.x) + "|" + (currentPenPos.y) + ")\t(" + (pos.x) + "|" + (pos.y) + ")\n" +
-        "(C')\t" + "(" + (currentPenPos.x + size.x) + "|" + (currentPenPos.y + size.y) + ")\t(" + (pos.x + size.x) + "|" + (pos.y + size.y) + ")";
   
-      System.out.println(debugMsg);
+  
+      System.out.println(
+        "\"" + c + "\"\n" +
+        "(A')\t" + "(" + x_A + "|" + y_A + ")\t(" + u_A + "|" + v_A + ")\n" +
+        "(B')\t" + "(" + x_B + "|" + y_B + ")\t(" + u_B + "|" + v_B + ")\n" +
+        "(C')\t" + "(" + x_C + "|" + y_C + ")\t(" + u_C + "|" + v_C + ")\n"
+      );
+      
       System.out.println("Glyph UV in Pixel: " + glyph.getPosition().x + " | " + glyph.getPosition().y + "\n");
-      
-      
-      
-      // TODO Vor dem rendern muss die Textur Render-Art von Stretch umgestellt werden auf clamp
-      //      Notfalls müssen die vbos von texten in ein eigenes vao gebunden werden
     }
     
   }

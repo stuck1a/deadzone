@@ -114,8 +114,8 @@ public class RectangleShape implements IShape {
       texture,
       new float[] {
         x + width, y, red, green, blue, alpha, 1, 0,
-        x,  y, red, green, blue, alpha, 0, 0,
-        x + width, y + height, red, green, blue, alpha, 1, 1
+        x + width, y + height, red, green, blue, alpha, 1, 1,
+        x,  y, red, green, blue, alpha, 0, 0
       }
     );
     vboList.add(vbo2);

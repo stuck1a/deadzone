@@ -72,45 +72,16 @@ public class Font implements IAsset {
     
     // Load the atlas image
     atlasTexture = new Texture((String)json.get("atlas"), assetsDir + "fonts" + fileSeparator);
-
-    
-    /*
-    * Zellgröße (BxH): 24*27
-    *
-    * TESTDATEN FÜR DEN CHARACTER "H"
-    * Korrekte Werte wären:
-    * id = 72
-    * Row = 5
-    * Col = 2
-    * xPos (Pixel) = 24
-    * yPos (Pixel) = 108
-    * xPos (Norm.) = 24/800 = 0,03
-    * yPos (Norm.) = 24/600 = 0,18
-    *
-    *
-    * TESTDATEN FÜR DEN CHARACTER "!"
-    * Korrekte Werte wären:
-    * id = 33
-    * Row = 1
-    * Col = 3
-    * xPos (Pixel) = 48
-    * yPos (Pixel) = 0
-    * xPos (Norm.) = 48/800 = 0,06
-    * yPos (Norm.) = 0/600 = 0
-    *
-    *
-    *
-    *
-    *
-    * */
     
     // Parse the glyph data, create glyph objects from it and add them to the fonts glyph map
     int counter = 0;
     for (Object item : glyphArray) {
+      
       // get the data of the current glyph definition
       JSONObject currentGlyphData = (JSONObject) item;
       final int id = Integer.parseInt((String)currentGlyphData.get("id"));
       final int glyphWidth = Integer.parseInt((String)currentGlyphData.get("width"));
+      
       // Calculate row and col of the glyph
       final int glyphsRow = (counter / cols) + 1;
       final int glyphsCol = (counter + 1) % cols;
@@ -120,9 +91,11 @@ public class Font implements IAsset {
         new Vector2(cellWidth, cellHeight),
         glyphWidth
       );
+      
       // add glyph to the glyph map of this font
       this.glyphs.put((char) id, glyph);
       counter++;
+      
     }
   }
   

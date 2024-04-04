@@ -115,8 +115,8 @@ public class Tile implements IIsoObject {
       texture,
       new float[] {
         xNormalized + width, yNormalized, 1, 1, 1, 1, 1, 0,
-        xNormalized, yNormalized, 1, 1, 1, 1, 0, 0,
-        xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1
+        xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1,
+        xNormalized, yNormalized, 1, 1, 1, 1, 0, 0
       }
     );
     vboList.add(vbo2);
