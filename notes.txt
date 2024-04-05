@@ -43,3 +43,49 @@
 
 - Read what function you have to execute in OpenGL for onResize to recalculate the window size
   and introduce a corresponding logic for this
+
+
+
+
+
+
+
+
+
+
+
+___________________________________________________
+
+Parameter for Ultimate Bitmap Font Generator:
+
+Neue Font Textur
+
+Schriftart: Arial
+Styles*:    Normal, Bold (Italic through shader projection matrix - 16°)
+Sizes:      20px   -  Normale
+            70px   -  Large
+Options:    Smooth: yes
+            Auto-trim glyphs: yes
+            Distance Field: none (0,0,0,0)
+            Merging: yes
+            BF-Merging: yes
+            Heuristic: Top left
+            Sorting: Height
+            Image format: PNG
+            Encoding: Unicode
+            Output format: XML
+            Transparent: yes
+            Export kerning: yes
+            Save inside XML: no
+
+
+Characters:
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĀΩↄ←↑→↓↔↕↨∂∆∏∑−∕∙√∞∟∩∫≈≠≡≤≥⌂⌐⌠⌡─│┌┐└┘├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬▀▄█▌▐░▒▓■□▪▫▬▲►▼◄◊○◌●◘◙◦☺☻☼♀♂♠♣♥♦♪♫♯
+
+After generation of the XML font definition file, kerning pairs with value of +1 (for large font size also "2")
+will be removed, because those make around 90% of the entries and have basically no visible impact
+
+___________________________________________________
+
+
+
