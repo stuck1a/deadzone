@@ -155,13 +155,15 @@ public class Text implements IRenderable {
       final float posY_NormTex = pos.y / fontAtlas.height;
       final float sizeX_NormTex =  size.x / fontAtlas.width;
       final float sizeY_NormTex = size.y / fontAtlas.height;
+      final float width_NormTex = width / fontAtlas.width;
       
       // Initialize / update current pen position
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
         final float letterOffset = 2f / windowWidth; // 2px offset between each letter
-        currentPenPos.x = currentPenPos.x + scale * (width_NormWin + letterOffset);
+        //currentPenPos.x = currentPenPos.x + scale * letterOffset + scale * width_NormWin;
+        currentPenPos.x = currentPenPos.x + scale * width_NormWin;
       }
       
       // Update total size of the text

@@ -3,12 +3,25 @@
 ###############################################################
 
 - Refactor font rendering (also fix all other shapes UV coords because we switched to stbi_set_flip_vertically_on_load = false)
+
+  Vorab Umbauten:
+
+  => Die aktuellen width-Values der einzelnen Characters sind zwar schon korrigiert, aber so richtig setzt er die Pen-Position noch nicht.
+
+  => Sobald die PenPos gefixt ist, die Font-Texturen neu erzeugen mit UBFG. Dafür die Glyph-Klasse an das neue Datenformat anpassen.
+     Zusätzlich soll Kerning integriert wird. Kerning beschreibt für jeden Glyph eigene Offsets zum nächsten Character, je nachdem, was das für einer ist.
+     Damit z.B. in "Text" das kleine "e" um 2px unter das große "T" geschoben wird, bekommt dann Kerning-Paar "T-e" den Wert 2.
+     => Für UBFG-Texturen ist vermutlich XML die bessere Variante, um die Font-Definitionen zu erstellen
+
+
+  Danach Refactoring:
+
   => Most important optimization: Pre-Calculate the normalized UV coordinates on font creation
   => They can be precalculated also for normalization within the global window space.
      But when doing so, then a logic is needed, which re-calculates these values of all existing IRenderables, whenever
      the window is resized.
 
-  => Font Classes will be wrapped from FontFamily. FontFamily is used afterwards to set up a font for drawing and contains all
+  => Font Classes will be into a FontFamily class. FontFamily is used afterwards to set up a font for drawing and contains all
      variants like italic, bold and three base sizes of each font: small, medium, large
      Maybe use a separate Pen class to draw the text.
      Font drawing should then something like: drawText(FontFamily, x, y, text, italic, bold, size)
@@ -17,11 +30,16 @@
      in the given size (height) at the end.
 
 
+
+
 - Implement vertex attributes for normal maps
+
 
 - Implement loading and drawing of 3D objects (.obj files with vertex data, UV coordinates and normal map)
 
+
 - ortho projection: Camera view is not yet 45° diagonal - fix as soon as textures/fonts are implemented, so that its easier to fix
+
 
 - Read what function you have to execute in OpenGL for onResize to recalculate the window size
   and introduce a corresponding logic for this
