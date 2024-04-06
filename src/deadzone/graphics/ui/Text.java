@@ -174,9 +174,9 @@ public class Text implements IRenderable {
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
-        final float letterOffset = 2f / windowWidth; // 2px offset between each letter
-        //currentPenPos.x = currentPenPos.x + scale * letterOffset + scale * width_NormWin;
-        currentPenPos.x = currentPenPos.x + scale * width_NormWin;
+        final char predecessor = renderedText.charAt(i-1);
+        final float letterOffset = ((float) glyph.getKerning(predecessor)) / windowWidth;
+        currentPenPos.x = currentPenPos.x + scale * width_NormWin + letterOffset;
       }
       
       // Update total size of the text

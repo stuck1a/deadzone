@@ -109,16 +109,16 @@ public class Font  {
         // Process kerning nodes (all glyphs are created at this point, because kerning data comes after char data in the XML
         if (child.getNodeName().equals("kerning")) {
           NamedNodeMap kerningAttr = child.getAttributes();
-          final char relatedChar = (char)(Integer.parseInt(kerningAttr.getNamedItem("first").getTextContent()));
-          final char targetChar = (char)(Integer.parseInt(kerningAttr.getNamedItem("second").getTextContent()));
+          final char firstChar = (char)(Integer.parseInt(kerningAttr.getNamedItem("first").getTextContent()));
+          final char secondChar = (char)(Integer.parseInt(kerningAttr.getNamedItem("second").getTextContent()));
           final int value = Integer.parseInt(kerningAttr.getNamedItem("value").getTextContent());
           
-          Glyph glyph = this.glyphs.get(relatedChar);
+          Glyph glyph = this.glyphs.get(secondChar);
           if (glyph == null) {
             System.err.println("Skipped invalid kerning entry in font definition \"" + name + "\"");
             continue;
           }
-          glyph.addKerning(targetChar, value);
+          glyph.addKerning(firstChar, value);
           continue;
         }
         
