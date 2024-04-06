@@ -25,18 +25,10 @@ public class AssetManager {
     textures.put("1_marked", new Texture("1_marked.png"));
     textures.put("2", new Texture("2.jpg"));
     
-    // Load Font: Arial, 10, Bold
-    /*
-    Font arial = new Font("old-Arial-10b.json");
-    arial.load();
-    fonts.put(arial.getName(), arial);
-    */
-    
-    // New logic
-    Font arial20 = new Font("arial20.xml");
-    arial20.load();
-    fonts.put(arial20.getName(), arial20);
-    
+    // Load Font: Arial, 70px, regular
+    Font arial70 = new Font("arial70.xml");
+    arial70.load();
+    fonts.put(arial70.getName(), arial70);
   }
   
   

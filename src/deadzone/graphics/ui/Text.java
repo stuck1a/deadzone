@@ -116,6 +116,8 @@ public class Text implements IRenderable {
    * Registers all required VBOs at the renderer which are needed to render the given text.
    */
   private void addTextToDraw(float x, float y) {
+    
+    // TODO: Adjust penPos for new glyph data (offsets and kerning)
     addTextToDraw_OLD(x, y);
   }
   

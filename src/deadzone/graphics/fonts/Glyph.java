@@ -47,6 +47,13 @@ public class Glyph {
     kernings.put(target, value);
   }
   
+  /**
+   * Returns the kerning value in pixel for the given successor character or 0 if no matching kerning pair exist
+   */
+  public int getKerning(char successor) {
+    Integer value = kernings.get(successor);
+    return value == null ? 0 : value;
+  }
   
   public void setId(int id) {
     this.id = id;
