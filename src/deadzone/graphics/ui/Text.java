@@ -194,23 +194,23 @@ public class Text implements IRenderable {
       // Create and register VBOs for this character
       float x_A, y_A, x_B, y_B, x_C, y_C, u_A, v_A, u_B, v_B, u_C, v_C;
       
-      x_A = currentPenPos.x;
-      y_A = currentPenPos.y + sizeY_NormWin;
+      x_A = currentPenPos.x ;  // x_A = currentPenPos.x;
+      y_A = currentPenPos.y + sizeY_NormWin;  // y_A = currentPenPos.y + sizeY_NormWin;
       
-      x_B = currentPenPos.x;
-      y_B = currentPenPos.y;
+      x_B = currentPenPos.x;  // x_B = currentPenPos.x;
+      y_B = currentPenPos.y;  // y_B = currentPenPos.y;
       
-      x_C = currentPenPos.x + sizeX_NormWin;
-      y_C = currentPenPos.y + sizeY_NormWin;
+      x_C = currentPenPos.x + sizeX_NormWin;  // x_C = currentPenPos.x + sizeX_NormWin;
+      y_C = currentPenPos.y + sizeY_NormWin;  // y_C = currentPenPos.y + sizeY_NormWin;
       
-      u_A = posX_NormTex;
-      v_A = posY_NormTex;
+      u_A = posX_NormTex;  // u_A = posX_NormTex;
+      v_A = posY_NormTex;  // v_A = posY_NormTex;
       
-      u_B = posX_NormTex;
-      v_B = posY_NormTex + sizeY_NormTex;
+      u_B = posX_NormTex;  // u_B = posX_NormTex;
+      v_B = posY_NormTex + sizeY_NormTex;  // v_B = posY_NormTex + sizeY_NormTex;
       
-      u_C = posX_NormTex + sizeX_NormTex;
-      v_C = posY_NormTex;
+      u_C = posX_NormTex + sizeX_NormTex;  // u_C = posX_NormTex + sizeX_NormTex;
+      v_C = posY_NormTex;  // v_C = posY_NormTex;
       
       VertexBufferObject vbo1 = new VertexBufferObject(
         false,
@@ -231,25 +231,25 @@ public class Text implements IRenderable {
       );
       
       
-      x_A = currentPenPos.x + sizeX_NormWin;
-      y_A = currentPenPos.y;
-  
-      x_B = currentPenPos.x + sizeX_NormWin;
-      y_B = currentPenPos.y + sizeY_NormWin;
-  
-      x_C = currentPenPos.x;
-      y_C = currentPenPos.y;
-  
-      u_A = posX_NormTex + sizeX_NormTex;
-      v_A = posY_NormTex + sizeY_NormTex;
-  
-      u_B = posX_NormTex + sizeX_NormTex;
-      v_B = posY_NormTex;
       
-      u_C = posX_NormTex;
-      v_C = posY_NormTex + sizeY_NormTex;
+      
+      x_A = currentPenPos.x + sizeX_NormWin;  // x_A = currentPenPos.x + sizeX_NormWin;
+      y_A = currentPenPos.y;  // y_A = currentPenPos.y;
   
-
+      x_B = currentPenPos.x + sizeX_NormWin;  // x_B = currentPenPos.x + sizeX_NormWin;
+      y_B = currentPenPos.y + sizeY_NormWin;  // y_B = currentPenPos.y + sizeY_NormWin;
+  
+      x_C = currentPenPos.x;  // x_C = currentPenPos.x;
+      y_C = currentPenPos.y;  // y_C = currentPenPos.y;
+  
+      u_A = posX_NormTex + sizeX_NormTex;  // u_A = posX_NormTex + sizeX_NormTex;
+      v_A = posY_NormTex + sizeY_NormTex;  // v_A = posY_NormTex + sizeY_NormTex;
+  
+      u_B = posX_NormTex + sizeX_NormTex;  // u_B = posX_NormTex + sizeX_NormTex;
+      v_B = posY_NormTex;  // v_B = posY_NormTex;
+      
+      u_C = posX_NormTex;  // u_C = posX_NormTex;
+      v_C = posY_NormTex + sizeY_NormTex;  // v_C = posY_NormTex + sizeY_NormTex;
       
       VertexBufferObject vbo2 = new VertexBufferObject(
         false,

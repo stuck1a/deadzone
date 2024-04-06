@@ -62,7 +62,7 @@ Neue Font Textur
 
 Schriftart: Arial
 Styles*:    Normal, Bold (Italic through shader projection matrix - 16°)
-Sizes:      20px   -  Normale
+Sizes:      20px   -  Normal
             70px   -  Large
 Options:    Smooth: yes
             Auto-trim glyphs: yes

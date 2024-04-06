@@ -15,10 +15,6 @@ public class Texture implements IAsset {
   
   private ByteBuffer data;
   
-  public IntBuffer w;
-  public IntBuffer h;
-  public IntBuffer comp;
-  
   public int width;
   public int height;
   
