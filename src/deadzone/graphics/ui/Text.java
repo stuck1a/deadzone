@@ -111,11 +111,22 @@ public class Text implements IRenderable {
     return (int)(totalHeight * window.getPixelHeight());
   }
   
+  
+  /**
+   * Registers all required VBOs at the renderer which are needed to render the given text.
+   */
+  private void addTextToDraw(float x, float y) {
+    addTextToDraw_OLD(x, y);
+  }
+  
+  
+  
+  
   /**
    * Registers all required VBOs at the renderer which are needed to render the given text.
    * For now, we use normalized OpenGL coordinates for x and y to ensure resolution-independent placement
    */
-  private void addTextToDraw(float x, float y) {
+  private void addTextToDraw_OLD(float x, float y) {
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
     
@@ -210,9 +221,6 @@ public class Text implements IRenderable {
       );
       
       
-      
-  
-  
       x_A = currentPenPos.x + sizeX_NormWin;
       y_A = currentPenPos.y;
   
@@ -256,5 +264,6 @@ public class Text implements IRenderable {
     }
     
   }
+  
   
 }

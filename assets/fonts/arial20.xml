@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <fontList>
-	<font name="Arial" size="20" bold="false" >
+	<font name="Arial" size="20" bold="false" atlas="arial20.png" >
 		<char id="32" x="0" y="0" width="0" height="0" Xoffset="6" Yoffset="23" OrigWidth="6" OrigHeight="23" />
 		<char id="33" x="0" y="94" width="3" height="15" Xoffset="0" Yoffset="4" OrigWidth="6" OrigHeight="23" />
 		<char id="34" x="24" y="171" width="6" height="5" Xoffset="0" Yoffset="4" OrigWidth="7" OrigHeight="23" />
