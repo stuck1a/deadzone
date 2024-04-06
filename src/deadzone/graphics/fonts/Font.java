@@ -99,7 +99,8 @@ public class Font  {
           Glyph glyph = new Glyph(
             new Vector2(x, y),
             new Vector2(width, height),
-            origWidth
+            new Vector2(xOffset, yOffset),
+            new Vector2(origWidth, origHeight)
           );
   
           this.glyphs.put(c, glyph);

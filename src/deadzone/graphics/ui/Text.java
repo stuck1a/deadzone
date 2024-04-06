@@ -154,21 +154,29 @@ public class Text implements IRenderable {
       Glyph glyph = font.getGlyph(c);
       Vector2 pos = glyph.getPosition();
       Vector2 size = glyph.getSize();
-      float width = glyph.getGlyphWidth();
+      Vector2 offset = glyph.getOffset();
+      Vector2 origSize = glyph.getOrigSize();
       
       // Normalize position and size for XYZ data (percent of window size)
       final float posX_NormWin = pos.x / windowWidth;
       final float posY_NormWin = pos.y / windowHeight;
       final float sizeX_NormWin = size.x * scale / windowWidth;
       final float sizeY_NormWin = size.y * scale / windowHeight;
-      final float width_NormWin = width / windowWidth;
+      final float origWidth_NormWin = origSize.x / windowWidth;
+      final float origHeight_NormWin = origSize.y / windowHeight;
+      final float offsetX_NormWin = offset.x / windowWidth;
+      final float offsetY_NormWin = offset.y / windowHeight;
   
       // Normalize position and size for UV data (percent of texture atlas size)
       final float posX_NormTex = pos.x / fontAtlas.width;
       final float posY_NormTex = pos.y / fontAtlas.height;
       final float sizeX_NormTex =  size.x / fontAtlas.width;
       final float sizeY_NormTex = size.y / fontAtlas.height;
-      final float width_NormTex = width / fontAtlas.width;
+      final float origWidth_NormTex = origSize.x / fontAtlas.width;
+      final float origHeight_NormTex = origSize.x / fontAtlas.height;
+      final float offsetX_NormTex = offset.x / fontAtlas.width;
+      final float offsetY_NormTex = offset.y / fontAtlas.height;
+      
       
       // Initialize / update current pen position
       if (currentPenPos == null) {
@@ -176,7 +184,7 @@ public class Text implements IRenderable {
       } else {
         final char predecessor = renderedText.charAt(i-1);
         final float letterOffset = ((float) glyph.getKerning(predecessor)) / windowWidth;
-        currentPenPos.x = currentPenPos.x + scale * width_NormWin + letterOffset;
+        currentPenPos.x = currentPenPos.x + scale * origWidth_NormWin + letterOffset;
       }
       
       // Update total size of the text
