@@ -148,6 +148,20 @@ public class Text implements IRenderable {
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     Vector2 currentPenPos = null;
     
+    
+    // in this first loop we only check the heights to find the max ascendant
+    float maxAscendant = 0;
+    for (int i = 0; i < renderedText.length(); i++) {
+      final char c = renderedText.charAt(i);
+      Glyph glyph = font.getGlyph(c);
+      Vector2 size = glyph.getSize();
+      Vector2 offset = glyph.getOffset();
+      Vector2 origSize = glyph.getOrigSize();
+      maxAscendant = Math.max(maxAscendant, size.y + offset.y);
+    }
+    maxAscendant = (scale * maxAscendant) / windowHeight;
+    
+    
     for (int i = 0; i < renderedText.length(); i++){
       // Get the glyph data
       final char c = renderedText.charAt(i);
@@ -178,13 +192,15 @@ public class Text implements IRenderable {
       final float offsetY_NormTex = offset.y / fontAtlas.height;
       
       
+      
       // Initialize / update current pen position
+      float letterOffset = 0;
+      
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
         final char predecessor = renderedText.charAt(i-1);
-        final float letterOffset = ((float) glyph.getKerning(predecessor)) / windowWidth;
-        currentPenPos.x = currentPenPos.x + scale * origWidth_NormWin + letterOffset;
+        letterOffset = ((float) glyph.getKerning(predecessor)) / windowHeight;
       }
       
       // Update total size of the text
@@ -271,6 +287,9 @@ public class Text implements IRenderable {
       );
       
       System.out.println("Glyph UV in Pixel: " + glyph.getPosition().x + " | " + glyph.getPosition().y + "\n");
+  
+  
+      currentPenPos.x += 1 * (sizeX_NormWin + letterOffset);
     }
     
   }
