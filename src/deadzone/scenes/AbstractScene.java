@@ -4,8 +4,8 @@ import deadzone.Deadzone;
 import deadzone.graphics.IRenderable;
 import deadzone.graphics.Renderer;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 
 
 /**
@@ -25,7 +25,7 @@ public abstract class AbstractScene {
    * All visible objects of the scene are registered here.
    * They will be rendered in the order they were added to the list.
    */
-  ArrayList<IRenderable> renderObjects = new ArrayList<>();
+  LinkedHashMap<String, IRenderable> renderObjects = new LinkedHashMap<>();
   
   /**
    * Base constructor for every scene. Generates the mapping,
@@ -54,19 +54,16 @@ public abstract class AbstractScene {
    * @param obj The new object to add
    * @return Succeeded or not
    */
-  public void addObject(IRenderable obj) {
-    renderObjects.add(obj);
+  public void addObject(String id, IRenderable obj) {
+    renderObjects.put(id, obj);
   }
+  
   
   /**
    * Removes an existing object from the scene
-   * @param id The object id
-   * @return Succeeded or not
    */
-  public void removeObject(int id) {
-    // TODO: Introduce a ID/Name or any other possibility to find and detect the objects later again
-    //       so we can remove them at runtime if necessary.
-    //       (for example if a world object shall disappear from the screen)
+  public void removeObject(String id) {
+    renderObjects.remove(id);
   }
   
   
@@ -87,9 +84,9 @@ public abstract class AbstractScene {
     
     // Now after all objects are adjusted accordingly, they are sent to the renderer with all their updated data for the next render loop
     Renderer renderer = Deadzone.getApplication().getRenderer();
-    for (IRenderable obj : renderObjects) {
+    renderObjects.forEach((id, obj) -> {
       renderer.registerObject(obj);
-    }
+    });
   }
 
   

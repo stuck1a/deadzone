@@ -10,8 +10,6 @@ import java.util.HashMap;
  */
 public class Glyph {
   
-  /** ID handle of the font texture */
-  private int id;
   /** The position of the glyph in the corresponding font atlas image */
   private Vector2 position;
   /** Width and Height of the glyph in the corresponding font atlas image */
@@ -20,7 +18,7 @@ public class Glyph {
   /** Offset between texture size and actual character size */
   private Vector2 offset;
   /** All kerning values which must be taken into account when placing a given glyph after this one */
-  private HashMap<Character, Integer> kernings = new HashMap<>();
+  private HashMap<Character, Float> kernings = new HashMap<>();
   
   
   /**
@@ -43,24 +41,16 @@ public class Glyph {
    * @param target Following char on which the kerning will be applied
    * @param value Offset in Pixel for the placement of the upcoming target character
    */
-  public void addKerning(char target, int value) {
+  public void addKerning(char target, float value) {
     kernings.put(target, value);
   }
   
   /**
    * Returns the kerning value in pixel for the given successor character or 0 if no matching kerning pair exist
    */
-  public int getKerning(char successor) {
-    Integer value = kernings.get(successor);
-    return value == null ? 0 : value;
-  }
-  
-  public void setId(int id) {
-    this.id = id;
-  }
-  
-  public int getId() {
-    return id;
+  public float getKerning(char successor) {
+    Float value = kernings.get(successor);
+    return value == null ? 0.0f : value;
   }
   
   /**

@@ -26,9 +26,9 @@ public class AssetManager {
     textures.put("2", new Texture("2.jpg"));
     
     // Load Font: Arial, 70px, regular
-    Font arial70 = new Font("arial70_test.xml");
-    arial70.load();
-    fonts.put(arial70.getName(), arial70);
+    Font arial20b = new Font("arial20b.xml");
+    arial20b.load();
+    fonts.put(arial20b.getName(), arial20b);
   }
   
   

@@ -19,7 +19,9 @@ public class Launcher extends AbstractScene {
     super(name);
   
     // Add a green triangle for testing purposes
-    addObject(new TriangleShape(
+    addObject(
+      "triangle1",
+      new TriangleShape(
       0.0f,  1.0f,
       -0.5f,  0.0f,
       0.5f,  0.0f,
@@ -27,7 +29,9 @@ public class Launcher extends AbstractScene {
     ));
     
     // Add a red triangle for testing purposes
-    addObject(new TriangleShape(
+    addObject(
+      "triangle2",
+      new TriangleShape(
       0.0f,  0.5f,
       -0.5f, -0.5f,
       0.5f, -0.5f,
@@ -35,8 +39,8 @@ public class Launcher extends AbstractScene {
     ));
   
     // Add a blue rectangle for testing purposes
-    addObject(new RectangleShape(0.0f, -0.1f, 0.3f, 0.2f, new Color(0, 0, 255, 100)));
-    addObject(new RectangleShape(-0.48f, 0.32f, 0.4f, 0.4f, new Color(20, 125, 255, 200)));
+    addObject("rectangle1", new RectangleShape(0.0f, -0.1f, 0.3f, 0.2f, new Color(0, 0, 255, 100)));
+    addObject("rectangle2", new RectangleShape(-0.48f, 0.32f, 0.4f, 0.4f, new Color(20, 125, 255, 200)));
   }
   
 }

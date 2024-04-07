@@ -206,14 +206,7 @@ public class Deadzone {
     glfwShowWindow(windowHandle);
     // Load all available assets into GPU memory
     loadAssets();
-    // Prepare initial scene
-    
-    // FOR TESTING: Set Compound as initial scene for iso testing
-//    deadzone.scenes.AbstractScene.setActiveScene(deadzone.scenes.Scene.LAUNCHER);
-//    new deadzone.scenes.Launcher();
-    deadzone.scenes.AbstractScene.setActiveScene(deadzone.scenes.Scene.COMPOUND);
-    new deadzone.scenes.Compound();
-    // TEST BLOCK END
+
     
     // Detect OpenGL thread and make bindings available for use
     GL.createCapabilities();
@@ -228,6 +221,15 @@ public class Deadzone {
     renderer = new Renderer();
     // Initialize timer
     timer = new GameTimer(Settings.targetFPS);
+  
+    // Prepare initial scene
+  
+    // FOR TESTING: Set Compound as initial scene for iso testing
+    //    deadzone.scenes.AbstractScene.setActiveScene(deadzone.scenes.Scene.LAUNCHER);
+    //    new deadzone.scenes.Launcher();
+    deadzone.scenes.AbstractScene.setActiveScene(deadzone.scenes.Scene.COMPOUND);
+    new deadzone.scenes.Compound();
+    // TEST BLOCK END
   }
   
   

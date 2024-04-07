@@ -149,19 +149,6 @@ public class Text implements IRenderable {
     Vector2 currentPenPos = null;
     
     
-    // in this first loop we only check the heights to find the max ascendant
-    float maxAscendant = 0;
-    for (int i = 0; i < renderedText.length(); i++) {
-      final char c = renderedText.charAt(i);
-      Glyph glyph = font.getGlyph(c);
-      Vector2 size = glyph.getSize();
-      Vector2 offset = glyph.getOffset();
-      Vector2 origSize = glyph.getOrigSize();
-      maxAscendant = Math.max(maxAscendant, size.y + offset.y);
-    }
-    maxAscendant = (scale * maxAscendant) / windowHeight;
-    
-    
     for (int i = 0; i < renderedText.length(); i++){
       // Get the glyph data
       final char c = renderedText.charAt(i);
@@ -200,11 +187,11 @@ public class Text implements IRenderable {
         currentPenPos = new Vector2(x, y);
       } else {
         final char predecessor = renderedText.charAt(i-1);
-        letterOffset = ((float) glyph.getKerning(predecessor)) / windowHeight;
+        letterOffset = scale * ((float) glyph.getKerning(predecessor)) / windowHeight;
       }
       
-      // Update total size of the text
-      totalHeight = sizeY_NormWin;
+      // Update total size of the text  // TODO: End values not yet correct
+      totalHeight = Math.max(totalHeight, sizeY_NormWin);
       totalWidth += sizeX_NormWin;
       
       // Create and register VBOs for this character
@@ -280,7 +267,6 @@ public class Text implements IRenderable {
   
   
       System.out.println(
-        "\"" + c + "\"\n" +
         "(A')\t" + "(" + x_A + "|" + y_A + ")\t(" + u_A + "|" + v_A + ")\n" +
         "(B')\t" + "(" + x_B + "|" + y_B + ")\t(" + u_B + "|" + v_B + ")\n" +
         "(C')\t" + "(" + x_C + "|" + y_C + ")\t(" + u_C + "|" + v_C + ")\n"
@@ -289,8 +275,12 @@ public class Text implements IRenderable {
       System.out.println("Glyph UV in Pixel: " + glyph.getPosition().x + " | " + glyph.getPosition().y + "\n");
   
   
-      currentPenPos.x += 1 * (sizeX_NormWin + letterOffset);
-    }
+      currentPenPos.x += sizeX_NormWin + letterOffset;
+    }  // for-end
+    
+    // Apply scaling to total size
+    totalHeight *= scale;
+    
     
   }
   
