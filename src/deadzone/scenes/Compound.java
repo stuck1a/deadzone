@@ -1,11 +1,8 @@
 package deadzone.scenes;
 
-import deadzone.Deadzone;
-import deadzone.assets.AssetManager;
 import deadzone.assets.Texture;
 import deadzone.graphics.Color;
 import deadzone.graphics.IsoGrid;
-import deadzone.graphics.Renderer;
 import deadzone.graphics.fonts.Font;
 import deadzone.graphics.ui.Text;
 import deadzone.graphics.worldobjects.Tile;
@@ -27,7 +24,6 @@ public class Compound extends AbstractScene {
   public Compound() {
     super(name);
     
-    final AssetManager assets = Deadzone.getApplication().getAssetManager();
     final Texture texture_1_marked = assets.getTexture("1_marked");
     
     // Add some Tiles to test the MVP projection
@@ -72,38 +68,28 @@ public class Compound extends AbstractScene {
     ));
     
     
-    // Render some text (use Arial, size 10, bold)
+    // Add a fixed text some text (use Arial, size 10, bold)
     final Font font = assets.getFont("Arial");
-    font.setColor(new Color(128, 64, 64));
-    final int currentSecond = Deadzone.getApplication().getTimer().getCurrentSecond();
-    Text testText = new Text(-1.0f, -1.0f, font, "FPS: " + currentSecond, 3.5f);
-    addObject("fpsDisplay", testText);
-    System.out.println("Initialized testText:\nTotal width: " + testText.getTotalPixelWidth() + "px\nTotal Height: " + testText.getTotalPixelHeight() + "px");
-    
+    font.setColor(new Color(255, 255, 255));
+    Text testText = new Text(-1.0f, -1.0f, font, "Seconds:", 3.5f);
+    addObject("secondsLabel", testText);
   }
   
   
   @Override
-  public void updateRegisteredObjects() {
+  public void updateScene() {
     // Remove the old timer text
-    removeObject("fpsDisplay");
+    removeObject("seconds");
     
     // Update FPS display
-    final AssetManager assets = Deadzone.getApplication().getAssetManager();
     final Font font = assets.getFont("Arial");
     font.setColor(new Color(128, 64, 64));
-    final double currentTimestamp = Deadzone.getApplication().getTimer().getCurrentTimestamp();
-    Text testText = new Text(-1.0f, -1.0f, font, "Time: " + currentTimestamp, 3.5f);
-    addObject("fpsDisplay", testText);
-    System.out.println("Initialized testText:\nTotal width: " + testText.getTotalPixelWidth() + "px\nTotal Height: " + testText.getTotalPixelHeight() + "px");
+    Text testText = new Text(-0.5f, -1.0f, font, timer.getCurrentSecond() + "s", 3);
+    addObject("seconds", testText);
+
     
-    
-    
-    // Now after all objects are adjusted accordingly, they are sent to the renderer with all their updated data for the next render loop
-    Renderer renderer = Deadzone.getApplication().getRenderer();
-    renderObjects.forEach((id, obj) -> {
-      renderer.registerObject(obj);
-    });
+    // Register objects for rendering  // TODO: Maybe omit this than let the renderer grab all registered objects itself? Check Pro/Con!
+    sendToRenderer();
   }
   
   

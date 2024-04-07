@@ -1,6 +1,9 @@
 package deadzone.scenes;
 
 import deadzone.Deadzone;
+import deadzone.GameTimer;
+import deadzone.Window;
+import deadzone.assets.AssetManager;
 import deadzone.graphics.IRenderable;
 import deadzone.graphics.Renderer;
 
@@ -26,6 +29,12 @@ public abstract class AbstractScene {
    * They will be rendered in the order they were added to the list.
    */
   LinkedHashMap<String, IRenderable> renderObjects = new LinkedHashMap<>();
+  
+  protected final Deadzone game = Deadzone.getApplication();
+  protected final GameTimer timer = Deadzone.getApplication().getTimer();
+  protected final Window window = Deadzone.getApplication().getWindow();
+  protected final AssetManager assets = Deadzone.getApplication().getAssetManager();
+  
   
   /**
    * Base constructor for every scene. Generates the mapping,
@@ -78,16 +87,21 @@ public abstract class AbstractScene {
   /**
    * This is the update loop for the actual scene.
    */
-  public void updateRegisteredObjects() {
-    // add/change/remove any registered objects based on user inputs and object internal game mechanics...
-    // ...
-    
+  public void updateScene() {
+    sendToRenderer();
+  }
+  
+  
+  /**
+   * Sends the current scene data to the renderer
+   */
+  protected void sendToRenderer() {
     // Now after all objects are adjusted accordingly, they are sent to the renderer with all their updated data for the next render loop
     Renderer renderer = Deadzone.getApplication().getRenderer();
     renderObjects.forEach((id, obj) -> {
       renderer.registerObject(obj);
     });
   }
-
+  
   
 }

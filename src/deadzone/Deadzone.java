@@ -144,7 +144,7 @@ public class Deadzone {
    * Subroutine of the game loop which updates all data for the next frame
    */
   public void update() {
-    AbstractScene.getActiveScene().updateRegisteredObjects();
+    AbstractScene.getActiveScene().updateScene();
   }
   
   /**
