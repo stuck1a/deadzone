@@ -91,15 +91,12 @@ public class Font  {
           final int y = Integer.parseInt(glyphAttr.getNamedItem("y").getTextContent());
           final int width = Integer.parseInt(glyphAttr.getNamedItem("width").getTextContent());
           final int height = Integer.parseInt(glyphAttr.getNamedItem("height").getTextContent());
-          final int xOffset = Integer.parseInt(glyphAttr.getNamedItem("Xoffset").getTextContent());
-          final int yOffset = Integer.parseInt(glyphAttr.getNamedItem("Yoffset").getTextContent());
           final int origWidth = Integer.parseInt(glyphAttr.getNamedItem("OrigWidth").getTextContent());
           final int origHeight = Integer.parseInt(glyphAttr.getNamedItem("OrigHeight").getTextContent());
           
           Glyph glyph = new Glyph(
             new Vector2(x, y),
             new Vector2(width, height),
-            new Vector2(xOffset, yOffset),
             new Vector2(origWidth, origHeight)
           );
   

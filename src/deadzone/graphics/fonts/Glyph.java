@@ -28,10 +28,9 @@ public class Glyph {
    * @param offset Offset between glyph size and the actual glyph position
    * @param origSize Real glyph size
    */
-  public Glyph(Vector2 pos, Vector2 size, Vector2 offset, Vector2 origSize) {
+  public Glyph(Vector2 pos, Vector2 size, Vector2 origSize) {
     this.position = pos;
     this.size = size;
-    this.offset = offset;
     this.origSize = origSize;
   }
   
@@ -63,10 +62,6 @@ public class Glyph {
   
   public Vector2 getSize() {
     return size;
-  }
-  
-  public Vector2 getOffset() {
-    return offset;
   }
   
   public Vector2 getOrigSize() {
