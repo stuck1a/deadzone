@@ -127,9 +127,27 @@ public class Text implements IRenderable {
     float alpha = color.getAlphaNormalized();
   
     final Texture fontAtlas = font.getAtlasTexture();
-    float totalWidth = 0, totalHeight = 0;
+    float totalWidth = 0, totalHeight = 0, lineHeight = 0;
+    int lines = 1;
     Vector2 currentPenPos = null;
   
+    // Use the tallest character as total height of the text line (we need to know this before creating any VBO to calc the y pen offset for line breaks)
+    for (int i = 0; i < renderedText.length(); i++) {
+      final char c = renderedText.charAt(i);
+      
+      // line break
+      if (c == 10) {
+        lines++;
+      }
+      lineHeight = Math.max(lineHeight, font.getGlyph(c).getSize().y);
+      
+    }
+  
+    // Store total size as class fields
+    totalHeightPx = (int) Math.ceil(lineHeight * lines * scale);
+    totalWidthPx = (int) Math.ceil(totalWidth);
+    
+    
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     for (int i = 0; i < renderedText.length(); i++){
       // Get the glyph data
@@ -158,9 +176,15 @@ public class Text implements IRenderable {
         letterOffset = letterOffsetPx / windowWidth;
       }
       
-      // Update total size
-      totalHeight = Math.max(totalHeight, size.y);
+      // Update total width
       totalWidth += size.x + letterOffsetPx;
+      
+      // If the current letter is a line break, then only calculate the proper pen pos
+      if (c == 10) {
+        currentPenPos.x = x;
+        currentPenPos.y -= lineHeight / windowHeight;
+        continue;
+      }
       
       // Create and register VBOs for this character
       VertexBufferObject vbo1 = new VertexBufferObject(
@@ -188,10 +212,6 @@ public class Text implements IRenderable {
       // Update pen position for the next character
       currentPenPos.x += sizeX_NormWin + letterOffset;
     }
-    
-    // Store total size as class fields
-    totalHeightPx = (int) Math.ceil(totalHeight * scale);
-    totalWidthPx = (int) Math.ceil(totalWidth);
   }
   
   
