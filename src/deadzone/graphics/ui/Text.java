@@ -23,12 +23,13 @@ public class Text implements IRenderable {
   private static final int glRenderType = GL_TRIANGLES;
   /** List of all VBOs which will form this object in the GPU */
   final private ArrayList<VertexBufferObject> vboList = new ArrayList<>();
-  private int vertexCount = 0;
+  final protected int vertexCount;
   public String renderedText;
-  public final Font font;
-  public final float xPos;
-  public final float yPos;
-  private final float scale;
+  final public Font font;
+  final public float xPos;
+  final public float yPos;
+  final protected float scale;
+  protected int lineCount;
   
   final private Window window;
   
@@ -112,6 +113,11 @@ public class Text implements IRenderable {
   }
   
   
+  public int getLineCount() {
+    return lineCount;
+  }
+  
+  
   /**
    * Registers all required VBOs at the renderer which are needed to render the given text.
    */
@@ -128,7 +134,6 @@ public class Text implements IRenderable {
   
     final Texture fontAtlas = font.getAtlasTexture();
     float totalWidth = 0, lineHeight = 0, pxWidthOfLongestLine = 0;
-    int lines = 1;
     Vector2 currentPenPos = null;
   
     // Use the tallest character as total size of the text and its lines (we need to know this before creating any VBO to calc the y pen offset for line breaks)
@@ -143,7 +148,7 @@ public class Text implements IRenderable {
       
       // Line break
       if (c == 10) {
-        lines++;
+        lineCount++;
         pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
         totalWidth = 0;
       }
@@ -153,7 +158,7 @@ public class Text implements IRenderable {
     }
   
     // Store total size as class fields
-    totalHeightPx = (int) Math.ceil(lineHeight * lines * scale);
+    totalHeightPx = (int) Math.ceil(lineHeight * lineCount * scale);
     totalWidthPx = (int) Math.ceil(totalWidth * scale);
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter

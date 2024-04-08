@@ -60,13 +60,16 @@ public abstract class AbstractScene {
   
   /**
    * Adds a new visible object to the scene
+   * @param id Object identifier (make sure it is a UNIQUE name if you don't want to overwrite an existing object)
    * @param obj The new object to add
-   * @return Succeeded or not
    */
   public void addObject(String id, IRenderable obj) {
     renderObjects.put(id, obj);
   }
   
+  public IRenderable getObjectById(String id) {
+    return renderObjects.get(id);
+  }
   
   /**
    * Removes an existing object from the scene
