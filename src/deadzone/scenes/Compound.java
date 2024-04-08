@@ -66,35 +66,20 @@ public class Compound extends AbstractScene {
       0.5f,  0.0f,
       new deadzone.graphics.Color(60, 20, 210, 255)
     ));
-    
-    
-    // Add a fixed text some text (use Arial, size 10, bold)
-    final Font font = assets.getFont("Arial");
-    font.setColor(new Color(255, 255, 255));
-    addObject("timeLbl", new Text(-0.95f, -0.8f, font, "Time:", 0));
+  
+  
+    if (game.isDebugMode()) {
+      initDebugInfos();
+    }
   }
   
   
   @Override
   public void updateScene() {
-    // Remove the old timer text
-    removeObject("time");
     
-    
-    
-    // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
-    final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
-    final Font font = assets.getFont("Arial");
-    font.setColor(new Color(128, 64, 64));
-    Text testText = new Text(
-      TimeLbl.xPos + TimeLbl.getTotalWidth() + 0.02f,
-      (TimeLbl.yPos - TimeLbl.getTotalHeight() / 2),
-      font,
-      timer.getCurrentSecond() + "s",
-      0
-    );
-    addObject("time", testText);
-
+    if (game.isDebugMode()) {
+      updateDebugInfos();
+    }
     
     // Register objects for rendering  // TODO: Maybe omit this here and let the renderer grab all registered objects itself? Check Pro/Con!
     sendToRenderer();
@@ -108,6 +93,41 @@ public class Compound extends AbstractScene {
    */
   public IsoGrid getGrid() {
     return grid;
+  }
+  
+  
+  
+  /**
+   * Adds the static part of the debug data which is displayed at the top left edge
+   */
+  private void initDebugInfos() {
+    final Font font = assets.getFont("Arial");
+    font.setColor(new Color(255, 255, 255));
+    
+    addObject("timeLbl", new Text(-1.0f, 1.0f, font, "Time:", -.5f));
+//    addObject("frameLbl", new Text(-0.98f, 0.8f, font, "Frame:", -.5f));
+  }
+  
+  
+  /**
+   * Updates the dynamic part of the debug data which is displayed at the top left edge
+   */
+  private void updateDebugInfos() {
+    // Remove the old timer text
+    removeObject("time");
+    
+    // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
+    final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
+    final Font font = assets.getFont("Arial");
+    font.setColor(new Color(128, 64, 64));
+    Text testText = new Text(
+      TimeLbl.getX() + TimeLbl.getTotalWidth() + 0.02f,
+      (TimeLbl.getY() - TimeLbl.getTotalHeight() / 2),
+      font,
+      timer.getCurrentSecond() + "s",
+      0
+    );
+    addObject("time", testText);
   }
   
 }

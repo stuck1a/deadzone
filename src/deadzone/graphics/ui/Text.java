@@ -26,8 +26,8 @@ public class Text implements IRenderable {
   final protected int vertexCount;
   public String renderedText;
   final public Font font;
-  final public float xPos;
-  final public float yPos;
+  final protected float xPos;
+  protected float yPos;
   final protected float scale;
   protected int lineCount;
   
@@ -104,6 +104,18 @@ public class Text implements IRenderable {
     return totalHeightPx;
   }
   
+  public float getX() {
+    return xPos;
+  }
+  
+  public float getY() {
+    return yPos;
+  }
+  
+  public float getScale() {
+    return scale;
+  }
+  
   public float getTotalWidth() {
     return ((float)totalWidthPx) / window.getPixelWidth();
   }
@@ -157,6 +169,9 @@ public class Text implements IRenderable {
       pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
     }
   
+    // Set the origin of the text to the top left edge of the first line (instead of the bottom-left edge of the first line)
+    y -= lineHeight * scale / windowHeight;
+    
     // Store total size as class fields
     totalHeightPx = (int) Math.ceil(lineHeight * lineCount * scale);
     totalWidthPx = (int) Math.ceil(totalWidth * scale);
