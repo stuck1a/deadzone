@@ -22,7 +22,7 @@ public class Text implements IRenderable {
   
   private static final int glRenderType = GL_TRIANGLES;
   /** List of all VBOs which will form this object in the GPU */
-  private ArrayList<VertexBufferObject> vboList;
+  final private ArrayList<VertexBufferObject> vboList = new ArrayList<>();
   private int vertexCount = 0;
   public String renderedText;
   public final Font font;
@@ -30,17 +30,17 @@ public class Text implements IRenderable {
   public final float yPos;
   private final float scale;
   
-  private Window window;
+  final private Window window;
   
   /**
    * Total width of a rectangle around all textures of this text in display coordinates (0..1)
    */
-  private float totalWidth = 0;
+  private int totalWidthPx = 0;
   
   /**
    * Total height of a rectangle around all textures of this text in display coordinates (0..1)
    */
-  private float totalHeight = 0;
+  private int totalHeightPx = 0;
   
   
   
@@ -95,20 +95,20 @@ public class Text implements IRenderable {
     return vertexCount;
   }
   
-  public float getTotalWidth() {
-    return totalWidth;
-  }
-  
-  public float getTotalHeight() {
-    return totalHeight;
-  }
-  
   public int getTotalPixelWidth() {
-    return (int)(totalWidth * window.getPixelWidth());
+    return totalWidthPx;
   }
   
   public int getTotalPixelHeight() {
-    return (int)(totalHeight * window.getPixelHeight());
+    return totalHeightPx;
+  }
+  
+  public float getTotalWidth() {
+    return ((float)totalWidthPx) / window.getPixelWidth();
+  }
+  
+  public float getTotalHeight() {
+    return ((float)totalHeightPx) / window.getPixelHeight();
   }
   
   
@@ -116,172 +116,82 @@ public class Text implements IRenderable {
    * Registers all required VBOs at the renderer which are needed to render the given text.
    */
   private void addTextToDraw(float x, float y) {
-    
-    // TODO: Adjust penPos for new glyph data (offsets and kerning)
-    addTextToDraw_OLD(x, y);
-  }
-  
-  
-  
-  
-  /**
-   * Registers all required VBOs at the renderer which are needed to render the given text.
-   * For now, we use normalized OpenGL coordinates for x and y to ensure resolution-independent placement
-   */
-  private void addTextToDraw_OLD(float x, float y) {
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
     
-    // Load the texture
-    final Texture fontAtlas = font.getAtlasTexture();
-    
-    // Normalize the color data
+    // Normalize color data
     final Color color = font.getColor();
     float red = color.getRedNormalized();
     float green = color.getGreenNormalized();
     float blue = color.getBlueNormalized();
     float alpha = color.getAlphaNormalized();
-
   
-    vboList = new ArrayList<>();
-    
-    // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
+    final Texture fontAtlas = font.getAtlasTexture();
+    float totalWidth = 0, totalHeight = 0;
     Vector2 currentPenPos = null;
-    
-    
+  
+    // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     for (int i = 0; i < renderedText.length(); i++){
       // Get the glyph data
       final char c = renderedText.charAt(i);
-      Glyph glyph = font.getGlyph(c);
-      Vector2 pos = glyph.getPosition();
-      Vector2 size = glyph.getSize();
-      Vector2 offset = glyph.getOffset();
-      Vector2 origSize = glyph.getOrigSize();
+      final Glyph glyph = font.getGlyph(c);
+      final Vector2 pos = glyph.getPosition();
+      final Vector2 size = glyph.getSize();
       
       // Normalize position and size for XYZ data (percent of window size)
-      final float posX_NormWin = pos.x / windowWidth;
-      final float posY_NormWin = pos.y / windowHeight;
       final float sizeX_NormWin = size.x * scale / windowWidth;
       final float sizeY_NormWin = size.y * scale / windowHeight;
-      final float origWidth_NormWin = origSize.x / windowWidth;
-      final float origHeight_NormWin = origSize.y / windowHeight;
-      final float offsetX_NormWin = offset.x / windowWidth;
-      final float offsetY_NormWin = offset.y / windowHeight;
   
       // Normalize position and size for UV data (percent of texture atlas size)
       final float posX_NormTex = pos.x / fontAtlas.width;
       final float posY_NormTex = pos.y / fontAtlas.height;
       final float sizeX_NormTex =  size.x / fontAtlas.width;
       final float sizeY_NormTex = size.y / fontAtlas.height;
-      final float origWidth_NormTex = origSize.x / fontAtlas.width;
-      final float origHeight_NormTex = origSize.x / fontAtlas.height;
-      final float offsetX_NormTex = offset.x / fontAtlas.width;
-      final float offsetY_NormTex = offset.y / fontAtlas.height;
       
-      
-      
-      // Initialize / update current pen position
-      float letterOffset = 0;
-      
+      // First iteration: init pen - all other: fetch kerning value
+      float letterOffset = 0, letterOffsetPx = 0;
       if (currentPenPos == null) {
         currentPenPos = new Vector2(x, y);
       } else {
         final char predecessor = renderedText.charAt(i-1);
-        letterOffset = scale * ((float) glyph.getKerning(predecessor)) / windowHeight;
+        letterOffsetPx = scale * glyph.getKerning(predecessor);
+        letterOffset = letterOffsetPx / windowWidth;
       }
       
-      // Update total size of the text  // TODO: End values not yet correct
-      totalHeight = Math.max(totalHeight, sizeY_NormWin);
-      totalWidth += sizeX_NormWin;
+      // Update total size
+      totalHeight = Math.max(totalHeight, size.y);
+      totalWidth += size.x + letterOffsetPx;
       
       // Create and register VBOs for this character
-      float x_A, y_A, x_B, y_B, x_C, y_C, u_A, v_A, u_B, v_B, u_C, v_C;
-      
-      x_A = currentPenPos.x ;  // x_A = currentPenPos.x;
-      y_A = currentPenPos.y + sizeY_NormWin;  // y_A = currentPenPos.y + sizeY_NormWin;
-      
-      x_B = currentPenPos.x;  // x_B = currentPenPos.x;
-      y_B = currentPenPos.y;  // y_B = currentPenPos.y;
-      
-      x_C = currentPenPos.x + sizeX_NormWin;  // x_C = currentPenPos.x + sizeX_NormWin;
-      y_C = currentPenPos.y + sizeY_NormWin;  // y_C = currentPenPos.y + sizeY_NormWin;
-      
-      u_A = posX_NormTex;  // u_A = posX_NormTex;
-      v_A = posY_NormTex;  // v_A = posY_NormTex;
-      
-      u_B = posX_NormTex;  // u_B = posX_NormTex;
-      v_B = posY_NormTex + sizeY_NormTex;  // v_B = posY_NormTex + sizeY_NormTex;
-      
-      u_C = posX_NormTex + sizeX_NormTex;  // u_C = posX_NormTex + sizeX_NormTex;
-      v_C = posY_NormTex;  // v_C = posY_NormTex;
-      
       VertexBufferObject vbo1 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
-          x_A, y_A, red, green, blue, alpha, u_A, v_A,
-          x_B, y_B, red, green, blue, alpha, u_B, v_B,
-          x_C, y_C, red, green, blue, alpha, u_C, v_C,
+          currentPenPos.x,                 currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex,                 posY_NormTex,
+          currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
+          currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
         }
       );
       vboList.add(vbo1);
-      
-      System.out.println(
-        "\"" + c + "\"\n" +
-          "(A)\t" + "(" + x_A + "|" + y_A + ")\t(" + u_A + "|" + v_A + ")\n" +
-          "(B)\t" + "(" + x_B + "|" + y_B + ")\t(" + u_B + "|" + v_B + ")\n" +
-          "(C)\t" + "(" + x_C + "|" + y_C + ")\t(" + u_C + "|" + v_C + ")\n"
-      );
-      
-      
-      
-      
-      x_A = currentPenPos.x + sizeX_NormWin;  // x_A = currentPenPos.x + sizeX_NormWin;
-      y_A = currentPenPos.y;  // y_A = currentPenPos.y;
-  
-      x_B = currentPenPos.x + sizeX_NormWin;  // x_B = currentPenPos.x + sizeX_NormWin;
-      y_B = currentPenPos.y + sizeY_NormWin;  // y_B = currentPenPos.y + sizeY_NormWin;
-  
-      x_C = currentPenPos.x;  // x_C = currentPenPos.x;
-      y_C = currentPenPos.y;  // y_C = currentPenPos.y;
-  
-      u_A = posX_NormTex + sizeX_NormTex;  // u_A = posX_NormTex + sizeX_NormTex;
-      v_A = posY_NormTex + sizeY_NormTex;  // v_A = posY_NormTex + sizeY_NormTex;
-  
-      u_B = posX_NormTex + sizeX_NormTex;  // u_B = posX_NormTex + sizeX_NormTex;
-      v_B = posY_NormTex;  // v_B = posY_NormTex;
-      
-      u_C = posX_NormTex;  // u_C = posX_NormTex;
-      v_C = posY_NormTex + sizeY_NormTex;  // v_C = posY_NormTex + sizeY_NormTex;
       
       VertexBufferObject vbo2 = new VertexBufferObject(
         false,
         fontAtlas,
         new float[] {
-          x_A, y_A, red, green, blue, alpha, u_A, v_A,
-          x_B, y_B, red, green, blue, alpha, u_B, v_B,
-          x_C, y_C, red, green, blue, alpha, u_C, v_C,
+          currentPenPos.x + sizeX_NormWin, currentPenPos.y,                 red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex + sizeY_NormTex,
+          currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
+          currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
         }
       );
       vboList.add(vbo2);
-  
-  
-      System.out.println(
-        "(A')\t" + "(" + x_A + "|" + y_A + ")\t(" + u_A + "|" + v_A + ")\n" +
-        "(B')\t" + "(" + x_B + "|" + y_B + ")\t(" + u_B + "|" + v_B + ")\n" +
-        "(C')\t" + "(" + x_C + "|" + y_C + ")\t(" + u_C + "|" + v_C + ")\n"
-      );
-      
-      System.out.println("Glyph UV in Pixel: " + glyph.getPosition().x + " | " + glyph.getPosition().y + "\n");
-  
-  
+
+      // Update pen position for the next character
       currentPenPos.x += sizeX_NormWin + letterOffset;
-    }  // for-end
+    }
     
-    // Apply scaling to total size
-    totalHeight *= scale;
-    
-    
+    // Store total size as class fields
+    totalHeightPx = (int) Math.ceil(totalHeight * scale);
+    totalWidthPx = (int) Math.ceil(totalWidth);
   }
   
   

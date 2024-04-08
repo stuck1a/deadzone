@@ -71,7 +71,7 @@ public class Compound extends AbstractScene {
     // Add a fixed text some text (use Arial, size 10, bold)
     final Font font = assets.getFont("Arial");
     font.setColor(new Color(255, 255, 255));
-    Text testText = new Text(-1.0f, -1.0f, font, "Seconds:", 3.5f);
+    Text testText = new Text(-1.0f, -1.0f, font, "Time:", 0);
     addObject("secondsLabel", testText);
   }
   
@@ -84,7 +84,7 @@ public class Compound extends AbstractScene {
     // Update FPS display
     final Font font = assets.getFont("Arial");
     font.setColor(new Color(128, 64, 64));
-    Text testText = new Text(-0.5f, -1.0f, font, timer.getCurrentSecond() + "s", 3);
+    Text testText = new Text(-0.78f, -1, font, timer.getCurrentSecond() + "s", 0);  // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
     addObject("seconds", testText);
 
     

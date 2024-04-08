@@ -26,7 +26,7 @@ public class Window {
     // Configure the window for the launcher scene
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hide until init is done
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // not resizable
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     // Configure OpenGL
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Settings.majorVersionOpenGL);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Settings.minorVersionOpenGL);
@@ -41,7 +41,7 @@ public class Window {
     glfwSetWindowSizeCallback(handle, windowSizeCallback = new GLFWWindowSizeCallback(){
       @Override
       public void invoke(long window, int width, int height) {
-        Deadzone.getApplication().getWindow().onResize(width, height);
+      Deadzone.getApplication().getWindow().onResize(width, height);
       }
     });
   }

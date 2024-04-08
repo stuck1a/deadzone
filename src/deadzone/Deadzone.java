@@ -94,7 +94,7 @@ public class Deadzone {
    * The primary execution loop
    */
   public void loop() throws InterruptedException {
-    long windowHandle = window.getHandle();
+    final long windowHandle = window.getHandle();
     // Run the primary loop until window is closed
     while ( !glfwWindowShouldClose(windowHandle) ) {
       // Update the game timer
