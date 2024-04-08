@@ -103,9 +103,16 @@ public class Compound extends AbstractScene {
   private void initDebugInfos() {
     final Font font = assets.getFont("Arial");
     font.setColor(new Color(255, 255, 255));
+    final float textScaling = -.5f;
     
-    addObject("timeLbl", new Text(-1.0f, 1.0f, font, "Time:", -.5f));
-//    addObject("frameLbl", new Text(-0.98f, 0.8f, font, "Frame:", -.5f));
+    final Text timeLbl = new Text(-1, 1, font, "Time:", textScaling);
+    final Text fpsLbl = new Text(-1, timeLbl.getY() - timeLbl.getTotalHeight(), font, "FP\nS:", textScaling);
+    //final Text coordLbl = new Text(-1, fpsLbl.getY() + fpsLbl.getTotalHeight() / 2, font, "Mouse Pos:", textScaling);
+    
+    addObject("timeLbl", timeLbl);
+    addObject("fpsLbl", fpsLbl);
+//    addObject("coordLbl", coordLbl);
+  
   }
   
   
