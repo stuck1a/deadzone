@@ -14,7 +14,6 @@ public class Glyph {
   private Vector2 position;
   /** Width and Height of the glyph in the corresponding font atlas image */
   private Vector2 size;
-  private Vector2 origSize;
   /** Offset between texture size and actual character size */
   private Vector2 offset;
   /** All kerning values which must be taken into account when placing a given glyph after this one */
@@ -28,10 +27,9 @@ public class Glyph {
    * @param offset Offset between glyph size and the actual glyph position
    * @param origSize Real glyph size
    */
-  public Glyph(Vector2 pos, Vector2 size, Vector2 origSize) {
+  public Glyph(Vector2 pos, Vector2 size) {
     this.position = pos;
     this.size = size;
-    this.origSize = origSize;
   }
   
   
@@ -63,9 +61,5 @@ public class Glyph {
   public Vector2 getSize() {
     return size;
   }
-  
-  public Vector2 getOrigSize() {
-    return origSize;
-  }
-  
+
 }

@@ -18,11 +18,11 @@ import java.util.HashMap;
  * TODO: Add pre-created textures for to each glyph
  *
  */
-public class Font  {
+public class Font {
   
   /** Stored the generated atlas texture on which als character are printed on initialization */
   private Texture atlasTexture;
-  private HashMap<Character, Glyph> glyphs = new HashMap<>();
+  private final HashMap<Character, Glyph> glyphs = new HashMap<>();
   /** Path to the glyph definition for this Font */
   private final String xmlFilePath;
   private String name;
@@ -53,18 +53,15 @@ public class Font  {
    * Generates glyph definitions and loads the atlas image
    */
   public void load() {
-    // NEUE LOGIK
     // Parse the given xml file, create the glyphs from it and load the atlas image
     Document xml = Util.parseXML(xmlFilePath);
     if (xml == null) {
       System.err.println("Failed to load font definition!");
       return;
     }
-  
-    // get the "font" node
-    Node fontNode = xml.getElementsByTagName("font").item(0);
     
     // fetch font attributes
+    Node fontNode = xml.getElementsByTagName("font").item(0);
     NamedNodeMap attributes = fontNode.getAttributes();
     name = attributes.getNamedItem("name").getTextContent();
     isBold = Boolean.getBoolean(attributes.getNamedItem("bold").getTextContent());
@@ -87,20 +84,15 @@ public class Font  {
         if (child.getNodeName().equals("char")) {
           NamedNodeMap glyphAttr = child.getAttributes();
           final char c = (char)(Integer.parseInt(glyphAttr.getNamedItem("id").getTextContent()));
-          final int x = Integer.parseInt(glyphAttr.getNamedItem("x").getTextContent());
-          final int y = Integer.parseInt(glyphAttr.getNamedItem("y").getTextContent());
-          final int width = Integer.parseInt(glyphAttr.getNamedItem("width").getTextContent());
-          final int height = Integer.parseInt(glyphAttr.getNamedItem("height").getTextContent());
-          final int origWidth = Integer.parseInt(glyphAttr.getNamedItem("OrigWidth").getTextContent());
-          final int origHeight = Integer.parseInt(glyphAttr.getNamedItem("OrigHeight").getTextContent());
-          
-          Glyph glyph = new Glyph(
-            new Vector2(x, y),
-            new Vector2(width, height),
-            new Vector2(origWidth, origHeight)
+          final Vector2 texturePos = new Vector2(
+            Float.parseFloat(glyphAttr.getNamedItem("x").getTextContent()),
+            Float.parseFloat(glyphAttr.getNamedItem("y").getTextContent())
           );
-  
-          this.glyphs.put(c, glyph);
+          final Vector2 textureSize = new Vector2(
+            Float.parseFloat(glyphAttr.getNamedItem("width").getTextContent()),
+            Float.parseFloat(glyphAttr.getNamedItem("height").getTextContent())
+          );
+          this.glyphs.put(c, new Glyph(texturePos, textureSize));
           continue;
         }
         
