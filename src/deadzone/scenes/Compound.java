@@ -71,7 +71,7 @@ public class Compound extends AbstractScene {
     // Add a fixed text some text (use Arial, size 10, bold)
     final Font font = assets.getFont("Arial");
     font.setColor(new Color(255, 255, 255));
-    Text testText = new Text(0, 0, font, "Ti\nme:", 0);
+    Text testText = new Text(-0.95f, -0.8f, font, "Ti\nme:", 0);
     addObject("secondsLabel", testText);
   }
   
