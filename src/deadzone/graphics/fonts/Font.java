@@ -65,7 +65,9 @@ public class Font {
     NamedNodeMap attributes = fontNode.getAttributes();
     name = attributes.getNamedItem("name").getTextContent();
     isBold = Boolean.getBoolean(attributes.getNamedItem("bold").getTextContent());
-    size = Integer.parseInt(attributes.getNamedItem("size").getTextContent());
+    size = Integer.parseInt(attributes.getNamedItem("size").getTextContent().replace("px", "").replace(" ", ""));
+    final int cellHeight = Integer.parseInt(attributes.getNamedItem("textureHeight").getTextContent().replace("px", "").replace(" ", ""));
+    
     atlasTexture = new Texture(
       attributes.getNamedItem("atlas").getTextContent(),
       Util.getAssetsDir() + "fonts" + System.getProperty("file.separator")
@@ -90,7 +92,7 @@ public class Font {
           );
           final Vector2 textureSize = new Vector2(
             Float.parseFloat(glyphAttr.getNamedItem("width").getTextContent()),
-            Float.parseFloat(glyphAttr.getNamedItem("height").getTextContent())
+            cellHeight
           );
           this.glyphs.put(c, new Glyph(texturePos, textureSize));
           continue;
