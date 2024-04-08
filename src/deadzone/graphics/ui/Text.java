@@ -127,26 +127,34 @@ public class Text implements IRenderable {
     float alpha = color.getAlphaNormalized();
   
     final Texture fontAtlas = font.getAtlasTexture();
-    float totalWidth = 0, totalHeight = 0, lineHeight = 0;
+    float totalWidth = 0, lineHeight = 0, pxWidthOfLongestLine = 0;
     int lines = 1;
     Vector2 currentPenPos = null;
   
-    // Use the tallest character as total height of the text line (we need to know this before creating any VBO to calc the y pen offset for line breaks)
+    // Use the tallest character as total size of the text and its lines (we need to know this before creating any VBO to calc the y pen offset for line breaks)
     for (int i = 0; i < renderedText.length(); i++) {
       final char c = renderedText.charAt(i);
+      final Glyph glyph = font.getGlyph(c);
+      final Vector2 size = glyph.getSize();
+  
+      // Total width  // TODO: Bei einem Zeilenumbruch
+      final float letterOffsetPx = i > 0 ? glyph.getKerning(renderedText.charAt(i-1)) : 0;
+      totalWidth += size.x + letterOffsetPx;
       
-      // line break
+      // Line break
       if (c == 10) {
         lines++;
+        pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
+        totalWidth = 0;
       }
-      lineHeight = Math.max(lineHeight, font.getGlyph(c).getSize().y);
       
+      lineHeight = Math.max(lineHeight, size.y);
+      pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
     }
   
     // Store total size as class fields
     totalHeightPx = (int) Math.ceil(lineHeight * lines * scale);
-    totalWidthPx = (int) Math.ceil(totalWidth);
-    
+    totalWidthPx = (int) Math.ceil(totalWidth * scale);
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     for (int i = 0; i < renderedText.length(); i++){
@@ -176,10 +184,7 @@ public class Text implements IRenderable {
         letterOffset = letterOffsetPx / windowWidth;
       }
       
-      // Update total width
-      totalWidth += size.x + letterOffsetPx;
-      
-      // If the current letter is a line break, then only calculate the proper pen pos
+      // If the current letter is a line break, then only calculate the new pen pos
       if (c == 10) {
         currentPenPos.x = x;
         currentPenPos.y -= lineHeight / windowHeight;
@@ -209,9 +214,10 @@ public class Text implements IRenderable {
       );
       vboList.add(vbo2);
 
-      // Update pen position for the next character
+      // Update pen pos for the next character
       currentPenPos.x += sizeX_NormWin + letterOffset;
     }
+
   }
   
   
