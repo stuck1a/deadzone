@@ -5,15 +5,15 @@
 
 - Fix flipped textures for Tiles, RectangleShape and TriangleShape (stbi_set_flip_vertically_on_load is now false globally)
 - Wrap Font class and Text.addTextToRender() in classes FontFamily and Pen:
-  A font family and font style data can be assigned to Pen objects and is also used for drawing text
-  The Font Family will wrap all Font classes within a Font Family and provide getter to get the proper Font object based on style setup from
-  the Pen object which asks for the Font object
+  => A font family and font style data can be assigned to Pen objects and is also used for drawing text
+  => The Font Family will wrap all Font classes within a Font Family and provide getter to get the proper Font object based on style setup from
+     the Pen object which asks for the Font object
 - Replace scale in text drawing with a logic which automatically calculates the required scale value for a given font size value.
-  This logic shall also decide, whether the low res or high res font texture will be used (the one which results in the lowest scale value)
+  This logic shall also decide, whether the low-res or high-res font texture will be used (the one which results in the lowest scale value)
 - Implement function to get all/topmost IRenderable at given coordinates
-- Implement event handler callback logic for defined events (for now: left click and hover)
+- Implement event handler callback logic for arbitrary events (for now: left click and hover)
 - Marry the input loop and the update loop
-- Add current mouse coords and currently hovered IRenderable to the debug data
+- Add current mouse coordinates and currently hovered IRenderable to the debug data
 - Add a Button class which provide predefined events to which callbacks can be added/removed/replaced
 
 
