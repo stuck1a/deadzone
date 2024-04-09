@@ -136,54 +136,25 @@ public class Text implements IRenderable {
   private void addTextToDraw(float x, float y) {
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
-    
-    // Normalize color data
     final Color color = font.getColor();
     float red = color.getRedNormalized();
     float green = color.getGreenNormalized();
     float blue = color.getBlueNormalized();
     float alpha = color.getAlphaNormalized();
-  
     final Texture fontAtlas = font.getAtlasTexture();
     float totalWidth = 0, pxWidthOfLongestLine = 0;
     Vector2 currentPenPos = null;
-  
-    // Use the  character as total size of the text and its lines (we need to know this before creating any VBO to calc the y pen offset for line breaks)
-    for (int i = 0; i < renderedText.length(); i++) {
-      final char c = renderedText.charAt(i);
-      final Glyph glyph = font.getGlyph(c);
-      final Vector2 size = glyph.getSize();
-      
-      final float letterOffsetPx = i > 0 ? glyph.getKerning(renderedText.charAt(i-1)) : 0;
-      totalWidth += size.x + letterOffsetPx;
-      
-      // Line break
-      if (c == 10) {
-        lineCount++;
-        pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
-        totalWidth = 0;
-      }
-      
-
-      pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
-    }
-  
-
-    
-
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
-    for (int i = 0; i < renderedText.length(); i++){
+    for (int i = 0; i < renderedText.length(); i++) {
       // Get the glyph data
       final char c = renderedText.charAt(i);
       final Glyph glyph = font.getGlyph(c);
       final Vector2 pos = glyph.getPosition();
       final Vector2 size = glyph.getSize();
-      
       // Normalize position and size for XYZ data (percent of window size)
       final float sizeX_NormWin = size.x * scale / windowWidth;
       final float sizeY_NormWin = size.y * scale / windowHeight;
-  
       // Normalize position and size for UV data (percent of texture atlas size)
       final float posX_NormTex = pos.x / fontAtlas.width;
       final float posY_NormTex = pos.y / fontAtlas.height;
@@ -194,21 +165,23 @@ public class Text implements IRenderable {
       float letterOffset = 0, letterOffsetPx = 0;
       if (i == 0) {
         currentPenPos = new Vector2(x, y - sizeY_NormWin);
-  
-        // Store total size as class fields
+        // Store total height
         totalHeightPx = (int) Math.ceil(size.y * lineCount * scale);
-        totalWidthPx = (int) Math.ceil(totalWidth * scale);
-        
       } else {
         final char predecessor = renderedText.charAt(i-1);
         letterOffsetPx = scale * glyph.getKerning(predecessor);
         letterOffset = letterOffsetPx / windowWidth;
+        // Increment width
+        totalWidth += size.x + letterOffsetPx;
       }
       
-      // If the current letter is a line break, then only calculate the new pen pos
+      // If the current letter is a line break, draw nothing - instead set pen to the start of the next line
       if (c == 10) {
         currentPenPos.x = x;
         currentPenPos.y -= sizeY_NormWin;
+        // Update total width if this was the longest line for now, then reset it to measure the upcoming new line
+        pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
+        totalWidth = 0;
         continue;
       }
       
@@ -237,8 +210,13 @@ public class Text implements IRenderable {
 
       // Update pen pos for the next character
       currentPenPos.x += sizeX_NormWin + letterOffset;
+      
+      // Update total width, if necessary
+      pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
     }
     
+    // Store total width
+    totalWidthPx = (int) Math.ceil(totalWidth * scale);
   }
   
   

@@ -106,12 +106,12 @@ public class Compound extends AbstractScene {
     final float textScaling = -.5f;
     
     final Text timeLbl = new Text(-1, 1, font, "Time:", textScaling);
-    final Text fpsLbl = new Text(-1, timeLbl.getY() - timeLbl.getTotalHeight(), font, "FP\nS:", textScaling);
-    //final Text coordLbl = new Text(-1, fpsLbl.getY() + fpsLbl.getTotalHeight() / 2, font, "Mouse Pos:", textScaling);
+    final Text fpsLbl = new Text(-1, timeLbl.getY() - timeLbl.getTotalHeight() * 2, font, "FPS:", textScaling);
+    final Text coordLbl = new Text(-1, fpsLbl.getY() + fpsLbl.getTotalHeight() * 2, font, "Mouse Pos:", textScaling);
     
     addObject("timeLbl", timeLbl);
     addObject("fpsLbl", fpsLbl);
-//    addObject("coordLbl", coordLbl);
+    addObject("coordLbl", coordLbl);
   
   }
   
