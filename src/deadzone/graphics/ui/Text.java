@@ -142,81 +142,84 @@ public class Text implements IRenderable {
     float blue = color.getBlueNormalized();
     float alpha = color.getAlphaNormalized();
     final Texture fontAtlas = font.getAtlasTexture();
-    float totalWidth = 0, pxWidthOfLongestLine = 0;
+    float totalWidth = 0, pxWidthOfLongestLine = 0, lineHeight = 0;
     Vector2 currentPenPos = null;
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     for (int i = 0; i < renderedText.length(); i++) {
+      float letterOffsetPx = 0;
+      
       // Get the glyph data
       final char c = renderedText.charAt(i);
       final Glyph glyph = font.getGlyph(c);
       final Vector2 pos = glyph.getPosition();
       final Vector2 size = glyph.getSize();
+      
       // Normalize position and size for XYZ data (percent of window size)
       final float sizeX_NormWin = size.x * scale / windowWidth;
       final float sizeY_NormWin = size.y * scale / windowHeight;
+      
       // Normalize position and size for UV data (percent of texture atlas size)
       final float posX_NormTex = pos.x / fontAtlas.width;
       final float posY_NormTex = pos.y / fontAtlas.height;
       final float sizeX_NormTex =  size.x / fontAtlas.width;
       final float sizeY_NormTex = size.y / fontAtlas.height;
       
-      // First iteration: init pen (origin to top left), store total size  - all other: fetch kerning value
-      float letterOffset = 0, letterOffsetPx = 0;
+      // First iteration: init pen (origin to top left), store line height  - all other: fetch kerning value
       if (i == 0) {
+        // In first iteration: set pen to origin (top left) and store the line height
         currentPenPos = new Vector2(x, y - sizeY_NormWin);
-        // Store total height
-        totalHeightPx = (int) Math.ceil(size.y * lineCount * scale);
+        lineHeight = size.y;
       } else {
-        final char predecessor = renderedText.charAt(i-1);
-        letterOffsetPx = scale * glyph.getKerning(predecessor);
-        letterOffset = letterOffsetPx / windowWidth;
-        // Increment width
-        totalWidth += size.x + letterOffsetPx;
+        // In all other iterations: get value of the kerning pair "last char" - "current char"
+        letterOffsetPx = scale * glyph.getKerning(renderedText.charAt(i-1));
       }
+  
+      // Update total width
+      totalWidth += size.x + letterOffsetPx;
       
-      // If the current letter is a line break, draw nothing - instead set pen to the start of the next line
+      // If the current letter is a line break start new line and draw nothing
       if (c == 10) {
+        lineCount++;
         currentPenPos.x = x;
         currentPenPos.y -= sizeY_NormWin;
-        // Update total width if this was the longest line for now, then reset it to measure the upcoming new line
-        pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
+        // Reset total width to measure width of the new line
         totalWidth = 0;
         continue;
       }
       
       // Create and register VBOs for this character
-      VertexBufferObject vbo1 = new VertexBufferObject(
-        false,
-        fontAtlas,
-        new float[] {
-          currentPenPos.x,                 currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex,                 posY_NormTex,
-          currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
-          currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
-        }
+      vboList.add(
+        new VertexBufferObject(
+          false,
+          fontAtlas,
+          new float[] {
+            currentPenPos.x,                 currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex,                 posY_NormTex,
+            currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
+            currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
+          }
+        )
       );
-      vboList.add(vbo1);
-      
-      VertexBufferObject vbo2 = new VertexBufferObject(
-        false,
-        fontAtlas,
-        new float[] {
-          currentPenPos.x + sizeX_NormWin, currentPenPos.y,                 red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex + sizeY_NormTex,
-          currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
-          currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
-        }
+      vboList.add(
+        new VertexBufferObject(
+          false,
+          fontAtlas,
+          new float[] {
+            currentPenPos.x + sizeX_NormWin, currentPenPos.y,                 red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex + sizeY_NormTex,
+            currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
+            currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
+          }
+        )
       );
-      vboList.add(vbo2);
-
-      // Update pen pos for the next character
-      currentPenPos.x += sizeX_NormWin + letterOffset;
       
-      // Update total width, if necessary
+      // Prepare pen pos for next character and update total width, if this was the longest line by now
+      currentPenPos.x += sizeX_NormWin + letterOffsetPx / windowWidth;
       pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
     }
     
-    // Store total width
-    totalWidthPx = (int) Math.ceil(totalWidth * scale);
+    // Finally store the texts total size
+    totalWidthPx = (int) Math.ceil(pxWidthOfLongestLine * scale);
+    totalHeightPx = (int) Math.ceil(lineHeight * lineCount * scale);
   }
   
   

@@ -101,9 +101,9 @@ public class Compound extends AbstractScene {
    * Adds the static part of the debug data which is displayed at the top left edge
    */
   private void initDebugInfos() {
+    final float textScaling = -.5f;
     final Font font = assets.getFont("Arial");
     font.setColor(new Color(255, 255, 255));
-    final float textScaling = -.5f;
     
     final Text timeLbl = new Text(-1, 1, font, "Time:", textScaling);
     final Text fpsLbl = new Text(-1, timeLbl.getY() - timeLbl.getTotalHeight(), font, "FPS:", textScaling);
@@ -112,7 +112,6 @@ public class Compound extends AbstractScene {
     addObject("timeLbl", timeLbl);
     addObject("fpsLbl", fpsLbl);
     addObject("coordLbl", coordLbl);
-  
   }
   
   
@@ -122,19 +121,18 @@ public class Compound extends AbstractScene {
   private void updateDebugInfos() {
     // Remove the old timer text
     removeObject("time");
-  
-    // Setup font
+    
     final Font font = assets.getFont("Arial");
     final float textScaling = -.5f;
     font.setColor(new Color(128, 64, 64));
     
     // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
     final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
-    addObject("time", new Text(TimeLbl.getX() + TimeLbl.getTotalWidth() + 0.05f, TimeLbl.getY(), font, "" + timer.getCurrentTimestamp(), textScaling));
+    addObject("time", new Text(TimeLbl.getX() + TimeLbl.getTotalWidth() + .05f, TimeLbl.getY(), font, "" + timer.getCurrentTimestamp(), textScaling));
     
     // Update rendered fps value
     final Text fpsLbl = ((Text) renderObjects.get("fpsLbl"));
-    addObject("fps", new Text(fpsLbl.getX() + fpsLbl.getTotalWidth() + 0.05f, fpsLbl.getY(), font, "" + timer.getFps(), textScaling));
+    addObject("fps", new Text(fpsLbl.getX() + fpsLbl.getTotalWidth() + .05f, fpsLbl.getY(), font, "" + timer.getFps(), textScaling));
     
     // Update current mouse coordinates
     final Text coordLbl = ((Text) renderObjects.get("coordLbl"));
