@@ -151,15 +151,6 @@ public class Deadzone {
    * Subroutine of the game loop which renders the updated data for the next frame
    */
   public void render() {
-    // Write some additional debug information to the console if in debug mode
-    if (isDebugMode()) {
-      System.out.println("Elapsed Time:" + timer.getCurrentTimestamp());
-      System.out.println("Elapsed Seconds:" + timer.getCurrentSecond());
-      System.out.println("Current Frame:" + timer.getCurrentFrame());
-      System.out.println("Current FPS:" + timer.getFps());
-      System.out.println("----------------------------");
-    }
-
     // Render the current frame
     renderer.renderRegisteredObjects();
   }

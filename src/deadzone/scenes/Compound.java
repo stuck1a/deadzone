@@ -106,8 +106,8 @@ public class Compound extends AbstractScene {
     final float textScaling = -.5f;
     
     final Text timeLbl = new Text(-1, 1, font, "Time:", textScaling);
-    final Text fpsLbl = new Text(-1, timeLbl.getY() - timeLbl.getTotalHeight() * 2, font, "FPS:", textScaling);
-    final Text coordLbl = new Text(-1, fpsLbl.getY() + fpsLbl.getTotalHeight() * 2, font, "Mouse Pos:", textScaling);
+    final Text fpsLbl = new Text(-1, timeLbl.getY() - timeLbl.getTotalHeight(), font, "FPS:", textScaling);
+    final Text coordLbl = new Text(-1, fpsLbl.getY() - fpsLbl.getTotalHeight(), font, "Mouse Pos:", textScaling);
     
     addObject("timeLbl", timeLbl);
     addObject("fpsLbl", fpsLbl);
@@ -122,19 +122,24 @@ public class Compound extends AbstractScene {
   private void updateDebugInfos() {
     // Remove the old timer text
     removeObject("time");
+  
+    // Setup font
+    final Font font = assets.getFont("Arial");
+    final float textScaling = -.5f;
+    font.setColor(new Color(128, 64, 64));
     
     // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
     final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
-    final Font font = assets.getFont("Arial");
-    font.setColor(new Color(128, 64, 64));
-    Text testText = new Text(
-      TimeLbl.getX() + TimeLbl.getTotalWidth() + 0.02f,
-      (TimeLbl.getY() - TimeLbl.getTotalHeight() / 2),
-      font,
-      timer.getCurrentSecond() + "s",
-      0
-    );
-    addObject("time", testText);
+    addObject("time", new Text(TimeLbl.getX() + TimeLbl.getTotalWidth() + 0.05f, TimeLbl.getY(), font, "" + timer.getCurrentTimestamp(), textScaling));
+    
+    // Update rendered fps value
+    final Text fpsLbl = ((Text) renderObjects.get("fpsLbl"));
+    addObject("fps", new Text(fpsLbl.getX() + fpsLbl.getTotalWidth() + 0.05f, fpsLbl.getY(), font, "" + timer.getFps(), textScaling));
+    
+    // Update current mouse coordinates
+    final Text coordLbl = ((Text) renderObjects.get("coordLbl"));
+    // TODO: Get and render current mouse position in display coordinates
+    
   }
   
 }
