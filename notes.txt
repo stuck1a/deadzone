@@ -1,48 +1,27 @@
-###############################################################
-###   DEAZONE ROADMAP FOR THE PACKAGE "deadzone.graphics"   ###
-###############################################################
-
-- Refactor font rendering (also fix all other shapes UV coords because we switched to stbi_set_flip_vertically_on_load = false)
-
-  Vorab Umbauten:
-
-  => Die aktuellen width-Values der einzelnen Characters sind zwar schon korrigiert, aber so richtig setzt er die Pen-Position noch nicht.
-
-  => Sobald die PenPos gefixt ist, die Font-Texturen neu erzeugen mit UBFG. Dafür die Glyph-Klasse an das neue Datenformat anpassen.
-     Zusätzlich soll Kerning integriert wird. Kerning beschreibt für jeden Glyph eigene Offsets zum nächsten Character, je nachdem, was das für einer ist.
-     Damit z.B. in "Text" das kleine "e" um 2px unter das große "T" geschoben wird, bekommt dann Kerning-Paar "T-e" den Wert 2.
-     => Für UBFG-Texturen ist vermutlich XML die bessere Variante, um die Font-Definitionen zu erstellen
+################################################
+###   DEADZONE ROADMAP FOR THE GAME ENGINE   ###
+################################################
 
 
-  Danach Refactoring:
-
-  => Most important optimization: Pre-Calculate the normalized UV coordinates on font creation
-  => They can be precalculated also for normalization within the global window space.
-     But when doing so, then a logic is needed, which re-calculates these values of all existing IRenderables, whenever
-     the window is resized.
-
-  => Font Classes will be into a FontFamily class. FontFamily is used afterwards to set up a font for drawing and contains all
-     variants like italic, bold and three base sizes of each font: small, medium, large
-     Maybe use a separate Pen class to draw the text.
-     Font drawing should then something like: drawText(FontFamily, x, y, text, italic, bold, size)
-     Depending on the given size, the Pen or FontFamily class decides themself which base size variant it should use, to keep the scale
-     value as small as possible (=better quality). It also need to calculate to proper scale value so that the rendered font is rendered
-     in the given size (height) at the end.
-
-
+- Fix flipped textures for Tiles, RectangleShape and TriangleShape (stbi_set_flip_vertically_on_load is now false globally)
+- Wrap Font class and Text.addTextToRender() in classes FontFamily and Pen:
+  A font family and font style data can be assigned to Pen objects and is also used for drawing text
+  The Font Family will wrap all Font classes within a Font Family and provide getter to get the proper Font object based on style setup from
+  the Pen object which asks for the Font object
+- Replace scale in text drawing with a logic which automatically calculates the required scale value for a given font size value.
+  This logic shall also decide, whether the low res or high res font texture will be used (the one which results in the lowest scale value)
+- Implement function to get all/topmost IRenderable at given coordinates
+- Implement event handler callback logic for defined events (for now: left click and hover)
+- Marry the input loop and the update loop
+- Add current mouse coords and currently hovered IRenderable to the debug data
+- Add a Button class which provide predefined events to which callbacks can be added/removed/replaced
 
 
 - Implement vertex attributes for normal maps
 
-
 - Implement loading and drawing of 3D objects (.obj files with vertex data, UV coordinates and normal map)
 
-
-- ortho projection: Camera view is not yet 45° diagonal - fix as soon as textures/fonts are implemented, so that its easier to fix
-
-
-- Read what function you have to execute in OpenGL for onResize to recalculate the window size
-  and introduce a corresponding logic for this
+- ortho projection: Camera view is not yet 45° diagonal
 
 
 
@@ -52,8 +31,8 @@
 
 
 
-
-
+___________________________________________________
+NOTEPAD
 ___________________________________________________
 
 Parameter for Ultimate Bitmap Font Generator:
