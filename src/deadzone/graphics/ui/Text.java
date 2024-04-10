@@ -145,6 +145,9 @@ public class Text implements IRenderable {
     float totalWidth = 0, pxWidthOfLongestLine = 0, lineHeight = 0;
     Vector2 currentPenPos = null;
     
+    ArrayList<Float> vertexData = new ArrayList<>();
+    
+    
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     for (int i = 0; i < renderedText.length(); i++) {
       float letterOffsetPx = 0;
@@ -188,34 +191,79 @@ public class Text implements IRenderable {
         continue;
       }
       
-      // Create and register VBOs for this character
-      vboList.add(
-        new VertexBufferObject(
-          false,
-          fontAtlas,
-          new float[] {
-            currentPenPos.x,                 currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex,                 posY_NormTex,
-            currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
-            currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
-          }
-        )
-      );
-      vboList.add(
-        new VertexBufferObject(
-          false,
-          fontAtlas,
-          new float[] {
-            currentPenPos.x + sizeX_NormWin, currentPenPos.y,                 red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex + sizeY_NormTex,
-            currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
-            currentPenPos.x,                 currentPenPos.y,                 red, green, blue, alpha, posX_NormTex,                 posY_NormTex + sizeY_NormTex,
-          }
-        )
-      );
+      // Collect the vertex data for this character
+      vertexData.add(currentPenPos.x);
+      vertexData.add(currentPenPos.y + sizeY_NormWin);
+      vertexData.add(red);
+      vertexData.add(green);
+      vertexData.add(blue);
+      vertexData.add(alpha);
+      vertexData.add(posX_NormTex);
+      vertexData.add(posY_NormTex);
       
+      vertexData.add(currentPenPos.x);
+      vertexData.add(currentPenPos.y);
+      vertexData.add(red);
+      vertexData.add(green);
+      vertexData.add(blue);
+      vertexData.add(alpha);
+      vertexData.add(posX_NormTex);
+      vertexData.add(posY_NormTex + sizeY_NormTex);
+      
+      vertexData.add(currentPenPos.x + sizeX_NormWin);
+      vertexData.add(currentPenPos.y + sizeY_NormWin);
+      vertexData.add(red);
+      vertexData.add(green);
+      vertexData.add(blue);
+      vertexData.add(alpha);
+      vertexData.add(posX_NormTex + sizeX_NormTex);
+      vertexData.add(posY_NormTex);
+      
+      
+      vertexData.add(currentPenPos.x + sizeX_NormWin);
+      vertexData.add(currentPenPos.y);
+      vertexData.add(red);
+      vertexData.add(green);
+      vertexData.add(blue);
+      vertexData.add(alpha);
+      vertexData.add(posX_NormTex + sizeX_NormTex);
+      vertexData.add(posY_NormTex + sizeY_NormTex);
+      
+      vertexData.add(currentPenPos.x + sizeX_NormWin);
+      vertexData.add(currentPenPos.y + sizeY_NormWin);
+      vertexData.add(red);
+      vertexData.add(green);
+      vertexData.add(blue);
+      vertexData.add(alpha);
+      vertexData.add(posX_NormTex + sizeX_NormTex);
+      vertexData.add(posY_NormTex);
+      
+      vertexData.add(currentPenPos.x);
+      vertexData.add(currentPenPos.y);
+      vertexData.add(red);
+      vertexData.add(green);
+      vertexData.add(blue);
+      vertexData.add(alpha);
+      vertexData.add(posX_NormTex);
+      vertexData.add(posY_NormTex + sizeY_NormTex);
+      
+
       // Prepare pen pos for next character and update total width, if this was the longest line by now
       currentPenPos.x += sizeX_NormWin + letterOffsetPx / windowWidth;
       pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
     }
+    
+    
+    // Generate a single VBO for the whole text
+    final float[] vertexDataArr = new float[vertexData.size()];
+    int index = 0;
+    for (final Float value: vertexData) {
+      vertexDataArr[index++] = value;
+    }
+    
+    vboList.add(new VertexBufferObject(false, fontAtlas, vertexDataArr));
+    
+    
     
     // Finally store the texts total size
     totalWidthPx = (int) Math.ceil(pxWidthOfLongestLine * scale);

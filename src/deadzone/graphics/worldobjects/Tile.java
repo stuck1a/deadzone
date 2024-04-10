@@ -93,7 +93,7 @@ public class Tile implements IIsoObject {
       return vboList;
     }
     
-    // Create the two VBOs which represents the given tile (two triangles)
+    // Create VBO which represents the given tile
     vboList = new ArrayList<>();
     float xNormalized = Util.normalizePixelWidth(x * grid.getTileWidth());
     float yNormalized = Util.normalizePixelHeight(y * grid.getTileHeight());
@@ -105,22 +105,17 @@ public class Tile implements IIsoObject {
       true,
       texture,
       new float[] {
+        // Triangle 1
         xNormalized, yNormalized + height, 1, 1, 1, 1, 0, 1,
         xNormalized, yNormalized, 1, 1, 1, 1, 0, 0,
-        xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1
-      })
-    );
-    VertexBufferObject vbo2 = new VertexBufferObject(
-      true,
-      texture,
-      new float[] {
+        xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1,
+        // Triangle 2
         xNormalized + width, yNormalized, 1, 1, 1, 1, 1, 0,
         xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1,
         xNormalized, yNormalized, 1, 1, 1, 1, 0, 0
-      }
+      })
     );
-    vboList.add(vbo2);
-  
+    
     return vboList;
   }
   

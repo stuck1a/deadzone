@@ -102,23 +102,17 @@ public class RectangleShape implements IShape {
       false,
       texture,
       new float[] {
+        // Triangle 1
         x, y + height, red, green, blue, alpha, 0, 1,
         x, y, red, green, blue, alpha, 0, 0,
-        x + width, y + height, red, green, blue, alpha, 1, 1
-      }
-    );
-    vboList.add(vbo1);
-  
-    VertexBufferObject vbo2 = new VertexBufferObject(
-      false,
-      texture,
-      new float[] {
+        x + width, y + height, red, green, blue, alpha, 1, 1,
+        // Triangle 2
         x + width, y, red, green, blue, alpha, 1, 0,
         x + width, y + height, red, green, blue, alpha, 1, 1,
         x,  y, red, green, blue, alpha, 0, 0
       }
     );
-    vboList.add(vbo2);
+    vboList.add(vbo1);
     
     return vboList;
   }
