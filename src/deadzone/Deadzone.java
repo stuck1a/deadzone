@@ -245,7 +245,7 @@ public class Deadzone {
   
   private void loadAssets() {
     // Tell STB to flip textures vertically, so that their origin is at bottom left instead of top left
-    stbi_set_flip_vertically_on_load(false);  // TODO: The must be adjustable per VAO, as soon as Fonts get their own VAO
+    stbi_set_flip_vertically_on_load(false);
     
     assets = new AssetManager();
     assets.loadAllAssets();

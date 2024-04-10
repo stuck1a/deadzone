@@ -19,6 +19,6 @@ public class Settings {
   
   public static float[] baseColorRGBA = { 0.0f, 0.0f, 0.0f, 0.0f };
   
-  public static int targetFPS = 60;
+  public static int targetFPS = 30;  // If v-sync is enabled, the FPS is limited to the frame rate of the monitor
   
 }
