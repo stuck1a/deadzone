@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL20.*;
 
 /**
  * Class for loading, compiling and managing GLSL shader programs.
- * Each instance represents a concrete shader.
+ * Each instance represents a complete shader pipeline.
  */
 public class ShaderProgram {
   

@@ -11,9 +11,12 @@ public class Renderer {
   protected ShaderProgram shaderProgram;
   
   /** Stores all VAO with the related mesh type as key which are currently stored in the GPU memory for rendering */
-  private final HashMap<Integer,VertexArrayObject> attachedVAOs = new HashMap<>();
+  final private HashMap<Integer,VertexArrayObject> attachedVAOs = new HashMap<>();
   
-  private ArrayList<IRenderable> registeredRenderableObjects = new ArrayList<>();
+  final private ArrayList<IRenderable> registeredRenderableObjects = new ArrayList<>();
+  
+  /** With this info, we know if we need to switch the VAO while rendering */
+  protected int activeDrawType;
   
   
   public Renderer() {
@@ -37,10 +40,9 @@ public class Renderer {
       }
     }
   
-    // Create and bind the VAO for standard meshes
-    VertexArrayObject vaoTriangles = new VertexArrayObject(GL_TRIANGLES);
-    attachedVAOs.put(GL_TRIANGLES, vaoTriangles);
-    vaoTriangles.bind();
+    // Prepare the VAO for triangle-based meshes
+    attachedVAOs.put(GL_TRIANGLES, new VertexArrayObject(GL_TRIANGLES));
+    attachedVAOs.put(GL_LINES, new VertexArrayObject(GL_LINES));  // TODO: not used yet, implement class LineShape
   }
   
   /**
@@ -50,15 +52,22 @@ public class Renderer {
    * After that, all registered objects will be cleared to prepare for the upcoming game loop.
    */
   public void renderRegisteredObjects() {
-    // Draw all meshes of type GL_TRIANGLES
+    
+    // Draw all registered vertices
     for ( IRenderable obj : registeredRenderableObjects ) {
-      if (obj.getGL_TYPE() == GL_TRIANGLES) {
-        final VertexBufferObject vbo = obj.getVBO();
-        vbo.initialize();
-        glDrawArrays(GL_TRIANGLES, 0, obj.getVertexCount());
-        vbo.delete();
+      // Do we need to bind another VAO for the current obj/vbo?
+      final int currentDrawType = obj.getGL_TYPE();
+      if (currentDrawType != activeDrawType) {
+        attachedVAOs.get(currentDrawType).bind();
       }
+      
+      // Draw all vertices of the current VBO, then pop it from stack
+      final VertexBufferObject vbo = obj.getVBO();
+      vbo.initialize();
+      glDrawArrays(GL_TRIANGLES, 0, obj.getVertexCount());
+      vbo.delete();
     }
+    
     registeredRenderableObjects.clear();
   }
   
