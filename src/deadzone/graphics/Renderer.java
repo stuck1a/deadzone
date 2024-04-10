@@ -40,7 +40,7 @@ public class Renderer {
       }
     }
   
-    // Prepare the VAO for triangle-based meshes
+    // Prepare VAOs
     attachedVAOs.put(GL_TRIANGLES, new VertexArrayObject(GL_TRIANGLES));
     attachedVAOs.put(GL_LINES, new VertexArrayObject(GL_LINES));  // TODO: not used yet, implement class LineShape
   }
@@ -59,12 +59,13 @@ public class Renderer {
       final int currentDrawType = obj.getGL_TYPE();
       if (currentDrawType != activeDrawType) {
         attachedVAOs.get(currentDrawType).bind();
+        activeDrawType = currentDrawType;
       }
       
       // Draw all vertices of the current VBO, then pop it from stack
       final VertexBufferObject vbo = obj.getVBO();
       vbo.initialize();
-      glDrawArrays(GL_TRIANGLES, 0, obj.getVertexCount());
+      glDrawArrays(activeDrawType, 0, obj.getVertexCount());
       vbo.delete();
     }
     

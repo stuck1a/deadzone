@@ -17,11 +17,10 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * This class represents a vertex buffer object and transforms java-sided objects into OpenGL-sided objects.
  * It also moves these objects to the GPU memory and stores the handles to access them.
- *
- * While the VBOs represents a single attribute list (like position attribute, color attribute, ...).
- * All VBOs in total describe a single renderable object, grouped together and bound in the shared VAO by meshes.
  */
 public class VertexBufferObject {
+  /** Defines the memory management strategy for OpenGL. Bad chose might decrease performance */
+  private final int usageType;
   
   /** The handler to access the native VBO variant OpenGL uses */
   private int vboId;
@@ -36,22 +35,53 @@ public class VertexBufferObject {
   private Texture texture;
   
   /** Stores the raw data received from the constructor for later use when initialized */
-  private float[] vertexData;
+  private final float[] vertexData;
   
   /** If true, an isometric projection matrix will be used for this VBO */
-  private boolean isIso;
+  private final boolean isIso;
   
   
   
   /**
-   * Creates a new VBO by allocating the required amount of GPU memory and adding the vertex data in it
+   * Creates a new VBO by allocating the required amount of GPU memory and adding the vertex data in it.
+   * Will use <code>GL_STATIC_DRAW</code> as default usage type.
    * @param vertexData Each vertex consists of 6 float values: x, y, r, g, b, a
    */
   public VertexBufferObject(boolean isIso, Texture texture, float[] vertexData) {
     this.vertexData = vertexData;
     this.texture = texture;
     this.isIso = isIso;
+    this.usageType = GL_STATIC_DRAW;
   }
+  
+  
+  /**
+   * Creates a new VBO by allocating the required amount of GPU memory and adding the vertex data in it.
+   * This constructor variants allows to define another usage type. Depending on the usage type, OpenGL
+   * will use different memory management strategies, so it can help improve performance to use a proper
+   * usage type
+   * @param vertexData Each vertex consists of 6 float values: x, y, r, g, b, a
+   * @param usageType One of the following values:
+   *                  <ul>
+   *                  <li><code>GL_DYNAMIC_DRAW</code> - ?</li>
+   *                  <li><code>GL_DYNAMIC_COPY</code> - ?</li>
+   *                  <li><code>GL_DYNAMIC_READ</code> - ?</li>
+   *                  <li><code>GL_STATIC_DRAW</code>  - ?</li>
+   *                  <li><code>GL_STATIC_COPY</code>  - ?</li>
+   *                  <li><code>GL_STATIC_READ</code>  - ?</li>
+   *                  <li><code>GL_STREAM_DRAW</code>  - ?</li>
+   *                  <li><code>GL_STREAM_COPY</code>  - ?</li>
+   *                  <li><code>GL_STREAM_READ</code>  - ?</li>
+   *                  </ul>
+   *
+   */
+  public VertexBufferObject(boolean isIso, Texture texture, float[] vertexData, int usageType) {
+    this.vertexData = vertexData;
+    this.texture = texture;
+    this.isIso = isIso;
+    this.usageType = usageType;
+  }
+  
   
   
   /**
@@ -64,7 +94,7 @@ public class VertexBufferObject {
       vertices.put(vertexData);
       vertices.flip();
       glBindBuffer(GL_ARRAY_BUFFER, vboId);
-      glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, vertices, usageType);
     }
     loadTexture();
     specifyVertexAttributes();

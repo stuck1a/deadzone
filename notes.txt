@@ -50,7 +50,7 @@ Possibilities to improve rendering performance
 -> Do not delete all existing VBOs after rendering but use glBindSubData() instead to update their vertices
 -> Use a VAO for static VBOs and one for dynamic VBOs, then use GL_STATIC_DRAW to render the static stuff
 -> Implement ray tracing and skip rendering of completely hidden meshes
-
+-> Wrap all Tiles together in a single VBO (maybe use a shared texture atlas per Tile category?)
 
 
 
