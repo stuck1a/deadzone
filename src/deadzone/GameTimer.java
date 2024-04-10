@@ -27,8 +27,7 @@ public class GameTimer {
     currentTimestamp = initialTimestamp = createTimestamp();
     currentSecond = 0;
     currentFrame = 1;
-    this.targetFps = targetFps;
-    sleepTime = 1000L / (long) (targetFps + 1);
+    setTargetFps(targetFps);
   }
   
   public double getInitialTimestamp() {
@@ -63,8 +62,12 @@ public class GameTimer {
   }
   
   public void setTargetFps(int targetFps) {
-    sleepTime = 1000L / (long) (targetFps + 1);
-    this.targetFps = targetFps;
+    if (targetFps == -1) {
+      sleepTime = 1;
+    } else {
+      sleepTime = 1000L / (long) (targetFps + 1);
+      this.targetFps = targetFps;
+    }
   }
   
   /**

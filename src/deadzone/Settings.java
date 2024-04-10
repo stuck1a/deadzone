@@ -15,10 +15,10 @@ public class Settings {
   
   public static int launcherHeight = 600;
   
-  public static boolean vSync = true;
+  public static boolean vSync = false;
   
   public static float[] baseColorRGBA = { 0.0f, 0.0f, 0.0f, 0.0f };
   
-  public static int targetFPS = 30;  // If v-sync is enabled, the FPS is limited to the frame rate of the monitor
+  public static int targetFPS = -1;  // If v-sync is enabled, the FPS is limited to the frame rate of the monitor (-1 = unlimited)
   
 }

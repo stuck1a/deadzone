@@ -110,7 +110,9 @@ public class Deadzone {
       // Swap color buffers
       glfwSwapBuffers(windowHandle);
       // Keep the target frame rate
-      sleep(timer.getSleepTime());
+      if (Settings.targetFPS != -1) {
+        sleep(timer.getSleepTime());
+      }
     }
   }
   

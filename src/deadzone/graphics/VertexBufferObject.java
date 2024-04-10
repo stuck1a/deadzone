@@ -64,7 +64,7 @@ public class VertexBufferObject {
       vertices.put(vertexData);
       vertices.flip();
       glBindBuffer(GL_ARRAY_BUFFER, vboId);
-      glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
     }
     loadTexture();
     specifyVertexAttributes();
