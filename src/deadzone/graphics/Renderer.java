@@ -50,24 +50,13 @@ public class Renderer {
    * After that, all registered objects will be cleared to prepare for the upcoming game loop.
    */
   public void renderRegisteredObjects() {
-    // TODO: As soon as another mesh types is implemented, test if the render order can mixed up or not.
-    //  If so we don't need the inner if-statement here and just use a variable mode parameter for glDrawArrays instead,
-    //  since this would speed up the execution.
-    
-    // TODO: Besides that, the current iteration logic would skip some VBOs if they are not perfectly ordered.
-    //  But as long as we have no other mesh type and don't know the details how to handle that properly,
-    //  that's okay. Rework will be done when with the introduction of mesh type GL_LINE.
-    
     // Draw all meshes of type GL_TRIANGLES
     for ( IRenderable obj : registeredRenderableObjects ) {
       if (obj.getGL_TYPE() == GL_TRIANGLES) {
-        ArrayList<VertexBufferObject> vboList = obj.getVBOs();
-        
-        for ( VertexBufferObject vbo : vboList ) {
-          vbo.initialize();
-          glDrawArrays(GL_TRIANGLES, 0, obj.getVertexCount());
-          vbo.delete();
-        }
+        final VertexBufferObject vbo = obj.getVBO();
+        vbo.initialize();
+        glDrawArrays(GL_TRIANGLES, 0, obj.getVertexCount());
+        vbo.delete();
       }
     }
     registeredRenderableObjects.clear();

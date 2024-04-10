@@ -6,8 +6,6 @@ import deadzone.graphics.IIsoObject;
 import deadzone.graphics.IsoGrid;
 import deadzone.graphics.VertexBufferObject;
 
-import java.util.ArrayList;
-
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 
@@ -25,8 +23,8 @@ public class Tile implements IIsoObject {
   /** The sum of vertices of all VBOs of the object */
   private static final int vertexCount = 6;
   
-  /** List of all VBOs which will form the objects mesh in the GPU */
-  private ArrayList<VertexBufferObject> vboList;
+  /** VBO which will form the objects mesh in the GPU */
+  private VertexBufferObject vbo;
   
   /** The x coordinate of the tile within the iso grid */
   private final int x;
@@ -88,20 +86,18 @@ public class Tile implements IIsoObject {
   }
   
   @Override
-  public ArrayList<VertexBufferObject> getVBOs() {
-    if (vboList != null) {
-      return vboList;
+  public VertexBufferObject getVBO() {
+    if (vbo != null) {
+      return vbo;
     }
     
     // Create VBO which represents the given tile
-    vboList = new ArrayList<>();
     float xNormalized = Util.normalizePixelWidth(x * grid.getTileWidth());
     float yNormalized = Util.normalizePixelHeight(y * grid.getTileHeight());
     float height = Util.normalizePixelHeight(grid.getTileHeight());
     float width = Util.normalizePixelWidth(grid.getTileWidth());
     
-    vboList.add(
-      new VertexBufferObject(
+    vbo = new VertexBufferObject(
       true,
       texture,
       new float[] {
@@ -113,10 +109,10 @@ public class Tile implements IIsoObject {
         xNormalized + width, yNormalized, 1, 1, 1, 1, 1, 0,
         xNormalized + width, yNormalized + height, 1, 1, 1, 1, 1, 1,
         xNormalized, yNormalized, 1, 1, 1, 1, 0, 0
-      })
+      }
     );
     
-    return vboList;
+    return vbo;
   }
   
   @Override

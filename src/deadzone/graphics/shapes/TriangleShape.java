@@ -6,8 +6,6 @@ import deadzone.graphics.Color;
 import deadzone.graphics.IShape;
 import deadzone.graphics.VertexBufferObject;
 
-import java.util.ArrayList;
-
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 
@@ -31,8 +29,7 @@ public class TriangleShape implements IShape {
   /** The sum of vertices of all VBOs of the object */
   private static final int vertexCount = 3;
   
-  /** List of all VBOs which will form this object in the GPU */
-  private ArrayList<VertexBufferObject> vboList;
+  private VertexBufferObject vbo;
   
   private float x1;
   private float y1;
@@ -99,9 +96,9 @@ public class TriangleShape implements IShape {
    * If necessary, they will be created.
    */
   @Override
-  public ArrayList<VertexBufferObject> getVBOs() {
-    if (vboList != null) {
-      return vboList;
+  public VertexBufferObject getVBO() {
+    if (vbo != null) {
+      return vbo;
     }
     
     // Prepare the color data
@@ -117,8 +114,7 @@ public class TriangleShape implements IShape {
     }
     
     // Create the VBO
-    vboList = new ArrayList<>();
-    VertexBufferObject vbo1 = new VertexBufferObject(
+    vbo = new VertexBufferObject(
       false,
       texture,
       new float[] {
@@ -128,9 +124,7 @@ public class TriangleShape implements IShape {
       }
     );
     
-    vboList.add(vbo1);
-    
-    return vboList;
+    return vbo;
   }
   
   

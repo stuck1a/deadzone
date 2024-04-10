@@ -6,8 +6,6 @@ import deadzone.graphics.Color;
 import deadzone.graphics.IShape;
 import deadzone.graphics.VertexBufferObject;
 
-import java.util.ArrayList;
-
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 
@@ -19,8 +17,8 @@ public class RectangleShape implements IShape {
   /** The sum of vertices of all VBOs of the object */
   private static final int vertexCount = 6;    // TODO: Set to 4 after implementing vertex index buffer (EBO)
   
-  /** List of all VBOs which will form this object in the GPU */
-  private ArrayList<VertexBufferObject> vboList;
+  /** VBO which will form this object in the GPU */
+  private VertexBufferObject vbo;
   
   private float x;
   private float y;
@@ -75,13 +73,13 @@ public class RectangleShape implements IShape {
   
   
   /**
-   * Returns a list of all VBOs which represent this object.
-   * If necessary, they will be created.
+   * Returns the VBO which represent this object.
+   * If necessary, it will be created.
    */
   @Override
-  public ArrayList<VertexBufferObject> getVBOs() {
-    if (vboList != null) {
-      return vboList;
+  public VertexBufferObject getVBO() {
+    if (vbo != null) {
+      return vbo;
     }
     
     // Prepare the color data
@@ -97,8 +95,7 @@ public class RectangleShape implements IShape {
     }
     
     // Create the two VBOs which represents the given rectangle
-    vboList = new ArrayList<>();
-    VertexBufferObject vbo1 = new VertexBufferObject(
+    vbo = new VertexBufferObject(
       false,
       texture,
       new float[] {
@@ -112,9 +109,8 @@ public class RectangleShape implements IShape {
         x,  y, red, green, blue, alpha, 0, 0
       }
     );
-    vboList.add(vbo1);
     
-    return vboList;
+    return vbo;
   }
   
   

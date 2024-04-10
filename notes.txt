@@ -3,6 +3,19 @@
 ################################################
 
 
+- Objekte, die in der update-Schleife erstellt/verändert werden, skalieren sich nicht mit bei einer Änderung der Fenstergröße
+
+
+- Solve the major performance issue:
+  -> Text rendering: Collect vertices of ALL Text objects and let the renderer (or something else) build a single VBO for all texts of the frame
+  -> Introduce buffered vertex indices (EBO objects) to reduce the vertex total count
+  -> Introduce batch rendering
+  -> Split shader into one program with transparency and one for objects without transparency
+  -> Reduce glDrawArrays calls: This requires a great rebuild, so first try if batch rendering is enough
+  -> Do not delete all existing VBOs after rendering but use glBindSubData() instead to update their vertices
+  -> Use a VAO for static VBOs and one for dynamic VBOs, then use GL_STATIC_DRAW to render the static stuff
+
+
 - Fix flipped textures for Tiles, RectangleShape and TriangleShape (stbi_set_flip_vertically_on_load is now false globally)
 - Wrap Font class and Text.addTextToRender() in classes FontFamily and Pen:
   => A font family and font style data can be assigned to Pen objects and is also used for drawing text

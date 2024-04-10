@@ -11,6 +11,7 @@ import deadzone.graphics.fonts.Glyph;
 import deadzone.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
@@ -21,8 +22,7 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 public class Text implements IRenderable {
   
   private static final int glRenderType = GL_TRIANGLES;
-  /** List of all VBOs which will form this object in the GPU */
-  final private ArrayList<VertexBufferObject> vboList = new ArrayList<>();
+  private VertexBufferObject vbo;
   final protected int vertexCount;
   public String renderedText;
   final public Font font;
@@ -83,8 +83,8 @@ public class Text implements IRenderable {
    * If there are no VBOs yet initialized, they will be initialized and bound on-the-fly
    */
   @Override
-  public ArrayList<VertexBufferObject> getVBOs() {
-    return this.vboList;
+  public VertexBufferObject getVBO() {
+    return this.vbo;
   }
   
   /**
@@ -192,62 +192,18 @@ public class Text implements IRenderable {
       }
       
       // Collect the vertex data for this character
-      vertexData.add(currentPenPos.x);
-      vertexData.add(currentPenPos.y + sizeY_NormWin);
-      vertexData.add(red);
-      vertexData.add(green);
-      vertexData.add(blue);
-      vertexData.add(alpha);
-      vertexData.add(posX_NormTex);
-      vertexData.add(posY_NormTex);
-      
-      vertexData.add(currentPenPos.x);
-      vertexData.add(currentPenPos.y);
-      vertexData.add(red);
-      vertexData.add(green);
-      vertexData.add(blue);
-      vertexData.add(alpha);
-      vertexData.add(posX_NormTex);
-      vertexData.add(posY_NormTex + sizeY_NormTex);
-      
-      vertexData.add(currentPenPos.x + sizeX_NormWin);
-      vertexData.add(currentPenPos.y + sizeY_NormWin);
-      vertexData.add(red);
-      vertexData.add(green);
-      vertexData.add(blue);
-      vertexData.add(alpha);
-      vertexData.add(posX_NormTex + sizeX_NormTex);
-      vertexData.add(posY_NormTex);
+      vertexData.addAll(new ArrayList<>( Arrays.asList(
+        // Triangle 1
+        currentPenPos.x, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex, posY_NormTex,
+        currentPenPos.x, currentPenPos.y, red, green, blue, alpha, posX_NormTex, posY_NormTex + sizeY_NormTex,
+        currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
+        // Triangle 2
+        currentPenPos.x + sizeX_NormWin, currentPenPos.y, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex + sizeY_NormTex,
+        currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
+        currentPenPos.x, currentPenPos.y, red, green, blue, alpha, posX_NormTex, posY_NormTex + sizeY_NormTex
+      )));
       
       
-      vertexData.add(currentPenPos.x + sizeX_NormWin);
-      vertexData.add(currentPenPos.y);
-      vertexData.add(red);
-      vertexData.add(green);
-      vertexData.add(blue);
-      vertexData.add(alpha);
-      vertexData.add(posX_NormTex + sizeX_NormTex);
-      vertexData.add(posY_NormTex + sizeY_NormTex);
-      
-      vertexData.add(currentPenPos.x + sizeX_NormWin);
-      vertexData.add(currentPenPos.y + sizeY_NormWin);
-      vertexData.add(red);
-      vertexData.add(green);
-      vertexData.add(blue);
-      vertexData.add(alpha);
-      vertexData.add(posX_NormTex + sizeX_NormTex);
-      vertexData.add(posY_NormTex);
-      
-      vertexData.add(currentPenPos.x);
-      vertexData.add(currentPenPos.y);
-      vertexData.add(red);
-      vertexData.add(green);
-      vertexData.add(blue);
-      vertexData.add(alpha);
-      vertexData.add(posX_NormTex);
-      vertexData.add(posY_NormTex + sizeY_NormTex);
-      
-
       // Prepare pen pos for next character and update total width, if this was the longest line by now
       currentPenPos.x += sizeX_NormWin + letterOffsetPx / windowWidth;
       pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
@@ -261,7 +217,7 @@ public class Text implements IRenderable {
       vertexDataArr[index++] = value;
     }
     
-    vboList.add(new VertexBufferObject(false, fontAtlas, vertexDataArr));
+    vbo = new VertexBufferObject(false, fontAtlas, vertexDataArr);
     
     
     
