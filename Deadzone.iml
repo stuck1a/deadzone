@@ -12,5 +12,6 @@
     <orderEntry type="library" name="lwjgl-opengl" level="project" />
     <orderEntry type="library" name="lwjgl-stb" level="project" />
     <orderEntry type="library" name="lwjgl-fmod" level="project" />
+    <orderEntry type="library" name="lwjgl-assimp" level="project" />
   </component>
 </module>

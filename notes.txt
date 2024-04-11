@@ -5,9 +5,6 @@
 
 - Objekte, die in der update-Schleife erstellt/verändert werden, skalieren sich nicht mit bei einer Änderung der Fenstergröße
 
-
-
-
 - Fix flipped textures for Tiles, RectangleShape and TriangleShape (stbi_set_flip_vertically_on_load is now false globally)
 - Wrap Font class and Text.addTextToRender() in classes FontFamily and Pen:
   => A font family and font style data can be assigned to Pen objects and is also used for drawing text

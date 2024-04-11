@@ -1,6 +1,8 @@
 package deadzone.assets;
 
+import deadzone.Util;
 import deadzone.graphics.fonts.Font;
+import deadzone.graphics.fonts.FontFamily;
 
 import java.util.HashMap;
 
@@ -31,12 +33,22 @@ public class AssetManager {
     fonts.put(arial70.getName(), arial70);
     
     
+    // Initialize font family "Arial"
+    final String fontsDir = Util.getFontsDir();
+    FontFamily arial = new FontFamily(
+      fontsDir + "arial20.xml",
+      fontsDir + "arial70.xml",
+      fontsDir + "arial20b.xml",
+      fontsDir + "arial70b.xml"
+    );
+    
+    
     
   }
   
   
   public Texture getTexture(String identifier) {
-    Texture result = textures.get(identifier);
+    final Texture result = textures.get(identifier);
     if (result == null) {
       throw new RuntimeException("Could not find requested texture \""+ identifier +"\"!");
     }
@@ -44,7 +56,7 @@ public class AssetManager {
   }
   
   public Font getFont(String identifier) {
-    Font result = fonts.get(identifier);
+    final Font result = fonts.get(identifier);
     if (result == null) {
       throw new RuntimeException("Could not find requested font \""+ identifier +"\"!");
     }

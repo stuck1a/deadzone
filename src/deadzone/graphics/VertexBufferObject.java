@@ -44,14 +44,14 @@ public class VertexBufferObject {
   
   /**
    * Creates a new VBO by allocating the required amount of GPU memory and adding the vertex data in it.
-   * Will use <code>GL_STATIC_DRAW</code> as default usage type.
+   * Will use <code>GL_DYNAMIC_DRAW</code> as default usage type.
    * @param vertexData Each vertex consists of 6 float values: x, y, r, g, b, a
    */
   public VertexBufferObject(boolean isIso, Texture texture, float[] vertexData) {
     this.vertexData = vertexData;
     this.texture = texture;
     this.isIso = isIso;
-    this.usageType = GL_STATIC_DRAW;
+    this.usageType = GL_DYNAMIC_DRAW;
   }
   
   
@@ -63,17 +63,16 @@ public class VertexBufferObject {
    * @param vertexData Each vertex consists of 6 float values: x, y, r, g, b, a
    * @param usageType One of the following values:
    *                  <ul>
-   *                  <li><code>GL_DYNAMIC_DRAW</code> - ?</li>
+   *                  <li><code>GL_DYNAMIC_DRAW</code> - Best if data is modified repeatedly and used many times (indicator: glBufferSubData often used)</li>
    *                  <li><code>GL_DYNAMIC_COPY</code> - ?</li>
    *                  <li><code>GL_DYNAMIC_READ</code> - ?</li>
-   *                  <li><code>GL_STATIC_DRAW</code>  - ?</li>
+   *                  <li><code>GL_STATIC_DRAW</code>  - Best if data is modified once and used many times (indicator: glBufferSubData never used)</li>
    *                  <li><code>GL_STATIC_COPY</code>  - ?</li>
    *                  <li><code>GL_STATIC_READ</code>  - ?</li>
-   *                  <li><code>GL_STREAM_DRAW</code>  - ?</li>
+   *                  <li><code>GL_STREAM_DRAW</code>  - Best if data is modified once and used a few times (indicator: glBufferSubData rarely used)</li>
    *                  <li><code>GL_STREAM_COPY</code>  - ?</li>
    *                  <li><code>GL_STREAM_READ</code>  - ?</li>
    *                  </ul>
-   *
    */
   public VertexBufferObject(boolean isIso, Texture texture, float[] vertexData, int usageType) {
     this.vertexData = vertexData;
