@@ -27,7 +27,7 @@ public class Texture implements IAsset {
    * @param path Relative to the assets/textures directory
    */
   public Texture(String path) {
-    filepath = assetsDir + "textures" + fileSeparator + path;
+    filepath = (assetsDir + "textures" + fileSeparator + path).replace(fileSeparator + fileSeparator, fileSeparator);
     load();
   }
   
@@ -38,7 +38,7 @@ public class Texture implements IAsset {
    * @param path Relative to the assets/textures directory
    */
   public Texture(String path, String dir) {
-    filepath = dir + fileSeparator + path;
+    filepath = (dir + fileSeparator + path).replace(fileSeparator + fileSeparator, fileSeparator);
     load();
   }
   

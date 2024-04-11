@@ -8,6 +8,7 @@ import deadzone.graphics.IRenderable;
 import deadzone.graphics.VertexBufferObject;
 import deadzone.graphics.fonts.Font;
 import deadzone.graphics.fonts.Glyph;
+import deadzone.graphics.fonts.Pen;
 import deadzone.math.Vector2;
 
 import java.util.ArrayList;
@@ -21,23 +22,22 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
  */
 public class Text implements IRenderable {
   
-  private static final int glRenderType = GL_TRIANGLES;
+  private final static int glRenderType = GL_TRIANGLES;
   private VertexBufferObject vbo;
-  final protected int vertexCount;
-  public String renderedText;
-  final public Font font;
-  final protected float xPos;
-  protected float yPos;
-  final protected float scale;
+  protected int vertexCount;
+  public final Font font;
+  public Color color;
+  protected String renderedText;
+  protected final float xPos;
+  protected final float yPos;
+  protected final float scale;
   protected int lineCount = 1;
-  
+  private final Pen pen;
   final private Window window;
-  
   /**
    * Total width of a rectangle around all textures of this text in display coordinates (0..1)
    */
   private int totalWidthPx = 0;
-  
   /**
    * Total height of a rectangle around all textures of this text in display coordinates (0..1)
    */
@@ -45,28 +45,16 @@ public class Text implements IRenderable {
   
   
   
-  
-  
-  public Text(float x, float y, Font font, String text) {
-    window = Deadzone.getApplication().getWindow();
-    this.xPos = x;
-    this.yPos = y;
+  public Text(Pen pen, Font font, String text, Color color, float scale) {
+    this.window = Deadzone.getApplication().getWindow();
+    this.pen = pen;
+    this.xPos = pen.getX();
+    this.yPos = pen.getY();
     this.font = font;
-    renderedText = text;
-    this.scale = 2;  // TODO: by default we need a scale of 2 the get the original cell size - why?
-    this.vertexCount = renderedText.length() * 6;
-    addTextToDraw(x, y);
-  }
-  
-  public Text(float x, float y, Font font, String text, float scale) {
-    window = Deadzone.getApplication().getWindow();
-    this.xPos = x;
-    this.yPos = y;
-    this.font = font;
-    renderedText = text;
+    this.renderedText = text;
+    this.color = color;
     this.scale = scale + 1;
     this.vertexCount = renderedText.length() * 6;
-    addTextToDraw(x, y);
   }
   
   
@@ -84,6 +72,9 @@ public class Text implements IRenderable {
    */
   @Override
   public VertexBufferObject getVBO() {
+    if (vbo == null) {
+      generateVBO();
+    }
     return this.vbo;
   }
   
@@ -124,6 +115,14 @@ public class Text implements IRenderable {
     return ((float)totalHeightPx) / window.getPixelHeight();
   }
   
+  public void setText(String newText) {
+    renderedText = newText;
+    vertexCount = newText.length() * 6;
+  }
+  
+  public String getText() {
+    return renderedText;
+  }
   
   public int getLineCount() {
     return lineCount;
@@ -133,20 +132,17 @@ public class Text implements IRenderable {
   /**
    * Registers all required VBOs at the renderer which are needed to render the given text.
    */
-  private void addTextToDraw(float x, float y) {
+  private void generateVBO() {
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
-    final Color color = font.getColor();
+    final Vector2 initialPenPos = new Vector2(pen.getX(), pen.getY());
     float red = color.getRedNormalized();
     float green = color.getGreenNormalized();
     float blue = color.getBlueNormalized();
     float alpha = color.getAlphaNormalized();
     final Texture fontAtlas = font.getAtlasTexture();
     float totalWidth = 0, pxWidthOfLongestLine = 0, lineHeight = 0;
-    Vector2 currentPenPos = null;
-    
     ArrayList<Float> vertexData = new ArrayList<>();
-    
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     for (int i = 0; i < renderedText.length(); i++) {
@@ -171,7 +167,7 @@ public class Text implements IRenderable {
       // First iteration: init pen (origin to top left), store line height  - all other: fetch kerning value
       if (i == 0) {
         // In first iteration: set pen to origin (top left) and store the line height
-        currentPenPos = new Vector2(x, y - sizeY_NormWin);
+        pen.setY(initialPenPos.y - sizeY_NormWin);
         lineHeight = size.y;
       } else {
         // In all other iterations: get value of the kerning pair "last char" - "current char"
@@ -184,14 +180,14 @@ public class Text implements IRenderable {
       // If the current letter is a line break start new line and draw nothing
       if (c == 10) {
         lineCount++;
-        currentPenPos.x = x;
-        currentPenPos.y -= sizeY_NormWin;
+        pen.setPos(initialPenPos.x, pen.getY() - sizeY_NormWin);
         // Reset total width to measure width of the new line
         totalWidth = 0;
         continue;
       }
       
       // Collect the vertex data for this character
+      final Vector2 currentPenPos = pen.getPos();
       vertexData.addAll(new ArrayList<>( Arrays.asList(
         // Triangle 1
         currentPenPos.x, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex, posY_NormTex,
@@ -205,7 +201,7 @@ public class Text implements IRenderable {
       
       
       // Prepare pen pos for next character and update total width, if this was the longest line by now
-      currentPenPos.x += sizeX_NormWin + letterOffsetPx / windowWidth;
+      pen.setX(currentPenPos.x + sizeX_NormWin + letterOffsetPx / windowWidth);
       pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
     }
     
@@ -219,11 +215,12 @@ public class Text implements IRenderable {
     
     vbo = new VertexBufferObject(false, fontAtlas, vertexDataArr);
     
-    
-    
     // Finally store the texts total size
     totalWidthPx = (int) Math.ceil(pxWidthOfLongestLine * scale);
     totalHeightPx = (int) Math.ceil(lineHeight * lineCount * scale);
+    
+    // Since we manipulated the pen pos origin within this function we must revert this otherwise the "global" pen pos would get an offset
+    pen.setY(pen.getY() + 2 * lineHeight / windowHeight);  // works, but why the hell x2 ??
   }
   
   

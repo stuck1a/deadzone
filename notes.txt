@@ -7,9 +7,12 @@
 
 - Fix flipped textures for Tiles, RectangleShape and TriangleShape (stbi_set_flip_vertically_on_load is now false globally)
 - Wrap Font class and Text.addTextToRender() in classes FontFamily and Pen:
-  => A font family and font style data can be assigned to Pen objects and is also used for drawing text
-  => The Font Family will wrap all Font classes within a Font Family and provide getter to get the proper Font object based on style setup from
-     the Pen object which asks for the Font object
+
+  Soweit fertig, was noch fehlt:
+    => updateFontData()
+    => Den Pen an addTextToRenderer() mitgeben und dann currentPenPos ersetzen mit pen.pos
+
+
 - Replace scale in text drawing with a logic which automatically calculates the required scale value for a given font size value.
   This logic shall also decide, whether the low-res or high-res font texture will be used (the one which results in the lowest scale value)
 - Implement function to get all/topmost IRenderable at given coordinates

@@ -29,10 +29,23 @@ public class FontFamily {
       put(2, new Font(sb));
       put(3, new Font(lb));
     }};
-
   }
   
   
+  public Font getSmallRegularFont() {
+    return fonts.get(0);
+  }
   
+  public Font getLargeRegularFont() {
+    return fonts.get(1);
+  }
+  
+  public Font getSmallBoldFont() {
+    return fonts.get(2);
+  }
+  
+  public Font getLargeBoldFont() {
+    return fonts.get(3);
+  }
   
 }

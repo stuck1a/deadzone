@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fontList>
-	<font name="Arial" size="20" bold="true" textureHeight="23" atlas="arial20b.png" >
-		<char id="10" x="0" y="0" width="0" height="0" OrigWidth="0" OrigHeight="0" />
+	<font height="23" atlas="arial20b.png" >
+		<char id="10" x="0" y="0" width="0" />
 		<char id="32" x="203" y="276" width="6" />
 		<char id="33" x="0" y="299" width="5" />
 		<char id="34" x="247" y="230" width="9" />

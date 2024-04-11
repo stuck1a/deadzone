@@ -1,7 +1,6 @@
 package deadzone.assets;
 
 import deadzone.Util;
-import deadzone.graphics.fonts.Font;
 import deadzone.graphics.fonts.FontFamily;
 
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 public class AssetManager {
   
   HashMap<String, Texture> textures = new HashMap<>();
-  HashMap<String, Font> fonts = new HashMap<>();
+  HashMap<String, FontFamily> fonts = new HashMap<>();
   
   /**
    * For now, we hardcode all available assets here.
@@ -27,19 +26,16 @@ public class AssetManager {
     textures.put("1_marked", new Texture("1_marked.png"));
     textures.put("2", new Texture("2.jpg"));
     
-    // Load Font: Arial, 70px, regular
-    Font arial70 = new Font("arial70.xml");
-    arial70.load();
-    fonts.put(arial70.getName(), arial70);
-    
-    
     // Initialize font family "Arial"
     final String fontsDir = Util.getFontsDir();
-    FontFamily arial = new FontFamily(
-      fontsDir + "arial20.xml",
-      fontsDir + "arial70.xml",
-      fontsDir + "arial20b.xml",
-      fontsDir + "arial70b.xml"
+    fonts.put(
+      "arial",
+      new FontFamily(
+        fontsDir + "arial20.xml",
+       fontsDir + "arial70.xml",
+        fontsDir + "arial20b.xml",
+        fontsDir + "arial70b.xml"
+      )
     );
     
     
@@ -48,17 +44,17 @@ public class AssetManager {
   
   
   public Texture getTexture(String identifier) {
-    final Texture result = textures.get(identifier);
+    final Texture result = textures.get(identifier.toLowerCase());
     if (result == null) {
       throw new RuntimeException("Could not find requested texture \""+ identifier +"\"!");
     }
     return result;
   }
   
-  public Font getFont(String identifier) {
-    final Font result = fonts.get(identifier);
+  public FontFamily getFont(String identifier) {
+    final FontFamily result = fonts.get(identifier.toLowerCase());
     if (result == null) {
-      throw new RuntimeException("Could not find requested font \""+ identifier +"\"!");
+      throw new RuntimeException("Could not find requested font family \""+ identifier +"\"!");
     }
     return result;
   }
