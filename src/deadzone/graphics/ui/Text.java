@@ -135,14 +135,16 @@ public class Text implements IRenderable {
   private void generateVBO() {
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
-    final Vector2 initialPenPos = new Vector2(pen.getX(), pen.getY());
-    float red = color.getRedNormalized();
-    float green = color.getGreenNormalized();
-    float blue = color.getBlueNormalized();
-    float alpha = color.getAlphaNormalized();
+    final Vector2 initialPenPos = new Vector2(xPos, yPos);
+//    final Vector2 initialPenPos = pen.getPos();
+    final float red = color.getRedNormalized();
+    final float green = color.getGreenNormalized();
+    final float blue = color.getBlueNormalized();
+    final float alpha = color.getAlphaNormalized();
     final Texture fontAtlas = font.getAtlasTexture();
-    float totalWidth = 0, pxWidthOfLongestLine = 0, lineHeight = 0;
-    ArrayList<Float> vertexData = new ArrayList<>();
+    float pxWidthOfLongestLine = 0;
+    float totalWidth = 0;
+    final ArrayList<Float> vertexData = new ArrayList<>();
     
     // Iterate through the given text and create a texture (2 triangles each) at the correct location for each letter
     for (int i = 0; i < renderedText.length(); i++) {
@@ -161,14 +163,13 @@ public class Text implements IRenderable {
       // Normalize position and size for UV data (percent of texture atlas size)
       final float posX_NormTex = pos.x / fontAtlas.width;
       final float posY_NormTex = pos.y / fontAtlas.height;
-      final float sizeX_NormTex =  size.x / fontAtlas.width;
+      final float sizeX_NormTex = size.x / fontAtlas.width;
       final float sizeY_NormTex = size.y / fontAtlas.height;
       
       // First iteration: init pen (origin to top left), store line height  - all other: fetch kerning value
       if (i == 0) {
         // In first iteration: set pen to origin (top left) and store the line height
         pen.setY(initialPenPos.y - sizeY_NormWin);
-        lineHeight = size.y;
       } else {
         // In all other iterations: get value of the kerning pair "last char" - "current char"
         letterOffsetPx = scale * glyph.getKerning(renderedText.charAt(i-1));
@@ -187,21 +188,25 @@ public class Text implements IRenderable {
       }
       
       // Collect the vertex data for this character
-      final Vector2 currentPenPos = pen.getPos();
-      vertexData.addAll(new ArrayList<>( Arrays.asList(
-        // Triangle 1
-        currentPenPos.x, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex, posY_NormTex,
-        currentPenPos.x, currentPenPos.y, red, green, blue, alpha, posX_NormTex, posY_NormTex + sizeY_NormTex,
-        currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
-        // Triangle 2
-        currentPenPos.x + sizeX_NormWin, currentPenPos.y, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex + sizeY_NormTex,
-        currentPenPos.x + sizeX_NormWin, currentPenPos.y + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
-        currentPenPos.x, currentPenPos.y, red, green, blue, alpha, posX_NormTex, posY_NormTex + sizeY_NormTex
-      )));
-      
+      final float currentPenPosX = pen.getX();
+      final float currentPenPosY = pen.getY();
+      vertexData.addAll(
+        new ArrayList<>(
+          Arrays.asList(
+            // Triangle 1
+            currentPenPosX, currentPenPosY + sizeY_NormWin, red, green, blue, alpha, posX_NormTex, posY_NormTex,
+            currentPenPosX, currentPenPosY, red, green, blue, alpha, posX_NormTex, posY_NormTex + sizeY_NormTex,
+            currentPenPosX + sizeX_NormWin, currentPenPosY + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
+            // Triangle 2
+            currentPenPosX + sizeX_NormWin, currentPenPosY, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex + sizeY_NormTex,
+            currentPenPosX + sizeX_NormWin, currentPenPosY + sizeY_NormWin, red, green, blue, alpha, posX_NormTex + sizeX_NormTex, posY_NormTex,
+            currentPenPosX, currentPenPosY, red, green, blue, alpha, posX_NormTex, posY_NormTex + sizeY_NormTex
+          )
+        )
+      );
       
       // Prepare pen pos for next character and update total width, if this was the longest line by now
-      pen.setX(currentPenPos.x + sizeX_NormWin + letterOffsetPx / windowWidth);
+      pen.moveX(sizeX_NormWin + letterOffsetPx / windowWidth);
       pxWidthOfLongestLine = Math.max(pxWidthOfLongestLine, totalWidth);
     }
     
@@ -217,11 +222,12 @@ public class Text implements IRenderable {
     
     // Finally store the texts total size
     totalWidthPx = (int) Math.ceil(pxWidthOfLongestLine * scale);
-    totalHeightPx = (int) Math.ceil(lineHeight * lineCount * scale);
+    totalHeightPx = (int) Math.ceil(font.getOriginalSize() * lineCount * scale);
     
     // Since we manipulated the pen pos origin within this function we must revert this otherwise the "global" pen pos would get an offset
-    pen.setY(pen.getY() + 2 * lineHeight / windowHeight);  // works, but why the hell x2 ??
+//    pen.moveY(scale * font.getOriginalSize() / windowHeight);
   }
+  
   
   
 }

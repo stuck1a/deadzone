@@ -6,12 +6,6 @@
 - Objekte, die in der update-Schleife erstellt/verändert werden, skalieren sich nicht mit bei einer Änderung der Fenstergröße
 
 - Fix flipped textures for Tiles, RectangleShape and TriangleShape (stbi_set_flip_vertically_on_load is now false globally)
-- Wrap Font class and Text.addTextToRender() in classes FontFamily and Pen:
-
-  Soweit fertig, was noch fehlt:
-    => updateFontData()
-    => Den Pen an addTextToRenderer() mitgeben und dann currentPenPos ersetzen mit pen.pos
-
 
 - Replace scale in text drawing with a logic which automatically calculates the required scale value for a given font size value.
   This logic shall also decide, whether the low-res or high-res font texture will be used (the one which results in the lowest scale value)

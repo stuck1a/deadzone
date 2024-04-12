@@ -1,9 +1,7 @@
 package deadzone.scenes;
 
 import deadzone.assets.Texture;
-import deadzone.graphics.Color;
 import deadzone.graphics.IsoGrid;
-import deadzone.graphics.fonts.Pen;
 import deadzone.graphics.ui.Text;
 import deadzone.graphics.worldobjects.Tile;
 
@@ -101,35 +99,12 @@ public class Compound extends AbstractScene {
    * Adds the static part of the debug data which is displayed at the top left edge
    */
   private void initDebugInfos() {
-    // NEUE LOGIK
-    final Pen pen = new Pen(
-      assets.getFont("Arial"),
-      50,
-      -1, 1,
-      new Color(128, 128, 128)
-    );
-
-    final Text test = pen.writeText("TestTest");
-    final Text test2 = pen.writeText("FooBar");
-    
-    
-    addObject("testText", test);
-    addObject("testText2", test2);
-    
-    
-    // ALTE LOGIK
-    
-//    final float textScaling = -.5f;
-//    final Font font = assets.getFont("Arial");
-//    font.setColor(new Color(255, 255, 255));
-//
-//    final Text timeLbl = new Text(-1, 1, font, "Time:", textScaling);
-//    final Text fpsLbl = new Text(-1, timeLbl.getY() - timeLbl.getTotalHeight(), font, "FPS:", textScaling);
-//    final Text coordLbl = new Text(-1, fpsLbl.getY() - fpsLbl.getTotalHeight(), font, "Mouse Pos:", textScaling);
-//
-//    addObject("timeLbl", timeLbl);
-//    addObject("fpsLbl", fpsLbl);
-//    addObject("coordLbl", coordLbl);
+    addObject("timeLbl",  pen.writeText("Time:\n "));
+    addObject("fpsLbl", pen.writeText("FPS:"));
+    pen.moveY(-.25f);
+    addObject("coordLbl", pen.writeText("Mouse Pos:"));
+  
+  
   }
   
   
@@ -137,30 +112,24 @@ public class Compound extends AbstractScene {
    * Updates the dynamic part of the debug data which is displayed at the top left edge
    */
   private void updateDebugInfos() {
-    // NEUE LOGIK
+    pen.setColor(128, 64, 64);
     
+    // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
+    removeObject("time");
+    final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
+    pen.setPos(TimeLbl.getX() + TimeLbl.getTotalWidth() + .05f, TimeLbl.getY());
+    addObject("time", pen.writeText("" + timer.getCurrentTimestamp()));
+
+    // Update rendered fps value
+    removeObject("fps");
+    final Text fpsLbl = ((Text) renderObjects.get("fpsLbl"));
+    pen.setPos(fpsLbl.getX() + fpsLbl.getTotalWidth() + .05f, fpsLbl.getY());
+    addObject("fps", pen.writeText("" + timer.getFps()));
     
-    
-    // ALTE LOGIK
-    
-//    // Remove the old timer text
-//    removeObject("time");
-//
-//    final Font font = assets.getFont("Arial");
-//    final float textScaling = -.5f;
-//    font.setColor(new Color(128, 64, 64));
-//
-//    // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
-//    final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
-//    addObject("time", new Text(TimeLbl.getX() + TimeLbl.getTotalWidth() + .05f, TimeLbl.getY(), font, "" + timer.getCurrentTimestamp(), textScaling));
-//
-//    // Update rendered fps value
-//    final Text fpsLbl = ((Text) renderObjects.get("fpsLbl"));
-//    addObject("fps", new Text(fpsLbl.getX() + fpsLbl.getTotalWidth() + .05f, fpsLbl.getY(), font, "" + timer.getFps(), textScaling));
-//
-//    // Update current mouse coordinates
-//    final Text coordLbl = ((Text) renderObjects.get("coordLbl"));
-//    // TODO: Get and render current mouse position in display coordinates
+    // Update current mouse coordinates
+    removeObject("coords");
+    final Text coordLbl = ((Text) renderObjects.get("coordLbl"));
+    // TODO: Get and render current mouse position in display coordinates
     
   }
   

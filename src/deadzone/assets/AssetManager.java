@@ -31,10 +31,10 @@ public class AssetManager {
     fonts.put(
       "arial",
       new FontFamily(
-        fontsDir + "arial20.xml",
-       fontsDir + "arial70.xml",
-        fontsDir + "arial20b.xml",
-        fontsDir + "arial70b.xml"
+        fontsDir + "arial-sr.xml",
+       fontsDir + "arial-lr.xml",
+        fontsDir + "arial-sb.xml",
+        fontsDir + "arial-lb.xml"
       )
     );
     

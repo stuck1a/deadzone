@@ -119,11 +119,13 @@ public class Pen {
     if (pos == null) pos = new Vector2(0, 0);
     if (color == null) color = new Color(0, 0, 0);
     
-    // Select most suitable font for the currently active style and size
-    activeFont = fontFamily.getSmallRegularFont();
+    // Get the best suitable font variant
+    final Font smallFont = bold ? fontFamily.getSmallBoldFont() : fontFamily.getSmallRegularFont();
+    final Font largeFont = bold ? fontFamily.getLargeBoldFont() : fontFamily.getLargeRegularFont();
+    activeFont = (Math.abs(fontSize - smallFont.getOriginalSize()) < Math.abs(fontSize - largeFont.getOriginalSize())) ? smallFont : largeFont;
     
     // Recalculate the required scaling factor to reach the effective target size
-    activeScaling = 1;
+    activeScaling = (float)fontSize / (float)activeFont.getOriginalSize();
   }
   
   
@@ -155,6 +157,18 @@ public class Pen {
   public float getX() {
     if (pos == null) pos = new Vector2(0, 0);
     return pos.x;
+  }
+  
+  public Pen moveX(float xOffset) {
+    if (pos == null) pos = new Vector2(0, 0);
+    pos.x += xOffset;
+    return this;
+  }
+  
+  public Pen moveY(float yOffset) {
+    if (pos == null) pos = new Vector2(0, 0);
+    pos.y += yOffset;
+    return this;
   }
   
   public float getY() {

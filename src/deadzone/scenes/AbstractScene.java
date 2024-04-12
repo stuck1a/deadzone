@@ -4,8 +4,10 @@ import deadzone.Deadzone;
 import deadzone.GameTimer;
 import deadzone.Window;
 import deadzone.assets.AssetManager;
+import deadzone.graphics.Color;
 import deadzone.graphics.IRenderable;
 import deadzone.graphics.Renderer;
+import deadzone.graphics.fonts.Pen;
 
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -34,6 +36,7 @@ public abstract class AbstractScene {
   protected final GameTimer timer = Deadzone.getApplication().getTimer();
   protected final Window window = Deadzone.getApplication().getWindow();
   protected final AssetManager assets = Deadzone.getApplication().getAssetManager();
+  protected final Pen pen;
   
   
   /**
@@ -45,6 +48,14 @@ public abstract class AbstractScene {
     if (!sceneMappings.containsKey(name)) {
       sceneMappings.put(name, this);
     }
+    
+    // Create the default pen. It should be used for all text in the scene for best performance
+    pen = new Pen(
+      assets.getFont("Arial"),
+      20,
+      -1, 1,
+      new Color(128, 128, 128)
+    );
   }
   
   
