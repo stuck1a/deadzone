@@ -4,7 +4,6 @@ import deadzone.Deadzone;
 import deadzone.GameTimer;
 import deadzone.Window;
 import deadzone.assets.AssetManager;
-import deadzone.graphics.Color;
 import deadzone.graphics.IRenderable;
 import deadzone.graphics.Renderer;
 import deadzone.graphics.fonts.Pen;
@@ -50,12 +49,7 @@ public abstract class AbstractScene {
     }
     
     // Create the default pen. It should be used for all text in the scene for best performance
-    pen = new Pen(
-      assets.getFont("Arial"),
-      20,
-      -1, 1,
-      new Color(128, 128, 128)
-    );
+    pen = new Pen(assets.getFont("Arial"), 20);
   }
   
   

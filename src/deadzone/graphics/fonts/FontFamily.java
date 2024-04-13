@@ -3,7 +3,7 @@ package deadzone.graphics.fonts;
 import java.util.HashMap;
 
 
-public class FontFamily {
+public class FontFamily implements Cloneable {
   
   /**
    * Stores all 4 subfonts:
@@ -12,7 +12,7 @@ public class FontFamily {
    * 2 - small bold
    * 3 - large bold
    */
-  final HashMap<Integer, Font> fonts;
+  HashMap<Integer, Font> fonts;
   
   
   /**
@@ -46,6 +46,22 @@ public class FontFamily {
   
   public Font getLargeBoldFont() {
     return fonts.get(3);
+  }
+  
+  @Override
+  public FontFamily clone() {
+    try {
+      FontFamily clone = (FontFamily) super.clone();
+      clone.fonts = new HashMap<Integer, Font>() {{
+        put(0, fonts.get(0));
+        put(1, fonts.get(1));
+        put(2, fonts.get(2));
+        put(3, fonts.get(3));
+      }};
+      return clone;
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError();
+    }
   }
   
 }

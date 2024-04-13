@@ -35,11 +35,11 @@ public class Text implements IRenderable {
   private final Pen pen;
   final private Window window;
   /**
-   * Total width of a rectangle around all textures of this text in display coordinates (0..1)
+   * Total width of a boundary rect around the text
    */
   private int totalWidthPx = 0;
   /**
-   * Total height of a rectangle around all textures of this text in display coordinates (0..1)
+   * Total height of a boundary rect around the text
    */
   private int totalHeightPx = 0;
   
@@ -47,13 +47,13 @@ public class Text implements IRenderable {
   
   public Text(Pen pen, Font font, String text, Color color, float scale) {
     this.window = Deadzone.getApplication().getWindow();
-    this.pen = pen;
+    this.pen = pen.clone();
     this.xPos = pen.getX();
     this.yPos = pen.getY();
     this.font = font;
     this.renderedText = text;
     this.color = color;
-    this.scale = scale + 1;
+    this.scale = scale;
     this.vertexCount = renderedText.length() * 6;
   }
   
@@ -75,7 +75,7 @@ public class Text implements IRenderable {
     if (vbo == null) {
       generateVBO();
     }
-    return this.vbo;
+    return vbo;
   }
   
   /**
@@ -131,12 +131,12 @@ public class Text implements IRenderable {
   
   /**
    * Registers all required VBOs at the renderer which are needed to render the given text.
+   * TODO: Text wird zwar richtig gerendert, aber die resultierende Pen Pos scheint nicht zu stimmen (mind. bei Zeilenumbrüchen)
    */
   private void generateVBO() {
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
-    final Vector2 initialPenPos = new Vector2(xPos, yPos);
-//    final Vector2 initialPenPos = pen.getPos();
+    final Vector2 initialPenPos = new Vector2(pen.getX(), pen.getY());
     final float red = color.getRedNormalized();
     final float green = color.getGreenNormalized();
     final float blue = color.getBlueNormalized();
@@ -225,9 +225,15 @@ public class Text implements IRenderable {
     totalHeightPx = (int) Math.ceil(font.getOriginalSize() * lineCount * scale);
     
     // Since we manipulated the pen pos origin within this function we must revert this otherwise the "global" pen pos would get an offset
-//    pen.moveY(scale * font.getOriginalSize() / windowHeight);
+    pen.moveY(scale * font.getOriginalSize() / windowHeight);
   }
   
   
+  /**
+   * Returns the new pen position after the text was written
+   */
+  public Vector2 getNewPenPos() {
+    return this.pen.getPos();
+  }
   
 }

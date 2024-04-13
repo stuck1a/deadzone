@@ -8,7 +8,7 @@ import deadzone.math.Vector2;
 /**
  * The Pen is used to add text
  */
-public class Pen {
+public class Pen implements Cloneable {
   protected FontFamily fontFamily;
   protected Vector2 pos;
   protected Color color;
@@ -93,7 +93,7 @@ public class Pen {
   
   /**
    * Writes some text which will be rendered in the upcoming frame.
-   * Returns the Text object for further use
+   * Returns the Pen object to update the pen position of the callee.
    */
   public Text writeText(String text) {
     // Choose Font and calculate scaling factor, if needed
@@ -104,7 +104,13 @@ public class Pen {
     
     // TODO: Apply 16° rotation matrix if italic = true
     
-    Text obj = new Text(this, activeFont, text, color, activeScaling);
+    // If we dont clone pen and color, it would be text would be influenced
+    // if this pen is changed afterwards. But we only want to sync the pos and only from Text to this, not vice versa!
+    Text obj = new Text(this.clone(), activeFont, text, color.clone(), activeScaling);
+    
+    // Update the position of this pen
+    this.setPos(obj.getNewPenPos());
+    
     return obj;
   }
   
@@ -125,7 +131,7 @@ public class Pen {
     activeFont = (Math.abs(fontSize - smallFont.getOriginalSize()) < Math.abs(fontSize - largeFont.getOriginalSize())) ? smallFont : largeFont;
     
     // Recalculate the required scaling factor to reach the effective target size
-    activeScaling = (float)fontSize / (float)activeFont.getOriginalSize();
+    activeScaling = (float)fontSize / (float)activeFont.getOriginalSize() + 1;
   }
   
   
@@ -274,5 +280,19 @@ public class Pen {
     return this;
   }
   
+  @Override
+  public Pen clone() {
+    final Pen clone = new Pen(
+      fontFamily.clone(),
+      fontSize,
+      new Vector2(pos.x, pos.y),
+      color.clone(),
+      bold,
+      italic
+    );
+    clone.activeScaling = activeScaling;
+    clone.activeFont = activeFont;
+    return clone;
+  }
   
 }
