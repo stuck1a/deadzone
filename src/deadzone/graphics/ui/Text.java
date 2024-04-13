@@ -55,6 +55,7 @@ public class Text implements IRenderable {
     this.color = color;
     this.scale = scale;
     this.vertexCount = renderedText.length() * 6;
+    calculateTotalSize();
   }
   
   
@@ -118,6 +119,7 @@ public class Text implements IRenderable {
   public void setText(String newText) {
     renderedText = newText;
     vertexCount = newText.length() * 6;
+    calculateTotalSize();
   }
   
   public String getText() {
@@ -134,9 +136,12 @@ public class Text implements IRenderable {
    * TODO: Text wird zwar richtig gerendert, aber die resultierende Pen Pos scheint nicht zu stimmen (mind. bei Zeilenumbrüchen)
    */
   private void generateVBO() {
+    
+    // TODO: Entferne alle total size Berechnungen, die haben wir jetzt schon vorberechnet
+    
     final int windowWidth = window.getPixelWidth();
     final int windowHeight = window.getPixelHeight();
-    final Vector2 initialPenPos = new Vector2(pen.getX(), pen.getY());
+    final Vector2 initialPenPos = new Vector2(xPos, yPos);
     final float red = color.getRedNormalized();
     final float green = color.getGreenNormalized();
     final float blue = color.getBlueNormalized();
@@ -230,10 +235,49 @@ public class Text implements IRenderable {
   
   
   /**
+   * This function calculates the theoretical text total size, if it would be rendered in its current state.
+   * We need this info to properly update the position of the pen which has created this text.
+   * Whenever the text is changed in a way which might change the total size, it must be recalculated by calling this
+   * function.
+   */
+  protected void calculateTotalSize() {
+    lineCount = 1;
+    float lineHeight = 0;
+    float totalWidth = 0;
+    float lineWidth = 0;  // px
+    
+    for (int i = 0; i < renderedText.length(); i++) {
+      final char c = renderedText.charAt(i);
+      final Glyph glyph = font.getGlyph(c);
+      final Vector2 size = glyph.getSize();
+      float kerning = 0;
+      
+      if (i == 0) {
+        lineHeight = size.y;
+      } else {
+        kerning = glyph.getKerning(renderedText.charAt(i-1));
+      }
+  
+      lineWidth += size.x + kerning;
+      
+      if (c == 10) {
+        lineCount++;
+        totalWidth = Math.max(totalWidth, lineWidth);
+        lineWidth = 0;
+      }
+    }
+    totalWidth = Math.max(totalWidth, lineWidth);
+    totalWidthPx = (int) Math.ceil(totalWidth * scale);
+    totalHeightPx = (int) Math.ceil(lineHeight * lineCount * scale);
+  }
+  
+  
+  /**
    * Returns the new pen position after the text was written
    */
   public Vector2 getNewPenPos() {
-    return this.pen.getPos();
+    final float normalizedHeight = getTotalHeight();
+    return new Vector2(pen.getX() + getTotalWidth(), pen.getY() - normalizedHeight + (normalizedHeight / lineCount)); // remove the height of 1 line because moved origin
   }
   
 }

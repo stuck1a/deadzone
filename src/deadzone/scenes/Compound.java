@@ -99,44 +99,10 @@ public class Compound extends AbstractScene {
    * Adds the static part of the debug data which is displayed at the top left edge
    */
   private void initDebugInfos() {
-    pen.setColor(255, 255, 255);
-    pen.setPos(-1, 1);
-    pen.setFontSize(40);
-  
-
-    
-//    addObject("test1",  pen.writeText("TestA\nTest"));
-//    addObject("test2",  pen.writeText("TestB"));
-  
-    System.out.println("A");
-    System.out.println("this.pen.getPos() = " + pen.getX() + ", " + pen.getY());
-  
-    final Text test3 = pen.writeText("AAA\nBBB");
-    addObject("test3", test3);
-  
-    System.out.println("B");
-    System.out.println("this.pen.getPos() = " + pen.getX() + ", " + pen.getY());
-    System.out.println("test3.getNewPenPos() = " + test3.getNewPenPos().x + ", " + test3.getNewPenPos().y);
-  
-    final Text test4 = pen.writeText("CCC");
-    addObject("test4", test4);
-  
-    System.out.println("C");
-    System.out.println("this.pen.getPos() = " + pen.getX() + ", " + pen.getY());
-    System.out.println("test4.getNewPenPos() = " + test4.getNewPenPos().x + ", " + test4.getNewPenPos().y);
-  
-    
-    pen.moveX(0.2f);
-    pen.setColor(0, 255, 0);
-  
-    //    addObject("timeLbl",  pen.writeText("Time:"));
-    //    pen.setX(-1);
-    //    pen.moveY(-.1f);
-    //    addObject("fpsLbl", pen.writeText("FPS:"));
-    //    pen.setX(-1);
-    //    pen.moveY(-.1f);
-    //    addObject("coordLbl", pen.writeText("Mouse Pos:"));
-    
+    pen.setColor(255, 255, 255).setPos(-1, 1).setFontSize(20);
+    addObject("timeLbl",  pen.writeText("Time:\n"));
+    addObject("fpsLbl", pen.writeText("FPS:\n"));
+    addObject("coordLbl", pen.writeText("Mouse Pos:"));
   }
   
   
@@ -144,24 +110,24 @@ public class Compound extends AbstractScene {
    * Updates the dynamic part of the debug data which is displayed at the top left edge
    */
   private void updateDebugInfos() {
-//    pen.setColor(128, 64, 64);
-//
-//    // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
-//    removeObject("time");
-//    final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
-//    pen.setPos(TimeLbl.getX() + TimeLbl.getTotalWidth() + .05f, TimeLbl.getY());
-//    addObject("time", pen.writeText("" + timer.getCurrentTimestamp()));
-//
-//    // Update rendered fps value
-//    removeObject("fps");
-//    final Text fpsLbl = ((Text) renderObjects.get("fpsLbl"));
-//    pen.setPos(fpsLbl.getX() + fpsLbl.getTotalWidth() + .05f, fpsLbl.getY());
-//    addObject("fps", pen.writeText("" + timer.getFps()));
-//
-//    // Update current mouse coordinates
-//    removeObject("coords");
-//    final Text coordLbl = ((Text) renderObjects.get("coordLbl"));
-//    // TODO: Get and render current mouse position in display coordinates
+    pen.setColor(128, 64, 64);
+
+    // Update rendered time value   // TODO: Skalierung wird hier nicht angewandt! Findet diese zu früh statt?
+    removeObject("time");
+    final Text TimeLbl = ((Text) renderObjects.get("timeLbl"));
+    pen.setPos(TimeLbl.getX() + TimeLbl.getTotalWidth() + .05f, TimeLbl.getY());
+    addObject("time", pen.writeText("" + timer.getCurrentTimestamp()));
+
+    // Update rendered fps value
+    removeObject("fps");
+    final Text fpsLbl = ((Text) renderObjects.get("fpsLbl"));
+    pen.setPos(fpsLbl.getX() + fpsLbl.getTotalWidth() + .05f, fpsLbl.getY());
+    addObject("fps", pen.writeText("" + timer.getFps()));
+
+    // Update current mouse coordinates
+    removeObject("coords");
+    final Text coordLbl = ((Text) renderObjects.get("coordLbl"));
+    // TODO: Get and render current mouse position in display coordinates
     
   }
   
